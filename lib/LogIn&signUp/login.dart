@@ -46,9 +46,6 @@ class _LoginPageState extends State<LoginPage> {
           workers.add(element['id']);
           Wid=element['id'];
           globals.isUser=false;
-          print("==========================================");
-          print('is worker');
-          print("==========================================");
           Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (context) {
             return WorkerHomePage();
@@ -67,9 +64,6 @@ class _LoginPageState extends State<LoginPage> {
             if(element['customerUID']==uid) {
               workers.add(element['id']);
               Wid=element['id'];
-              print("==========================================");
-              print('is customer');
-              print("==========================================");
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
                 return UserHomePage();

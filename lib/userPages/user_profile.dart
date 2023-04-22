@@ -31,7 +31,7 @@ List post = [
   "https://cdn.accentuate.io/5804795035810/1669665007055/Photo-Gallery-4.jpg?v=1669665007055",
 ];
 bool noti = false;
-late dynamic id;
+late dynamic id='';
 late dynamic uid;
 late dynamic data;
 class _UserProfileState extends State<UserProfile> {
@@ -143,7 +143,7 @@ class _UserProfileState extends State<UserProfile> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(20),
                                   child: Image.network(
-                                    "https://th.bing.com/th/id/OIP.idZujeAveK_cp-_JidMxWQHaGD?pid=ImgDet&rs=1",
+                                    "${data['imageURL']}",
                                     fit: BoxFit.fill,
                                   ),
                                 ),

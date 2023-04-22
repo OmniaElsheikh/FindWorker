@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:path/path.dart';
+import 'dart:io';
 import 'package:gp_1/shared/globals.dart' as globals;
+import 'package:image_picker/image_picker.dart';
 
 import '../workerPages/home_page.dart';
 import '../workerPages/worker_profile_page.dart';
@@ -14,22 +18,24 @@ class SignupPage extends StatefulWidget {
 }
 late List<dynamic> items=['Carpenter','Black Smith','Engineer','Plumber'] ;
 class _SignupPageState extends State<SignupPage> {
+  late List<dynamic> categorie=[];
   CollectionReference categories = FirebaseFirestore.instance.collection('categories');
   getData()async{
     var response=await categories.get();
     response.docs.forEach((element) {
       setState(() {
-        items.add(element['name']);
+        categorie.add(element['name']);
       });
     });
   }
 
   initState(){
-    //getData();
+    getData();
     id=DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
     super.initState();
   }
-  var name,email,phone,password,category;
+  late dynamic ref;
+  var name,email,phone,password,category,imageurl;
   late UserCredential userCredential;
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -50,7 +56,7 @@ class _SignupPageState extends State<SignupPage> {
     return regExp.hasMatch(email);
   }
 
-  Future<void> signup() async {
+  Future<void> signup(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
       try {
@@ -71,16 +77,18 @@ class _SignupPageState extends State<SignupPage> {
       }
         isLoading = false;
       try{
+        final TaskSnapshot snapshot = await ref.putFile(file);
+        imageurl = await snapshot.ref.getDownloadURL();
         if (globals.isUser) {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) {
-                return customer(customerUID:uid.toString(),customerName: name,email: email,phone: phone,);
-              }), (_) => false);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+            return customer(customerUID: uid.toString(),customerName: name,email: email,phone: phone,imageurlIn: imageurl,);
+
+          }));
         } else {
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (context) {
-                return worker(workerUID: uid.toString(),workerName: name,email: email,phone: phone,category: category,);
-              }), (_) => false);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+            return worker(workerUID: uid.toString(),workerName: name,email: email,phone: phone,category: category,imageurlIn: imageurl,);
+
+          }));
         }
       }catch(e){
         print(e.toString());
@@ -317,7 +325,85 @@ class _SignupPageState extends State<SignupPage> {
                     const SizedBox(height: 20),
                     MaterialButton(
                         color: Colors.white,
-                        onPressed: () {},
+                        onPressed: () {
+                          showModalBottomSheet(
+                              context: context,
+                              builder: (context){
+                                return Container(
+                                  color: Colors.grey.withOpacity(0.7),
+                                  padding: EdgeInsets.all(15),
+                                  height: 170,
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Please Choose Image",
+                                        style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),
+                                      ),
+                                      Divider(height: 5,thickness: 0,),
+                                      InkWell(
+                                        onTap: ()async{
+                                          var picked=await ImagePicker().pickImage(source: ImageSource.gallery);
+                                          if(picked!=null)
+                                          {
+                                            setState(() {
+                                              file=File(picked.path);
+                                              var rand =DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
+                                              var nameImage="$rand"+basename(picked.path);
+                                              ref =FirebaseStorage.instance.ref('profile').child('$nameImage');
+                                            });
+                                          }
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.all(8),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.photo,color: Colors.deepOrange,size: 30,
+                                              ),
+                                              SizedBox(width: 15,),
+                                              Text("From Gallary",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),)
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                      Divider(height: 5,thickness: 1,color: Colors.white,),
+                                      InkWell(
+                                        onTap: ()async{
+                                          var picked=await ImagePicker().pickImage(source: ImageSource.camera);
+                                          if(picked!=null)
+                                          {
+                                            setState(() {
+                                              file=File(picked.path);
+                                              var rand =DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
+                                              var nameImage="$rand"+basename(picked.path);
+                                              ref =FirebaseStorage.instance.ref('profile').child('$nameImage');
+                                            });
+                                          }
+                                          Navigator.of(context).pop();
+                                        },
+                                        child: Container(
+                                          width: double.infinity,
+                                          padding: EdgeInsets.all(8),
+                                          child: Row(
+                                            children: [
+                                              Icon(
+                                                Icons.camera,color: Colors.deepOrange,size: 30,
+                                              ),
+                                              SizedBox(width: 15,),
+                                              Text("From Camera",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),)
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }
+                          );
+                        },
                         child: Text(
                           "Add Image",
                           style:
@@ -387,7 +473,7 @@ class _SignupPageState extends State<SignupPage> {
                                           Icons.keyboard_arrow_down,
                                           color: Colors.white,
                                         ),
-                                        items: items
+                                        items: categorie
                                             .map((item) => DropdownMenuItem(
                                                   child: Text(
                                                     "$item",
@@ -463,7 +549,7 @@ class _SignupPageState extends State<SignupPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
                         onTap: () {
-                          signup();
+                          signup(context);
                         },
                         child: Container(
                           height: 50,
@@ -546,12 +632,14 @@ class worker extends StatelessWidget{
   late final email;
   late final phone;
   late final category;
-  worker({this.workerUID,this.workerName,this.email,this.phone,this.category});
+  late final imageurlIn;
+  worker({this.workerUID,this.workerName,this.email,this.phone,this.category,this.imageurlIn});
 
   @override
   Widget build(BuildContext context) {
     if(true)
       {
+        print(this.imageurlIn);
         FirebaseFirestore.instance.collection("worker").doc('$id').set({
           "workerUID":this.workerUID,
           "workerName":this.workerName,
@@ -563,6 +651,7 @@ class worker extends StatelessWidget{
           'prevReq':0,
           "complains":0,
           "warn":0,
+          "imageURL":this.imageurlIn
         });
         }
 
@@ -577,12 +666,14 @@ class customer extends StatelessWidget{
   late final customerName;
   late final email;
   late final phone;
-  customer({this.customerUID,this.customerName,this.email,this.phone});
+  late final imageurlIn;
+  customer({this.customerUID,this.customerName,this.email,this.phone,this.imageurlIn});
 
   @override
   Widget build(BuildContext context) {
     if(true)
     {
+      print(this.imageurlIn);
       FirebaseFirestore.instance.collection("customer").doc('$id').set({
         "customerUID":this.customerUID,
         "customerName":this.customerName,
@@ -593,6 +684,7 @@ class customer extends StatelessWidget{
         'prevReq':0,
         "complain":0,
         "warn":0,
+        "imageURL":this.imageurlIn
       });
     }
     return UserHomePage();

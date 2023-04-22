@@ -3,41 +3,43 @@ import 'package:flutter/material.dart';
 import 'package:gp_1/workerPages/home_page.dart';
 import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import 'home_page.dart';
 import 'notification_page.dart';
 
-class ComplainPage extends StatefulWidget {
-  final Wid;
+class UserComplainPage extends StatefulWidget {
   final Cid;
-  final Cname;
-  const ComplainPage({this.Wid,this.Cid,this.Cname,Key? key}) : super(key: key);
+  final Wid;
+  final Wname;
+  const UserComplainPage({this.Cid,this.Wid,this.Wname,Key? key}) : super(key: key);
 
   @override
-  State<ComplainPage> createState() => _ComplainPageState();
+  State<UserComplainPage> createState() => _UserComplainPageState();
 }
-late dynamic complainId;
-class _ComplainPageState extends State<ComplainPage> {
+
+class _UserComplainPageState extends State<UserComplainPage> {
   bool isRequested = false;
-  var content;
+
   final _formKey = GlobalKey<FormState>();
+  var content='';
+  late dynamic complainId;
   final TextEditingController _complainController = TextEditingController();
 
-  void editinfo(BuildContext context) async{
+  void editinfo(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      await FirebaseFirestore.instance.collection('workerComplains').doc('$complainId').set(
+      await FirebaseFirestore.instance.collection('customerComplains').doc('$complainId').set(
           {
             'customerId':widget.Cid,
             'workerId':widget.Wid,
             'content':content
           });
-      print("complain added");
     }
   }
-
   @override
   void initState() {
     complainId=DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -90,7 +92,7 @@ class _ComplainPageState extends State<ComplainPage> {
                     height: 10,
                   ),
                   Text(
-                    "Client's Name : ${widget.Cname}",
+                    "Client's Name : ${widget.Wname}",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.black,
@@ -150,10 +152,35 @@ class _ComplainPageState extends State<ComplainPage> {
                       MaterialButton(
                         onPressed: () {
                           editinfo(context);
+                          showDialog<void>(
+                            context: context,
+                            builder: (BuildContext dialogContext) {
+                              return AlertDialog(
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)
+                                ),
+                                title: Text('Note',style:TextStyle(color: Colors.indigo.shade900,fontSize: 20),),
+                                content: Text('Complain Done Succefully',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                                actions: <Widget>[
+                                  MaterialButton(
+                                    color: Colors.deepOrange,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15)
+                                    ),
+                                    child: Text('Ok'),
+                                    onPressed: () {
+                                      Navigator.of(dialogContext)
+                                          .pop(); // Dismiss alert dialog
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                           Navigator.of(context)
                               .pushReplacement(MaterialPageRoute(
                             builder: (BuildContext context) =>
-                                const WorkerHomePage(),
+                                const UserHomePage(),
                           ));
                         },
                         shape: RoundedRectangleBorder(

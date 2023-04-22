@@ -12,12 +12,11 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
-  int selectedindex = 1;
+  int selectedindex = 2;
   List <Widget> Widgets=[
     Notifications(),
     UserProfile(),
     CategoriesPage(),
-
   ];
   @override
   Widget build(BuildContext context) {

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gp_1/userPages/home_page.dart';
 import 'package:gp_1/userPages/worker_profile_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 
@@ -16,76 +17,21 @@ late List<dynamic> workers=[];
 late dynamic data;
 class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver{
 
-  final Stream<QuerySnapshot> _workerStream =
-  FirebaseFirestore.instance.collection('worker').snapshots();
-
-
-  CollectionReference Workers = FirebaseFirestore.instance.collection('worker');
-  getData()async{
-    await Workers.get().then((value) => {
-    value.docs.forEach((element) async{
-      if(element['category']==widget.cateName)
-        {
-          setState(() {
-            workers.add({
-              'name':element['workerName'],
-              'id':element['id']
-          });
-          });
-          data=element['id'];
-        }
-    })
-    });
-    print(workers);
-  }
-
-
   @override
   void initState() {
-    workers=[];
-    getData();
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
-  List favorits = [
-    {
-      'name': "omnia mohamed",
-      'category': "Plumber",
-      'img':"https://th.bing.com/th/id/OIP.idZujeAveK_cp-_JidMxWQHaGD?pid=ImgDet&rs=1",
-      'rate': "8.5",
-      'distance': "7 km",
-    },
-    {
-      'name': "motasem mohamed",
-      'category': "carpenter",
-      'img':
-      "https://th.bing.com/th/id/R.7b4e5903c7de5337a73e00f00d73f36d?rik=WrtiSDesVmn8Og&pid=ImgRaw&r=0",
 
-      'rate': "9.9",
-      'distance': "5 km",
-    },
-    {
-      'name': "omnia mohamed",
-      'category': "Plumber",
-      'img':"https://th.bing.com/th/id/OIP.idZujeAveK_cp-_JidMxWQHaGD?pid=ImgDet&rs=1",
-      'rate': "8.5",
-      'distance': "7 km",
-    },
-    {
-      'name': "Sehkaa ",
-      'category': "Plumber",
-      'img':  "https://th.bing.com/th/id/OIP.TfmC0UsikoZDsn_QxdVOBgHaE8?pid=ImgDet&rs=1",
-      'rate': "7",
-      'distance': "9.5 km",
-    },
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Colors.white,
             leading: IconButton(icon: Icon(Icons.arrow_back),color: Colors.deepOrange,onPressed: (){
-              Navigator.pop(context);
+              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+                return UserHomePage();
+              }));
             },),
           title: Center(
             child: Padding(
@@ -98,15 +44,14 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver{
             ),
           ),
         ),
-        body: workers.isEmpty||workers==null
-        ?Container(
-          color: Colors.white,
-            child: Center(child: Text("Loading",style: TextStyle(color: Colors.black,fontSize: 35),),))
-        :StreamBuilder<QuerySnapshot>(
+        body:StreamBuilder<QuerySnapshot>(
           key: UniqueKey(),
-          stream: _workerStream,
+          stream: FirebaseFirestore.instance.collection('worker').where("category",isEqualTo: widget.cateName.toString()).where("status",isEqualTo:"true").snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
+              return const Text('Something went wrong');
+            }
+            if (!snapshot.hasData) {
               return const Text('Something went wrong');
             }
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -154,7 +99,7 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver{
                                           alignment: Alignment.topLeft,
                                           child: Text(
                                             textAlign: TextAlign.start,
-                                            "${workers[i]['name']}",
+                                            "${snapshot.data?.docs[i]['workerName']}",
                                             style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,
@@ -170,15 +115,15 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver{
                           ),
                         ),
                         onTap: (){
-                          Navigator.of(context).push(MaterialPageRoute(
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
                             builder: (context) {
-                              return WorkerProfilePage(id: workers[i]['id'],);
+                              return WorkerInUserProfilePage(id:snapshot.data?.docs[i]['id'],cateName:widget.cateName);
                             },
                           ));
                         },
                       )),
                   separatorBuilder: (context,i)=>Divider(height: 10,thickness: 0,),
-                  itemCount: workers.length
+                  itemCount: snapshot.data?.docs.length as int
               )
             );
           }

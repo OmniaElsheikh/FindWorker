@@ -133,7 +133,7 @@ class DataSearch extends SearchDelegate{
 
                   builder: (context) {
 
-                    return WorkerProfilePage();
+                    return WorkerInUserProfilePage();
 
                   },
 

@@ -32,7 +32,20 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   List category=[];
   CollectionReference categories = FirebaseFirestore.instance.collection('categories');
+  List workers=[];
+  CollectionReference Workers = FirebaseFirestore.instance.collection('worker');
   getData()async{
+    var responseWork=await Workers.get();
+    responseWork.docs.forEach((element) {
+      setState(() {
+        if(element['workerUID']==uid) {
+          setState(() {
+            workers.add(element['id']);
+            id=element['id'];
+          });
+        }
+      });
+    });
     var response=await categories.get();
     response.docs.forEach((element) {
       setState(() {
@@ -133,7 +146,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
                       ),
                       onTap: () {
                         setState(() {});
-                        Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
                           builder: (context) {
                             return FilterdPage(cateName:snapshot.data?.docs[i]['name']);
                           },
@@ -170,52 +183,61 @@ class DataSearch extends SearchDelegate{
 
   @override
   Widget buildResults(BuildContext context) {
-    return Text("data");
+    return Center(child: Text("No Such Worker Name",style: TextStyle(color: Colors.indigo.shade900,fontSize: 30),));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
 
-List filterdworkers = workers.where((element) => element.startsWith(query)).toList();
 return Container(
   color: globals.ContColor,
-  child:   ListView.builder(
+  child:   StreamBuilder<QuerySnapshot>(
+    stream: FirebaseFirestore.instance.collection('worker').snapshots(),
+    builder: (context, snapshot) {
+      return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance.collection('worker').where("workerName",isEqualTo: '$query').snapshots(),
+        builder: (context, snapshot2) {
+          return ListView.builder(
 
-          itemCount: query ==""? workers.length: filterdworkers.length,
+                  itemCount: query ==""? snapshot.data?.docs.length: snapshot2.data?.docs.length,
 
-          itemBuilder: (context,i){
+                  itemBuilder: (context,i){
 
-            return InkWell(
+                    return InkWell(
 
-              onTap: (){
+                      onTap: (){
 
-                Navigator.of(context).push(MaterialPageRoute(
+                        Navigator.of(context).push(MaterialPageRoute(
 
-                  builder: (context) {
+                          builder: (context) {
 
-                    return WorkerProfilePage();
+                            return WorkerInUserProfilePage(id:snapshot.data?.docs[i].id);
 
-                  },
+                          },
 
-                ));
+                        ));
 
-              },
+                      },
 
-              child: Container(
+                      child: Container(
 
-                padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.all(10),
 
-                child: query==""?Text("${workers[i]}",style: TextStyle(color: Colors.indigo.shade900),):
+                        child: query==""?Text("${snapshot.data?.docs[i]['workerName']}",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),):
 
-                    Text("${filterdworkers[i]}")
+                            Text("${snapshot2.data?.docs[i]['workerName']}",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25))
 
-              ),
+                      ),
 
-            );
+                    );
 
-          }
+                  }
 
-      ),
+              );
+        }
+      );
+    }
+  ),
 );
   }
 }

@@ -3,15 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:gp_1/workerPages/notification_page.dart';
 import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
-import 'complain_page.dart';
+import 'User_complain_page.dart';
 import 'home_page.dart';
 
-class OngoingRequestPage extends StatefulWidget {
+class UserOngoingRequestPage extends StatefulWidget {
   final id;
-  const OngoingRequestPage({this.id,Key? key}) : super(key: key);
+  const UserOngoingRequestPage({this.id,Key? key}) : super(key: key);
 
   @override
-  State<OngoingRequestPage> createState() => _OngoingRequestPageState();
+  State<UserOngoingRequestPage> createState() => _UserOngoingRequestPageState();
 }
 
 bool isRequested = false;
@@ -19,7 +19,7 @@ var textforbutton = "Send Request";
 dynamic fontSize = 18.0;
 dynamic sizedBox = 15.0;
 late dynamic data={'':dynamic};
-class _OngoingRequestPageState extends State<OngoingRequestPage> {
+class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
 
 
   getData()async{
@@ -44,11 +44,13 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         backgroundColor: Colors.white,
-        leading: IconButton(icon: Icon(Icons.arrow_back),color: Colors.deepOrange,onPressed: (){
-          Navigator.pop(context);
-        },),
+        leading: Container(
+            margin: EdgeInsets.all(3),
+            child: CircleAvatar(
+              foregroundImage: AssetImage("images/worker-icon2.png"),
+            )),
         title: Center(
           child: Text(
             "Ongoing Request",
@@ -89,7 +91,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                 child: ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: Image.network(
-                      "${data['customerImage']}",
+                      "${data['workerImage']}",
                       fit: BoxFit.fill,
                     )),
               ),
@@ -221,7 +223,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           height: sizedBox,
                         ),
                         Text(
-                          "${data['customerName']}",
+                          "${data['workerName']}",
                           style: TextStyle(
                               fontSize: fontSize, fontWeight: FontWeight.w700),
                         ),
@@ -229,7 +231,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           height: sizedBox,
                         ),
                         Text(
-                          "${data['customerPhone']}",
+                          "${data['workerPhone']}",
                           style: TextStyle(
                               fontSize: fontSize, fontWeight: FontWeight.w700),
                         ),
@@ -326,7 +328,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                 return AlertDialog(
                                                   backgroundColor: Colors.white,
                                                   title: Text(
-                                                      "Review On Client : ${data['customerName']}"),
+                                                      "Review On Client : ${data['workerName']}"),
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -347,7 +349,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                                         20),
                                                             child:
                                                                 Image.network(
-                                                              "${data['customerImage']}",
+                                                              "${data['workerImage']}",
                                                               fit: BoxFit.fill,
                                                             ),
                                                           ),
@@ -356,7 +358,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                       Expanded(
                                                         child: Container(
                                                           child: Text(
-                                                            "Name : ${data['customerName']}",
+                                                            "Name : ${data['workerName']}",
                                                             style: TextStyle(
                                                                 fontSize: 20,
                                                                 fontWeight:
@@ -446,7 +448,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                                         MaterialPageRoute(
                                                                   builder: (BuildContext
                                                                           context) =>
-                                                                      const WorkerHomePage(),
+                                                                      const UserHomePage(),
                                                                 ));
                                                               },
                                                               child: Text(
@@ -481,7 +483,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                                         MaterialPageRoute(
                                                                   builder: (BuildContext
                                                                           context) =>
-                                                                       ComplainPage(Wid: data['workerId'],Cid: data['customerId'],Cname:data['customerName']),
+                                                                      UserComplainPage(Cid:data['customerId'],Wid:data['workerId'],Wname: data['workerName'],),
                                                                 ));
                                                               },
                                                               child: Text(
@@ -588,7 +590,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                           Navigator.of(context).pushReplacement(
                                               MaterialPageRoute(
                                             builder: (BuildContext context) =>
-                                                const WorkerHomePage(),
+                                                const UserHomePage(),
                                           ));
                                         },
                                         child: Text(
