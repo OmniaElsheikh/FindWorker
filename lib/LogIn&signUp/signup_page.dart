@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'package:gp_1/shared/globals.dart' as globals;
@@ -10,18 +11,63 @@ import 'package:image_picker/image_picker.dart';
 import '../workerPages/home_page.dart';
 import '../workerPages/worker_profile_page.dart';
 import '../userPages/home_page.dart';
+
 var id;
+late Position position=new Position(longitude: 0, latitude: 0, timestamp: DateTime.now(), accuracy: 0, altitude: 0, heading: 0, speed: 0, speedAccuracy: 0);
+late double lat = 0.0, long = 0.0;
+
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
   @override
   State<SignupPage> createState() => _SignupPageState();
 }
-late List<dynamic> items=['Carpenter','Black Smith','Engineer','Plumber'] ;
+
+Future<Position> _determinePosition() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  // Test if location services are enabled.
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    // Location services are not enabled don't continue
+    // accessing the position and request users of the
+    // App to enable the location services.
+    return Future.error('Location services are disabled.');
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, next time you could try
+      // requesting permissions again (this is also where
+      // Android's shouldShowRequestPermissionRationale
+      // returned true. According to Android guidelines
+      // your App should show an explanatory UI now.
+      return Future.error('Location permissions are denied');
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately.
+    return Future.error(
+        'Location permissions are permanently denied, we cannot request permissions.');
+  }
+
+  // When we reach here, permissions are granted and we can
+  // continue accessing the position of the device.
+  return position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.low);
+}
+
+late List<dynamic> items = ['Carpenter', 'Black Smith', 'Engineer', 'Plumber'];
+
 class _SignupPageState extends State<SignupPage> {
-  late List<dynamic> categorie=[];
-  CollectionReference categories = FirebaseFirestore.instance.collection('categories');
-  getData()async{
-    var response=await categories.get();
+  late List<dynamic> categorie = [];
+  CollectionReference categories =
+      FirebaseFirestore.instance.collection('categories');
+  getData() async {
+    var response = await categories.get();
     response.docs.forEach((element) {
       setState(() {
         categorie.add(element['name']);
@@ -29,13 +75,14 @@ class _SignupPageState extends State<SignupPage> {
     });
   }
 
-  initState(){
+  initState() {
     getData();
-    id=DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
+    id = DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
     super.initState();
   }
+
   late dynamic ref;
-  var name,email,phone,password,category,imageurl;
+  var name, email, phone, password, category, imageurl;
   late UserCredential userCredential;
   final TextEditingController _userNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
@@ -60,12 +107,48 @@ class _SignupPageState extends State<SignupPage> {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
       try {
-        userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: "$email",
-            password: "$password"
-        );
-        uid=FirebaseAuth.instance.currentUser?.uid;
-        print("account created succefully");
+        if(position==null)
+          {
+            print("position is null");
+          }
+        else
+          {
+            userCredential = await FirebaseAuth.instance
+                .createUserWithEmailAndPassword(
+                email: "$email", password: "$password");
+            uid = FirebaseAuth.instance.currentUser?.uid;
+            try {
+              final TaskSnapshot snapshot = await ref.putFile(file);
+              imageurl = await snapshot.ref.getDownloadURL();
+              if (globals.isUser) {
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (context) {
+                  return customer(
+                    customerUID: uid.toString(),
+                    customerName: name,
+                    email: email,
+                    phone: phone,
+                    imageurlIn: imageurl,
+                  );
+                }));
+              } else {
+                Navigator.of(context)
+                    .pushReplacement(MaterialPageRoute(builder: (context) {
+                  return worker(
+                    workerUID: uid.toString(),
+                    workerName: name,
+                    email: email,
+                    phone: phone,
+                    category: category,
+                    imageurlIn: imageurl,
+                  );
+                }));
+              }
+            } catch (e) {
+              print(e.toString());
+            }
+            print("account created succefully");
+          }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           print('The password provided is too weak.');
@@ -75,28 +158,10 @@ class _SignupPageState extends State<SignupPage> {
       } catch (e) {
         print(e);
       }
-        isLoading = false;
-      try{
-        final TaskSnapshot snapshot = await ref.putFile(file);
-        imageurl = await snapshot.ref.getDownloadURL();
-        if (globals.isUser) {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
-            return customer(customerUID: uid.toString(),customerName: name,email: email,phone: phone,imageurlIn: imageurl,);
-
-          }));
-        } else {
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
-            return worker(workerUID: uid.toString(),workerName: name,email: email,phone: phone,category: category,imageurlIn: imageurl,);
-
-          }));
-        }
-      }catch(e){
-        print(e.toString());
-      }
-      }
+      isLoading = false;
 
     }
-
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -149,8 +214,8 @@ class _SignupPageState extends State<SignupPage> {
                           }
                           return null;
                         },
-                        onChanged: (val){
-                          name=val;
+                        onChanged: (val) {
+                          name = val;
                         },
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
@@ -188,8 +253,8 @@ class _SignupPageState extends State<SignupPage> {
                           }
                           return null;
                         },
-                        onChanged: (val){
-                          email=val;
+                        onChanged: (val) {
+                          email = val;
                         },
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
@@ -226,8 +291,8 @@ class _SignupPageState extends State<SignupPage> {
                           }
                           return null;
                         },
-                        onChanged: (val){
-                          password=val;
+                        onChanged: (val) {
+                          password = val;
                         },
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
@@ -298,8 +363,8 @@ class _SignupPageState extends State<SignupPage> {
                           }
                           return null;
                         },
-                        onChanged: (val){
-                          phone=val;
+                        onChanged: (val) {
+                          phone = val;
                         },
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
@@ -328,29 +393,42 @@ class _SignupPageState extends State<SignupPage> {
                         onPressed: () {
                           showModalBottomSheet(
                               context: context,
-                              builder: (context){
+                              builder: (context) {
                                 return Container(
                                   color: Colors.grey.withOpacity(0.7),
                                   padding: EdgeInsets.all(15),
-                                  height: 170,
+                                  height: 180,
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         "Please Choose Image",
-                                        style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),
+                                        style: TextStyle(
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                      Divider(height: 5,thickness: 0,),
+                                      Divider(
+                                        height: 5,
+                                        thickness: 0,
+                                      ),
                                       InkWell(
-                                        onTap: ()async{
-                                          var picked=await ImagePicker().pickImage(source: ImageSource.gallery);
-                                          if(picked!=null)
-                                          {
+                                        onTap: () async {
+                                          var picked = await ImagePicker()
+                                              .pickImage(
+                                                  source: ImageSource.gallery);
+                                          if (picked != null) {
                                             setState(() {
-                                              file=File(picked.path);
-                                              var rand =DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
-                                              var nameImage="$rand"+basename(picked.path);
-                                              ref =FirebaseStorage.instance.ref('profile').child('$nameImage');
+                                              file = File(picked.path);
+                                              var rand = DateTime.now()
+                                                  .millisecondsSinceEpoch
+                                                  .remainder(100000)
+                                                  .toString();
+                                              var nameImage = "$rand" +
+                                                  basename(picked.path);
+                                              ref = FirebaseStorage.instance
+                                                  .ref('profile')
+                                                  .child('$nameImage');
                                             });
                                           }
                                           Navigator.of(context).pop();
@@ -361,25 +439,46 @@ class _SignupPageState extends State<SignupPage> {
                                           child: Row(
                                             children: [
                                               Icon(
-                                                Icons.photo,color: Colors.deepOrange,size: 30,
+                                                Icons.photo,
+                                                color: Colors.deepOrange,
+                                                size: 30,
                                               ),
-                                              SizedBox(width: 15,),
-                                              Text("From Gallary",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),)
+                                              SizedBox(
+                                                width: 15,
+                                              ),
+                                              Text(
+                                                "From Gallary",
+                                                style: TextStyle(
+                                                    color:
+                                                        Colors.indigo.shade900,
+                                                    fontSize: 25),
+                                              )
                                             ],
                                           ),
                                         ),
                                       ),
-                                      Divider(height: 5,thickness: 1,color: Colors.white,),
+                                      Divider(
+                                        height: 5,
+                                        thickness: 1,
+                                        color: Colors.white,
+                                      ),
                                       InkWell(
-                                        onTap: ()async{
-                                          var picked=await ImagePicker().pickImage(source: ImageSource.camera);
-                                          if(picked!=null)
-                                          {
+                                        onTap: () async {
+                                          var picked = await ImagePicker()
+                                              .pickImage(
+                                                  source: ImageSource.camera);
+                                          if (picked != null) {
                                             setState(() {
-                                              file=File(picked.path);
-                                              var rand =DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
-                                              var nameImage="$rand"+basename(picked.path);
-                                              ref =FirebaseStorage.instance.ref('profile').child('$nameImage');
+                                              file = File(picked.path);
+                                              var rand = DateTime.now()
+                                                  .millisecondsSinceEpoch
+                                                  .remainder(100000)
+                                                  .toString();
+                                              var nameImage = "$rand" +
+                                                  basename(picked.path);
+                                              ref = FirebaseStorage.instance
+                                                  .ref('profile')
+                                                  .child('$nameImage');
                                             });
                                           }
                                           Navigator.of(context).pop();
@@ -390,10 +489,20 @@ class _SignupPageState extends State<SignupPage> {
                                           child: Row(
                                             children: [
                                               Icon(
-                                                Icons.camera,color: Colors.deepOrange,size: 30,
+                                                Icons.camera,
+                                                color: Colors.deepOrange,
+                                                size: 30,
                                               ),
-                                              SizedBox(width: 15,),
-                                              Text("From Camera",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),)
+                                              SizedBox(
+                                                width: 15,
+                                              ),
+                                              Text(
+                                                "From Camera",
+                                                style: TextStyle(
+                                                    color:
+                                                        Colors.indigo.shade900,
+                                                    fontSize: 25),
+                                              )
                                             ],
                                           ),
                                         ),
@@ -401,8 +510,7 @@ class _SignupPageState extends State<SignupPage> {
                                     ],
                                   ),
                                 );
-                              }
-                          );
+                              });
                         },
                         child: Text(
                           "Add Image",
@@ -461,39 +569,40 @@ class _SignupPageState extends State<SignupPage> {
                                         color: Colors.black,
                                       ),
                                     if (!globals.isUser)
-                                      DropdownButton(
-                                        hint: Text(
-                                          "Select you category",
-                                          style: TextStyle(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
+                                      Expanded(
+                                        child: DropdownButton(
+                                          hint: Text(
+                                            "Select you category",
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          dropdownColor: Colors.grey,
+                                          icon: const Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: Colors.white,
+                                          ),
+                                          items: categorie
+                                              .map((item) => DropdownMenuItem(
+                                                    child: Text(
+                                                      "$item",
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors
+                                                              .indigo[900]),
+                                                    ),
+                                                    value: item,
+                                                  ))
+                                              .toList(),
+                                          value: selectedJob,
+                                          onChanged: (value) {
+                                            setState(() {
+                                              selectedJob = value.toString();
+                                              category = value.toString();
+                                            });
+                                          },
                                         ),
-                                        dropdownColor: Colors.grey,
-                                        icon: const Icon(
-                                          Icons.keyboard_arrow_down,
-                                          color: Colors.white,
-                                        ),
-                                        items: categorie
-                                            .map((item) => DropdownMenuItem(
-                                                  child: Text(
-                                                    "$item",
-                                                    style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color:
-                                                            Colors.indigo[900]),
-                                                  ),
-                                                  value: item,
-                                                ))
-                                            .toList(),
-                                        value: selectedJob,
-                                        onChanged: (value) {
-                                          setState(() {
-                                            selectedJob = value.toString();
-                                            category=value.toString();
-                                          });
-                                        },
-
                                       )
                                   ],
                                 ),
@@ -548,8 +657,9 @@ class _SignupPageState extends State<SignupPage> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: InkWell(
-                        onTap: () {
+                        onTap: () async {
                           signup(context);
+                          //LocationPermission permission = await Geolocator.requestPermission();
                         },
                         child: Container(
                           height: 50,
@@ -578,7 +688,12 @@ class _SignupPageState extends State<SignupPage> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    Center(child: Text("Or",style: TextStyle(color: Colors.white,fontSize: 20),),),
+                    Center(
+                      child: Text(
+                        "Or",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                    ),
                     const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -595,25 +710,24 @@ class _SignupPageState extends State<SignupPage> {
                           child: Center(
                             child: isLoading
                                 ? const Padding(
-                              padding: EdgeInsets.all(8.0),
-                              child: CircularProgressIndicator(
-                                color: Colors.white,
-                              ),
-                            )
+                                    padding: EdgeInsets.all(8.0),
+                                    child: CircularProgressIndicator(
+                                      color: Colors.white,
+                                    ),
+                                  )
                                 : const Text(
-                              'Login',
-                              style: TextStyle(
-                                color: Colors.deepOrange,
-                                fontSize: 25,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
+                                    'Login',
+                                    style: TextStyle(
+                                      color: Colors.deepOrange,
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 20),
-
                   ],
                 ),
               ),
@@ -625,69 +739,84 @@ class _SignupPageState extends State<SignupPage> {
   }
 }
 
-
-class worker extends StatelessWidget{
+class worker extends StatelessWidget {
   late final workerUID;
   late final workerName;
   late final email;
   late final phone;
   late final category;
   late final imageurlIn;
-  worker({this.workerUID,this.workerName,this.email,this.phone,this.category,this.imageurlIn});
+  worker(
+      {this.workerUID,
+      this.workerName,
+      this.email,
+      this.phone,
+      this.category,
+      this.imageurlIn});
 
   @override
   Widget build(BuildContext context) {
-    if(true)
-      {
-        print(this.imageurlIn);
-        FirebaseFirestore.instance.collection("worker").doc('$id').set({
-          "workerUID":this.workerUID,
-          "workerName":this.workerName,
-          "email":this.email,
-          "phone":this.phone,
-          "category":this.category,
-          "id":"$id",
-          "onReq":"false",
-          'prevReq':0,
-          "complains":0,
-          "warn":0,
-          "imageURL":this.imageurlIn
-        });
-        }
+    if (true) {
+      _determinePosition();
+      lat = position.latitude;
+      long = position.longitude;
+      print(lat);
+      print(long);
+      FirebaseFirestore.instance.collection("worker").doc('$id').set({
+        "workerUID": this.workerUID,
+        "workerName": this.workerName,
+        "email": this.email,
+        "phone": this.phone,
+        "category": this.category,
+        "id": "$id",
+        "onReq": "false",
+        "status": "false",
+        'prevReq': 0,
+        "complains": 0,
+        "warn": 0,
+        "imageURL": this.imageurlIn,
+        "location": GeoPoint(lat, long)
+      });
+    }
 
-        return WorkerHomePage();
+    return WorkerHomePage();
   }
-
-
 }
 
-class customer extends StatelessWidget{
+class customer extends StatelessWidget {
   late final customerUID;
   late final customerName;
   late final email;
   late final phone;
   late final imageurlIn;
-  customer({this.customerUID,this.customerName,this.email,this.phone,this.imageurlIn});
+  customer(
+      {this.customerUID,
+      this.customerName,
+      this.email,
+      this.phone,
+      this.imageurlIn});
 
   @override
   Widget build(BuildContext context) {
-    if(true)
-    {
-      print(this.imageurlIn);
+    if (true) {
+      _determinePosition();
+      lat = position.latitude;
+      long = position.longitude;
+      print(lat);
+      print(long);
       FirebaseFirestore.instance.collection("customer").doc('$id').set({
-        "customerUID":this.customerUID,
-        "customerName":this.customerName,
-        "email":this.email,
-        "phone":this.phone,
-        "id":"$id",
-        "onReq":"false",
-        'prevReq':0,
-        "complain":0,
-        "warn":0,
-        "imageURL":this.imageurlIn
+        "customerUID": this.customerUID,
+        "customerName": this.customerName,
+        "email": this.email,
+        "phone": this.phone,
+        "id": "$id",
+        'prevReq': 0,
+        "complain": 0,
+        "warn": 0,
+        "imageURL": this.imageurlIn,
+        "location": GeoPoint(lat, long)
       });
     }
     return UserHomePage();
   }
-
 }

@@ -1,43 +1,62 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gp_1/workerPages/home_page.dart';
-import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
-import 'notification_page.dart';
+
+late globals.FireBase db = new globals.FireBase();
 
 class ComplainPage extends StatefulWidget {
   final Wid;
   final Cid;
   final Cname;
-  const ComplainPage({this.Wid,this.Cid,this.Cname,Key? key}) : super(key: key);
+  const ComplainPage({this.Wid, this.Cid, this.Cname, Key? key})
+      : super(key: key);
 
   @override
   State<ComplainPage> createState() => _ComplainPageState();
 }
+
 late dynamic complainId;
+
 class _ComplainPageState extends State<ComplainPage> {
   bool isRequested = false;
   var content;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _complainController = TextEditingController();
+  CollectionReference Customers = db.customer();
 
-  void editinfo(BuildContext context) async{
+  updateCustomerComplain() {
+    DocumentReference documentReference1 = Customers.doc(widget.Cid);
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot snapshot1 = await transaction.get(documentReference1);
+      if (!snapshot1.exists) {
+        throw Exception("User does not exist!");
+      }
+      int newWarnCount = snapshot1['complain'] + 1;
+      transaction.update(documentReference1, {'complain': newWarnCount});
+
+      return newWarnCount;
+    });
+  }
+
+  void editinfo(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      await FirebaseFirestore.instance.collection('workerComplains').doc('$complainId').set(
-          {
-            'customerId':widget.Cid,
-            'workerId':widget.Wid,
-            'content':content
-          });
+      await db.workerComplains().doc('$complainId').set({
+        'customerId': widget.Cid,
+        'workerId': widget.Wid,
+        'content': content
+      });
       print("complain added");
     }
   }
 
   @override
   void initState() {
-    complainId=DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
+    complainId =
+        DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,9 +134,9 @@ class _ComplainPageState extends State<ComplainPage> {
                       }
                       return null;
                     },
-                    onChanged: (val){
+                    onChanged: (val) {
                       setState(() {
-                        content=val;
+                        content = val;
                       });
                     },
                     style: const TextStyle(color: Colors.white),
@@ -149,6 +168,7 @@ class _ComplainPageState extends State<ComplainPage> {
                     children: [
                       MaterialButton(
                         onPressed: () {
+                          updateCustomerComplain();
                           editinfo(context);
                           Navigator.of(context)
                               .pushReplacement(MaterialPageRoute(

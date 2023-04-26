@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gp_1/workerPages/notification_page.dart';
-import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'User_complain_page.dart';
 import 'home_page.dart';
 
+late globals.FireBase db = new globals.FireBase();
+
 class UserOngoingRequestPage extends StatefulWidget {
   final id;
-  const UserOngoingRequestPage({this.id,Key? key}) : super(key: key);
+  const UserOngoingRequestPage({this.id, Key? key}) : super(key: key);
 
   @override
   State<UserOngoingRequestPage> createState() => _UserOngoingRequestPageState();
@@ -18,14 +18,13 @@ bool isRequested = false;
 var textforbutton = "Send Request";
 dynamic fontSize = 18.0;
 dynamic sizedBox = 15.0;
-late dynamic data={'':dynamic};
+late dynamic data = {'': dynamic};
+
 class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
-
-
-  getData()async{
-    QuerySnapshot usersSnapshot2 = await FirebaseFirestore.instance.collection("requests").doc(widget.id).get()
-        .then(
-          (DocumentSnapshot doc){
+  getData() async {
+    Stream<QuerySnapshot> usersSnapshot2 =
+        await db.requests().doc(widget.id).get().then(
+      (DocumentSnapshot doc) {
         setState(() {
           data = doc.data() as Map<String, dynamic>;
         });
@@ -35,11 +34,13 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
       onError: (e) => print("Error getting document: $e"),
     );
   }
+
   @override
   void initState() {
     getData();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -255,7 +256,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                           height: sizedBox,
                         ),
                         Text(
-                          "10 Minutes",
+                          "5 Minutes",
                           style: TextStyle(
                               fontSize: fontSize, fontWeight: FontWeight.w700),
                         ),
@@ -274,7 +275,8 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                     ),
                   ],
                 ),
-              )),
+              )
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -310,12 +312,13 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                               BorderRadius.circular(15.0),
                                         ),
                                         color: Colors.green,
-                                        onPressed: () async{
-                                          CollectionReference Noti = FirebaseFirestore.instance.collection('requests');
-                                          var response=await Noti.get();
+                                        onPressed: () async {
+                                          CollectionReference Noti =
+                                              db.requests();
+                                          var response = await Noti.get();
                                           response.docs.forEach((element) {
                                             setState(() {
-                                              if(element.id==widget.id) {
+                                              if (element.id == widget.id) {
                                                 Noti.doc(widget.id).delete();
                                               }
                                             });
@@ -483,7 +486,14 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                                         MaterialPageRoute(
                                                                   builder: (BuildContext
                                                                           context) =>
-                                                                      UserComplainPage(Cid:data['customerId'],Wid:data['workerId'],Wname: data['workerName'],),
+                                                                      UserComplainPage(
+                                                                    Cid: data[
+                                                                        'customerId'],
+                                                                    Wid: data[
+                                                                        'workerId'],
+                                                                    Wname: data[
+                                                                        'workerName'],
+                                                                  ),
                                                                 ));
                                                               },
                                                               child: Text(
@@ -577,12 +587,13 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                               BorderRadius.circular(15.0),
                                         ),
                                         color: Colors.green,
-                                        onPressed: () async{
-                                          CollectionReference Noti = FirebaseFirestore.instance.collection('requests');
-                                          var response=await Noti.get();
+                                        onPressed: () async {
+                                          CollectionReference Noti =
+                                              db.requests();
+                                          var response = await Noti.get();
                                           response.docs.forEach((element) {
                                             setState(() {
-                                              if(element.id==widget.id) {
+                                              if (element.id == widget.id) {
                                                 Noti.doc(widget.id).delete();
                                               }
                                             });

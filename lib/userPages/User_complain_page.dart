@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gp_1/workerPages/home_page.dart';
 import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'home_page.dart';
 import 'notification_page.dart';
 
+late globals.FireBase db = new globals.FireBase();
+
 class UserComplainPage extends StatefulWidget {
   final Cid;
   final Wid;
   final Wname;
-  const UserComplainPage({this.Cid,this.Wid,this.Wname,Key? key}) : super(key: key);
+  const UserComplainPage({this.Cid, this.Wid, this.Wname, Key? key})
+      : super(key: key);
 
   @override
   State<UserComplainPage> createState() => _UserComplainPageState();
@@ -20,23 +22,38 @@ class _UserComplainPageState extends State<UserComplainPage> {
   bool isRequested = false;
 
   final _formKey = GlobalKey<FormState>();
-  var content='';
+  var content = '';
   late dynamic complainId;
   final TextEditingController _complainController = TextEditingController();
+  CollectionReference Workers = db.worker();
+
+  updateWorkerComplain() {
+    DocumentReference documentReference1 = Workers.doc(widget.Wid);
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot snapshot1 = await transaction.get(documentReference1);
+      if (!snapshot1.exists) {
+        throw Exception("User does not exist!");
+      }
+      int newWarnCount = snapshot1['complains'] + 1;
+      transaction.update(documentReference1, {'complains': newWarnCount});
+      return newWarnCount;
+    });
+  }
 
   void editinfo(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
-      await FirebaseFirestore.instance.collection('customerComplains').doc('$complainId').set(
-          {
-            'customerId':widget.Cid,
-            'workerId':widget.Wid,
-            'content':content
-          });
+      await db.customerComplains().doc('$complainId').set({
+        'customerId': widget.Cid,
+        'workerId': widget.Wid,
+        'content': content
+      });
     }
   }
+
   @override
   void initState() {
-    complainId=DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
+    complainId =
+        DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
     super.initState();
   }
 
@@ -117,9 +134,9 @@ class _UserComplainPageState extends State<UserComplainPage> {
                       }
                       return null;
                     },
-                    onChanged: (val){
+                    onChanged: (val) {
                       setState(() {
-                        content=val;
+                        content = val;
                       });
                     },
                     style: const TextStyle(color: Colors.white),
@@ -151,22 +168,32 @@ class _UserComplainPageState extends State<UserComplainPage> {
                     children: [
                       MaterialButton(
                         onPressed: () {
+                          updateWorkerComplain();
                           editinfo(context);
                           showDialog<void>(
                             context: context,
                             builder: (BuildContext dialogContext) {
                               return AlertDialog(
                                 shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)
+                                    borderRadius: BorderRadius.circular(20)),
+                                title: Text(
+                                  'Note',
+                                  style: TextStyle(
+                                      color: Colors.indigo.shade900,
+                                      fontSize: 20),
                                 ),
-                                title: Text('Note',style:TextStyle(color: Colors.indigo.shade900,fontSize: 20),),
-                                content: Text('Complain Done Succefully',style: TextStyle(fontWeight: FontWeight.bold,fontSize: 20),),
+                                content: Text(
+                                  'Complain Done Succefully',
+                                  style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20),
+                                ),
                                 actions: <Widget>[
                                   MaterialButton(
                                     color: Colors.deepOrange,
                                     shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(15)
-                                    ),
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
                                     child: Text('Ok'),
                                     onPressed: () {
                                       Navigator.of(dialogContext)

@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:gp_1/userPages/filterd_page.dart';
 import 'package:gp_1/userPages/home_page.dart';
+
+late globals.FireBase db=new globals.FireBase();
 
 class WorkerInUserProfilePage extends StatefulWidget {
   final id;
@@ -15,17 +16,6 @@ class WorkerInUserProfilePage extends StatefulWidget {
 }
 bool favorit = false;
 bool isRequested= false;
-dynamic y=0;
-var textforbutton="Send Request";
-
-List posts = [
-  "https://cdn.accentuate.io/5804795035810/1669665007055/Photo-Gallery-4.jpg?v=1669665007055",
-  "https://cdn.accentuate.io/5804795035810/1669665007055/Photo-Gallery-4.jpg?v=1669665007055",
-  "https://cdn.accentuate.io/5804795035810/1669665007055/Photo-Gallery-4.jpg?v=1669665007055",
-  "https://cdn.accentuate.io/5804795035810/1669665007055/Photo-Gallery-4.jpg?v=1669665007055",
-  "https://cdn.accentuate.io/5804795035810/1669665007055/Photo-Gallery-4.jpg?v=1669665007055",
-  "https://cdn.accentuate.io/5804795035810/1669665007055/Photo-Gallery-4.jpg?v=1669665007055",
-];
 late dynamic reqId='';
 late dynamic Wid='';
 late dynamic Cid='';
@@ -41,11 +31,11 @@ late dynamic data={'':dynamic};
 late dynamic reqstatus='';
 class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
   List workers=[];
-  CollectionReference Workers = FirebaseFirestore.instance.collection('worker');
+  CollectionReference Workers = db.worker();
   List customer=[];
-  CollectionReference customers = FirebaseFirestore.instance.collection('customer');
+  CollectionReference customers = db.customer();
   List Request=[];
-  CollectionReference Requests = FirebaseFirestore.instance.collection('requests');
+  CollectionReference Requests = db.requests();
 
   getData()async{
     var response=await Workers.get();
@@ -81,7 +71,6 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
     });
     setState(() {
      reqstatus='';
-     print(reqstatus+"==============empty====================");
     });
     await Requests.where("customerId",isEqualTo:Cid).where("workerId",isEqualTo: Wid).get().then((value) {
       value.docs.forEach((element) {
@@ -89,7 +78,6 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
         {
           setState(() {
             reqId=element.id;
-            print(reqstatus+"=================دخل=====");
             reqstatus=element['reqStatus'];
             return reqstatus;
           });
@@ -105,9 +93,9 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
     });
     setState(() {
       if(reqstatus==null)
-        print("====================لا=============");
+        reqstatus='';
     });
-    QuerySnapshot usersSnapshot = await Workers.doc(widget.id).get().then(
+    Stream<QuerySnapshot> usersSnapshot = await Workers.doc(widget.id).get().then(
           (DocumentSnapshot doc){
             setState(() {
               data = doc.data() as Map<String, dynamic>;
@@ -120,9 +108,36 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
     
   }
 
+  updateWorkerReq(){
+    DocumentReference documentReference1=Workers.doc(Wid);
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot snapshot1 = await transaction.get(documentReference1);
+      if (!snapshot1.exists) {
+        throw Exception("User does not exist!");
+      }
+      int newWarnCount = snapshot1['prevReq']+1;
+      transaction.update(documentReference1, {'prevReq': newWarnCount});
+
+      return newWarnCount;
+    });
+  }
+  updateCustomerReq(){
+    DocumentReference documentReference2=customers.doc(Cid);
+    FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot snapshot1 = await transaction.get(documentReference2);
+      if (!snapshot1.exists) {
+        throw Exception("User does not exist!");
+      }
+      int newWarnCount = snapshot1['prevReq']+1;
+      transaction.update(documentReference2, {'prevReq': newWarnCount});
+
+      return newWarnCount;
+    });
+  }
+
   @override
   void initState() {
-    uid=FirebaseAuth.instance.currentUser?.uid;
+    uid=db.Uid();
     getData();
     super.initState();
   }
@@ -154,7 +169,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
           }));
         },),
       ),
-      body:  workers==null||workers.isEmpty
+      body:workers.isEmpty
           ?Container(child:Center(child: Text("Loading",style: TextStyle(color: Colors.indigo.shade900,fontSize: 35),),),)
           :StreamBuilder(
           stream:Workers.doc(widget.id).get().asStream(),
@@ -190,7 +205,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                               padding: const EdgeInsets.all(15.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
-                                child: Image.network("${data['imageURL']}",fit: BoxFit.fill,width: 110,height: 180,
+                                child: Image.network("${data['imageURL']}",fit: BoxFit.fill,width: 109,height: 180,
                                 ),
                               ),
                             ),
@@ -260,7 +275,8 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                                         'workerPhone':Wphone,
                                                         'workerImage':Wimage
                                                       }
-                                                      );
+                                                    );
+
                                                       setState(() {
                                                         getData();
                                                       });

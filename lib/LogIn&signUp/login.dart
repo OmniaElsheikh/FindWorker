@@ -6,8 +6,8 @@ import '../userPages/home_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 
 import '../workerPages/home_page.dart';
-late dynamic Wid;
-late dynamic Cid;
+late dynamic Wid='';
+late dynamic Cid='';
 late dynamic uid;
 late dynamic data;
 class LoginPage extends StatefulWidget {
@@ -53,7 +53,33 @@ class _LoginPageState extends State<LoginPage> {
           )
           );
         }
+        else if(Wid==''){
+          showDialog(
+              context: context, builder: (context){
+            return AlertDialog(
 
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)
+              ),
+              icon: Icon(Icons.warning,color: Colors.red,size: 30,),
+              title: Text("Warning",style: TextStyle(color: Colors.red,fontSize: 30),),
+              content: Text("You Are Not A User Or You Are Blocked",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
+              actions: [
+                MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)
+                  ),
+                  color: Colors.deepOrange,
+                  onPressed: (){
+                    Navigator.of(context).popAndPushNamed('login');
+                  },
+                  child: Text("Ok"),
+                )
+              ],
+            );
+          });
+         // Navigator.of(context).popAndPushNamed('login');
+        }
       });
     });
 
@@ -63,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
           setState(() {
             if(element['customerUID']==uid) {
               workers.add(element['id']);
-              Wid=element['id'];
+              Cid=element['id'];
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
                 return UserHomePage();
@@ -71,7 +97,32 @@ class _LoginPageState extends State<LoginPage> {
               )
               );
             }
-
+            else if(Cid==''){
+              showDialog(
+                  context: context, builder: (context){
+                return AlertDialog(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)
+                  ),
+                  icon: Icon(Icons.warning,color: Colors.red,size: 30,),
+                  title: Text("Warning",style: TextStyle(color: Colors.red,fontSize: 30),),
+                  content: Text("You Are Not A User Or You Are Blocked",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
+                  actions: [
+                    MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)
+                      ),
+                      color: Colors.deepOrange,
+                      onPressed: (){
+                        Navigator.of(context).popAndPushNamed('login');
+                      },
+                      child: Text("Ok"),
+                    )
+                  ],
+                );
+              });
+              //Navigator.of(context).popAndPushNamed('login');
+            }
           });
         });
       }
@@ -82,14 +133,13 @@ class _LoginPageState extends State<LoginPage> {
   // Sign In Function
   void login()async {
     if (_formKey.currentState!.validate()) {
-
       try {
         userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: email,
             password: password
         );
         uid = FirebaseAuth.instance.currentUser?.uid;
-        getData();
+        await getData();
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           print('No user found for that email.');
