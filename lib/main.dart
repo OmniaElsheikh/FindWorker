@@ -11,6 +11,7 @@ import 'package:gp_1/LogIn&signUp/login.dart';
 import 'package:gp_1/userPages/worker_profile_page.dart';
 import 'package:gp_1/userPages/user_setting_page.dart';
 import 'package:gp_1/workerPages/complain_page.dart';
+import 'package:gp_1/workerPages/worker_categories_page.dart';
 import 'package:gp_1/workerPages/notification_page.dart';
 import 'package:gp_1/workerPages/ongoingReq_page.dart';
 import 'package:gp_1/workerPages/setting_page.dart';
@@ -64,7 +65,9 @@ class _MyAppState extends State<MyApp> {
       if (element['workerUID'] == uid) {
         workers.add(element['id']);
         Wid = element['id'];
-        globals.isUser = false;
+        setState(() {
+          globals.isUser = false;
+        });
         print("==========================================");
         print('is worker');
         print("==========================================");
@@ -109,7 +112,7 @@ class _MyAppState extends State<MyApp> {
         "workerNotificationPage": (context) => NotificationPage(),
         "workeComplainPage": (context) => ComplainPage(),
         "workerOngoingRequestPage": (context) => OngoingRequestPage(),
-        "workerCategoriesPage": (context) => WorkerCategoriesPage(),
+        "workerCategoriesPage": (context) => workerCategoriesPage(),
         "customerHomePage": (context) => UserHomePage(),
         "customerProfilePage": (context) => UserProfile(),
         "customerSettingPage": (context) => UserSettingPage(),

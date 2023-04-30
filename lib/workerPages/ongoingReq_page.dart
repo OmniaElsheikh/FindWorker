@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'complain_page.dart';
 import 'home_page.dart';
@@ -15,7 +16,7 @@ class OngoingRequestPage extends StatefulWidget {
 }
 
 bool isRequested = false;
-var textforbutton = "Send Request";
+dynamic whereToUpdate=true;
 dynamic fontSize = 18.0;
 dynamic sizedBox = 15.0;
 late dynamic data = {'': dynamic};
@@ -33,6 +34,38 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
       },
       onError: (e) => print("Error getting document: $e"),
     );
+  }
+  List workers = [];
+  CollectionReference Workers = db.worker();
+  List customers = [];
+  CollectionReference Customers = db.customer();
+
+  updateRate(New,Old,Id)async{
+    double rate=(New+Old)/2.0;
+    var Wresponse = await Workers.get();
+    var Cresponse = await Customers.get();
+    Wresponse.docs.forEach((element) {
+      if (element['id'] == Id) {
+        Workers.doc(Id).update({
+          'rate':rate
+        });
+        print("==========================================");
+        print('is worker');
+        print("==========================================");
+      }
+    });
+    Cresponse.docs.forEach((element) {
+      if (element['id'] == Id) {
+        Customers.doc(Id).update({
+          'rate':rate
+        });
+        print("==========================================");
+        print('is customer');
+        print("==========================================");
+        print('done rate update for customer');
+      }
+    });
+
   }
 
   @override
@@ -361,6 +394,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                       ),
                                                       Expanded(
                                                         child: Container(
+                                                          height:35,
                                                           child: Text(
                                                             "Name : ${data['customerName']}",
                                                             style: TextStyle(
@@ -371,57 +405,52 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                           ),
                                                           margin: EdgeInsets
                                                               .symmetric(
-                                                                  vertical: 20),
+                                                                  vertical: 5),
                                                         ),
                                                       ),
                                                       Expanded(
                                                         child: Row(
                                                           mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .center,
+                                                          MainAxisAlignment
+                                                              .center,
                                                           children: [
                                                             Text(
-                                                              "Rate : 7.5",
+                                                              "Rate : ${data['customerRate']}",
                                                               style: TextStyle(
                                                                   fontWeight:
-                                                                      FontWeight
-                                                                          .bold,
+                                                                  FontWeight
+                                                                      .bold,
                                                                   fontSize: 15),
                                                             ),
                                                             SizedBox(width: 10),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                              size: 20,
-                                                            ),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                              size: 20,
-                                                            ),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                              size: 20,
-                                                            ),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                              size: 20,
-                                                            ),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color:
-                                                                  Colors.grey,
-                                                              size: 20,
-                                                            ),
+
                                                           ],
                                                         ),
                                                       ),
+                                                      Expanded(child:Container(
+                                                        width: 160,
+                                                        height: 70,
+                                                        child: Column(
+                                                          children: [
+                                                            RatingBar.builder(
+                                                                updateOnDrag: true,
+                                                                itemSize:25,
+                                                                glowColor:Colors.amber,
+                                                                itemPadding: EdgeInsets.symmetric(horizontal: 4),
+                                                                initialRating: data['customerRate'].toDouble(),
+                                                                itemCount: 5,
+                                                                itemBuilder: (context,i){
+                                                                  return Icon(Icons.star,size:5,color:Colors.grey);
+                                                                },
+                                                                onRatingUpdate: (newRating){
+                                                                  setState(() {
+                                                                    updateRate(newRating.toDouble(),data['customerRate'].toDouble(),data['customerId']);
+                                                                  });
+                                                                }
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ))
                                                     ],
                                                   )),
                                                   actions: [

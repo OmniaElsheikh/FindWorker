@@ -184,6 +184,17 @@ class _NotificationsState extends State<Notifications> {
                                                   color: Colors.deepOrange),
                                             ),
                                           ),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 20.0),
+                                            child: Text(
+                                              "Rate : ${snapshot.data?.docs[i]['workerRate']}",
+                                              style: TextStyle(
+                                                  fontSize: 30,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.indigo.shade900),
+                                            ),
+                                          ),
                                         ],
                                       ),
                                     ),

@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:gp_1/userPages/filterd_page.dart';
 import 'package:gp_1/userPages/home_page.dart';
+import 'package:gp_1/workerPages/worker_filterd_page.dart';
+
+import 'home_page.dart';
 
 late globals.FireBase db=new globals.FireBase();
 
-class WorkerInUserProfilePage extends StatefulWidget {
+class WorkerInWorkerProfilePage extends StatefulWidget {
   final id;
   final cateName;
-  const WorkerInUserProfilePage({this.id,this.cateName,Key? key}) : super(key: key);
+  const WorkerInWorkerProfilePage({this.id,this.cateName,Key? key}) : super(key: key);
 
   @override
-  State<WorkerInUserProfilePage> createState() => _WorkerInUserProfilePageState();
+  State<WorkerInWorkerProfilePage> createState() => _WorkerInWorkerProfilePageState();
 }
 bool favorit = false;
 bool isRequested= false;
@@ -31,11 +34,11 @@ late dynamic Crate=0;
 late dynamic uid;
 late dynamic data={'':dynamic};
 late dynamic reqstatus='';
-class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
+class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
   List workers=[];
   CollectionReference Workers = db.worker();
   List customer=[];
-  CollectionReference customers = db.customer();
+  CollectionReference customers = db.worker();
   List Request=[];
   CollectionReference Requests = db.requests();
 
@@ -61,10 +64,10 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
     var response1=await customers.get();
     response1.docs.forEach((element) {
       setState(() {
-        if(element['customerUID']==uid) {
+        if(element['workerUID']==uid) {
           setState(() {
             Cid=element['id'];
-            Cname=element['customerName'];
+            Cname=element['workerName'];
             Cphone=element['phone'];
             Cimage=element['imageURL'];
             Crate=element['rate'];
@@ -166,10 +169,10 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
         :IconButton(icon: Icon(Icons.arrow_back),color: Colors.deepOrange,onPressed: (){
           widget.cateName!=null
           ?Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
-            return FilterdPage(cateName: widget.cateName,);
+            return WorkerFilterdPage(cateName: widget.cateName,);
           }))
           :Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
-            return UserHomePage();
+            return WorkerHomePage();
           }));
         },),
       ),

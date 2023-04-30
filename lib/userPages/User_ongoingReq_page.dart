@@ -1,5 +1,7 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'User_complain_page.dart';
 import 'home_page.dart';
@@ -33,6 +35,13 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
       },
       onError: (e) => print("Error getting document: $e"),
     );
+  }
+  updateRate(New,Old,Id){
+    double rate=(New+Old)/2.0;
+    FirebaseFirestore.instance.collection('worker').doc(data['workerId']).update({
+      'rate':rate
+    });
+    print('done rate update');
   }
 
   @override
@@ -360,6 +369,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                       ),
                                                       Expanded(
                                                         child: Container(
+                                                          height:35,
                                                           child: Text(
                                                             "Name : ${data['workerName']}",
                                                             style: TextStyle(
@@ -370,7 +380,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                           ),
                                                           margin: EdgeInsets
                                                               .symmetric(
-                                                                  vertical: 20),
+                                                                  vertical: 5),
                                                         ),
                                                       ),
                                                       Expanded(
@@ -380,7 +390,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                                   .center,
                                                           children: [
                                                             Text(
-                                                              "Rate : 7.5",
+                                                              "Rate : ${data['workerRate']}",
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -388,39 +398,32 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                                   fontSize: 15),
                                                             ),
                                                             SizedBox(width: 10),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                              size: 20,
-                                                            ),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                              size: 20,
-                                                            ),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                              size: 20,
-                                                            ),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: Colors
-                                                                  .deepOrange,
-                                                              size: 20,
-                                                            ),
-                                                            Icon(
-                                                              Icons.star,
-                                                              color:
-                                                                  Colors.grey,
-                                                              size: 20,
-                                                            ),
                                                           ],
                                                         ),
                                                       ),
+                                                      Expanded(child:Container(
+                                                        width: 150,
+                                                        height: 70,
+                                                        child: Column(
+                                                          children: [
+                                                            RatingBar.builder(
+                                                                updateOnDrag: true,
+                                                                itemSize:25,
+                                                                itemPadding: EdgeInsets.symmetric(horizontal: 1),
+                                                                initialRating: data['workerRate'].toDouble(),
+                                                                itemCount: 5,
+                                                                itemBuilder: (context,i){
+                                                                  return Icon(Icons.star,size:1,color:Colors.grey);
+                                                                },
+                                                                onRatingUpdate: (newRating){
+                                                                  setState(() {
+                                                                    updateRate(newRating,data['workerRate'].toDouble(),data['workerId']);
+                                                                  });
+                                                                }
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ))
                                                     ],
                                                   )),
                                                   actions: [

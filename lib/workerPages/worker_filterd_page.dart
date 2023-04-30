@@ -1,31 +1,35 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:gp_1/userPages/home_page.dart';
 import 'package:gp_1/userPages/worker_profile_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import 'package:gp_1/workerPages/workerINworker_profile_page.dart';
+
+import 'home_page.dart';
 
 late globals.FireBase db = new globals.FireBase();
 
-class FilterdPage extends StatefulWidget {
+class WorkerFilterdPage extends StatefulWidget {
   final cateName;
-  const FilterdPage({this.cateName, Key? key}) : super(key: key);
+  const WorkerFilterdPage({this.cateName, Key? key}) : super(key: key);
 
   @override
-  State<FilterdPage> createState() => _FilterdPageState();
+  State<WorkerFilterdPage> createState() => _WorkerFilterdPageState();
 }
 
 late dynamic data='';
 late dynamic id = '';
 late dynamic uid;
 
-class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
-  CollectionReference Customers = db.customer();
+class _WorkerFilterdPageState extends State<WorkerFilterdPage> with WidgetsBindingObserver {
+  CollectionReference Customers = db.worker();
   getData() async {
     var response = await Customers.get();
     response.docs.forEach((element) {
       setState(() {
-        if (element['customerUID'] == uid) {
+        if (element['workerUID'] == uid) {
           id = element['id'];
           data=element['location'];
         }
@@ -67,7 +71,7 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
             onPressed: () {
               Navigator.of(context)
                   .pushReplacement(MaterialPageRoute(builder: (context) {
-                return UserHomePage();
+                return WorkerHomePage();
               }));
             },
           ),
@@ -84,10 +88,9 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
         ),
         body: StreamBuilder<QuerySnapshot>(
             key: UniqueKey(),
-            stream: db
-                .worker()
+            stream:FirebaseFirestore.instance.collection('worker')
                 .where("category", isEqualTo: widget.cateName.toString())
-                .where("status", isEqualTo: "true").orderBy("rate",descending: true)
+                .where("status", isEqualTo: "true").where("id",isNotEqualTo:"$id" ).orderBy('id').orderBy("rate",descending: true)
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -183,7 +186,7 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
                               Navigator.of(context)
                                   .pushReplacement(MaterialPageRoute(
                                 builder: (context) {
-                                  return WorkerInUserProfilePage(
+                                  return WorkerInWorkerProfilePage(
                                       id: snapshot.data?.docs[i]['id'],
                                       cateName: widget.cateName);
                                 },

@@ -139,9 +139,6 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
           ),
         ),
         actions: [
-          SizedBox(
-            width: 5,
-          ),
           Container(
             padding: EdgeInsets.only(top: 5, right: 5),
             height: 30,
@@ -170,6 +167,35 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
               ],
             ),
           ),
+          IconButton(onPressed: (){
+            showDialog(context: context, builder: (context){
+
+              return AlertDialog(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                icon:Icon(Icons.info_outline,color:Colors.deepOrange,size:50),
+                title:Text("Info About Active Button",style:TextStyle(fontSize:25,color:Colors.indigo.shade900)),
+                content:Text("When you Press this button you become active/disactive"
+                    "and thats controls whether you want to be available to the users and show up"
+                    "in filteration results or not",style:TextStyle(fontSize: 15,color:Colors.indigo.shade900)),
+                actions: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      MaterialButton(
+                          shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                          color:Colors.white,
+                          minWidth:40,
+                          onPressed: (){
+                            Navigator.of(context).pop();
+                          },
+                          child:Text("Ok",style: TextStyle(color:Colors.deepOrange),)
+                      )
+                    ],
+                  )
+                ],
+              );
+            });
+          }, icon: Icon(Icons.info_outline,color:Colors.deepOrange)),
         ],
       ),
       body: workers.isEmpty || data == null
@@ -259,17 +285,14 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                       ),
                                     ),
                                     Text(
-                                      "${data['category']}",
+                                      "Category : ${data['category']}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
                                     Text(
-                                      "${data['phone']}",
+                                      "Phone : ${data['phone']}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
@@ -289,7 +312,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "9.5",
+                                          "Rate : ${data['rate']}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
@@ -309,7 +332,9 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                         Container(
                                           width: 200,
                                           child: MaterialButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              workerCategoriesPage();
+                                            },
                                             height: 50,
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
@@ -319,6 +344,9 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                               padding: const EdgeInsets.symmetric(
                                                   vertical: 5),
                                               child: InkWell(
+                                                onTap: (){
+                                                  Navigator.of(context).pushNamed("workerCategoriesPage");
+                                                },
                                                 child: Column(
                                                   children: [
                                                     Icon(
@@ -338,14 +366,6 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                                     ),
                                                   ],
                                                 ),
-                                                onTap: () {
-                                                  setState(() {});
-                                                  Navigator.of(context).push(
-                                                      MaterialPageRoute(
-                                                          builder: (context) {
-                                                    return WorkerCategoriesPage();
-                                                  }));
-                                                },
                                               ),
                                             ),
                                           ),
@@ -680,3 +700,4 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
     );
   }
 }
+

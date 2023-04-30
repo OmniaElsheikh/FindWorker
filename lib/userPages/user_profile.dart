@@ -214,7 +214,7 @@ class _UserProfileState extends State<UserProfile> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "9.5",
+                                          "Rate : ${data['rate']}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
