@@ -60,7 +60,6 @@ Future<Position> _determinePosition() async {
       desiredAccuracy: LocationAccuracy.low);
 }
 
-late List<dynamic> items = ['Carpenter', 'Black Smith', 'Engineer', 'Plumber'];
 
 class _SignupPageState extends State<SignupPage> {
   late List<dynamic> categorie = [];
@@ -106,6 +105,7 @@ class _SignupPageState extends State<SignupPage> {
   Future<void> signup(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
+      bool normalEmail=validateEmail(email);
       try {
         if(position==null)
           {

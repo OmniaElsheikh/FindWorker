@@ -435,6 +435,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                             RatingBar.builder(
                                                                 updateOnDrag: true,
                                                                 itemSize:25,
+                                                                minRating:1,
+                                                                allowHalfRating:true,
                                                                 glowColor:Colors.amber,
                                                                 itemPadding: EdgeInsets.symmetric(horizontal: 4),
                                                                 initialRating: data['customerRate'].toDouble(),
@@ -541,7 +543,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                               });
                                         },
                                         child: Text(
-                                          "End",
+                                          "Done",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),

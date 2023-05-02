@@ -409,6 +409,8 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                             RatingBar.builder(
                                                                 updateOnDrag: true,
                                                                 itemSize:25,
+                                                                minRating:1,
+                                                                allowHalfRating:true,
                                                                 itemPadding: EdgeInsets.symmetric(horizontal: 1),
                                                                 initialRating: data['workerRate'].toDouble(),
                                                                 itemCount: 5,
@@ -517,7 +519,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                               });
                                         },
                                         child: Text(
-                                          "End",
+                                          "Done",
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),
