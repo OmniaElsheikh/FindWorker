@@ -1,4 +1,8 @@
 import 'dart:io';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:gp_1/controller/localization_service.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -7,6 +11,9 @@ import 'package:gp_1/LogIn&signUp/login.dart';
 import 'package:gp_1/workerPages/home_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../t_key.dart';
 
 late globals.FireBase db = new globals.FireBase();
 
@@ -111,6 +118,8 @@ class _SettingPageState extends State<SettingPage> {
     }
   }
 
+  final localizationController=Get.find<LocalizationController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -124,7 +133,7 @@ class _SettingPageState extends State<SettingPage> {
             )),
         title: Center(
           child: Text(
-            "Edit Info",
+            TKeys.WeditInfoTitle.translate(context),
             style: TextStyle(
                 color: Colors.deepOrange,
                 fontSize: 25,
@@ -151,9 +160,9 @@ class _SettingPageState extends State<SettingPage> {
       body: Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-          image: AssetImage(globals.BGImg),
-          fit: BoxFit.fill,
-        )),
+              image: AssetImage(globals.BGImg),
+              fit: BoxFit.fill,
+            )),
         child: ListView(children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -179,7 +188,7 @@ class _SettingPageState extends State<SettingPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: 'Enter Your Name',
+                          hintText: TKeys.WsettingNameField.translate(context),
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -211,7 +220,7 @@ class _SettingPageState extends State<SettingPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: 'Enter your phone Number',
+                          hintText: TKeys.WsettingPhoneFiled.translate(context),
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -240,7 +249,7 @@ class _SettingPageState extends State<SettingPage> {
                       width: double.infinity,
                       child: DropdownButton(
                         hint: Text(
-                          "Select you category",
+                          TKeys.WsettingCategoryButton.translate(context),
                           style: TextStyle(
                               color: Colors.indigo[900],
                               fontWeight: FontWeight.bold),
@@ -252,14 +261,14 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                         items: categorie
                             .map((item) => DropdownMenuItem(
-                                  child: Text(
-                                    "$item",
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.indigo[900]),
-                                  ),
-                                  value: item,
-                                ))
+                          child: Text(
+                            "$item",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.indigo[900]),
+                          ),
+                          value: item,
+                        ))
                             .toList(),
                         onChanged: (val) {
                           setState(() {
@@ -280,13 +289,13 @@ class _SettingPageState extends State<SettingPage> {
                                 return Container(
                                   color: Colors.grey.withOpacity(0.7),
                                   padding: EdgeInsets.all(15),
-                                  height: 170,
+                                  height: 225,
                                   child: Column(
                                     crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Please Choose Image",
+                                        TKeys.WuploadPhotos.translate(context),
                                         style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold),
@@ -299,7 +308,7 @@ class _SettingPageState extends State<SettingPage> {
                                         onTap: () async {
                                           var picked = await ImagePicker()
                                               .pickImage(
-                                                  source: ImageSource.gallery);
+                                              source: ImageSource.gallery);
                                           if (picked != null) {
                                             setState(() {
                                               file = File(picked.path);
@@ -331,10 +340,10 @@ class _SettingPageState extends State<SettingPage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                "From Gallary",
+                                                TKeys.WphotoFromGal.translate(context),
                                                 style: TextStyle(
                                                     color:
-                                                        Colors.indigo.shade900,
+                                                    Colors.indigo.shade900,
                                                     fontSize: 25),
                                               )
                                             ],
@@ -350,7 +359,7 @@ class _SettingPageState extends State<SettingPage> {
                                         onTap: () async {
                                           var picked = await ImagePicker()
                                               .pickImage(
-                                                  source: ImageSource.camera);
+                                              source: ImageSource.camera);
                                           if (picked != null) {
                                             setState(() {
                                               file = File(picked.path);
@@ -382,10 +391,10 @@ class _SettingPageState extends State<SettingPage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                "From Camera",
+                                                TKeys.WphotoFromCam.translate(context),
                                                 style: TextStyle(
                                                     color:
-                                                        Colors.indigo.shade900,
+                                                    Colors.indigo.shade900,
                                                     fontSize: 25),
                                               )
                                             ],
@@ -398,10 +407,11 @@ class _SettingPageState extends State<SettingPage> {
                               });
                         },
                         child: Text(
-                          "Edit Image",
+                          TKeys.WsettingEditImageButoon.translate(context),
                           style:
-                              TextStyle(color: Colors.deepOrange, fontSize: 20),
+                          TextStyle(color: Colors.deepOrange, fontSize: 20),
                         )),
+
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -417,7 +427,7 @@ class _SettingPageState extends State<SettingPage> {
                           ),
                           child: Center(
                             child: Text(
-                              'Done',
+                              TKeys.WsettingDoneButton.translate(context),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,
@@ -428,7 +438,24 @@ class _SettingPageState extends State<SettingPage> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(height: 40),
+                    Padding(
+                        padding: EdgeInsets.all(8),
+                        child:Container(
+                          height:100,
+                          child: Column(children: [
+                            Text(TKeys.WchangeLangTitle.translate(context),style: TextStyle(color:Colors.white,fontSize: 20),),
+                            SizedBox(height: 5,),
+                            Row(children: [
+                              Expanded(child: MaterialButton(onPressed: (){
+                                setState(() {
+                                  localizationController.toggleLanguge();
+                                });
+                              },shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),color: Colors.white,child: Text(TKeys.WsettingLanguageButton.translate(context),style: TextStyle(color: Colors.deepOrange),),)),
+                            ],)
+                          ],),
+                        )
+                    ),
                   ],
                 ),
               ),
@@ -437,5 +464,7 @@ class _SettingPageState extends State<SettingPage> {
         ]),
       ),
     );
+
+
   }
 }

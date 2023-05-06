@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/LogIn&signUp/login.dart';
+import 'package:gp_1/t_key.dart';
 import 'package:gp_1/userPages/worker_profile_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import '../controller/localization_service.dart';
 import 'filterd_page.dart';
 
 late globals.FireBase db = new globals.FireBase();
@@ -52,6 +56,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
       });
     });
   }
+  final localizationController=Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +75,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
         ),
         title: Center(
             child: Text(
-          "Categories",
+          TKeys.WcategoriesTitle.translate(context),
           style: TextStyle(color: Colors.deepOrange),
         )),
         actions: [
@@ -187,7 +192,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
 }
 
 class DataSearch extends SearchDelegate {
-  List workers = ["motasem mohamed", "omnia", "sheka"];
 
   @override
   List<Widget>? buildActions(BuildContext context) {

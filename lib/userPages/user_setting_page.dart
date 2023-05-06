@@ -1,10 +1,14 @@
 import 'dart:io';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 import 'home_page.dart';
 
 late globals.FireBase db = new globals.FireBase();
@@ -89,6 +93,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
       }
     }
   }
+  final localizationController=Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -103,7 +108,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
             )),
         title: Center(
           child: Text(
-            "Edit Info",
+            TKeys.WeditInfoTitle.translate(context),
             style: TextStyle(
                 color: Colors.deepOrange,
                 fontSize: 25,
@@ -150,7 +155,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: 'Enter Your Name',
+                          hintText: '${TKeys.WsettingNameField.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -182,7 +187,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: 'Enter your phone Number',
+                          hintText: '${TKeys.WsettingPhoneFiled.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -210,13 +215,13 @@ class _UserSettingPageState extends State<UserSettingPage> {
                                 return Container(
                                   color: Colors.grey.withOpacity(0.7),
                                   padding: EdgeInsets.all(15),
-                                  height: 170,
+                                  height: 225,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Please Choose Image",
+                                        TKeys.WuploadPhotos.translate(context),
                                         style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold),
@@ -261,7 +266,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                "From Gallary",
+                                                TKeys.WphotoFromGal.translate(context),
                                                 style: TextStyle(
                                                     color:
                                                         Colors.indigo.shade900,
@@ -312,7 +317,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                "From Camera",
+                                                TKeys.WphotoFromCam.translate(context),
                                                 style: TextStyle(
                                                     color:
                                                         Colors.indigo.shade900,
@@ -328,7 +333,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
                               });
                         },
                         child: Text(
-                          "Edit Image",
+                          TKeys.WsettingEditImageButoon.translate(context),
                           style:
                               TextStyle(color: Colors.deepOrange, fontSize: 20),
                         )),
@@ -347,7 +352,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
                           ),
                           child: Center(
                             child: Text(
-                              'Done',
+                              TKeys.WsettingDoneButton.translate(context),
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 18,

@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/LogIn&signUp/login.dart';
 import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 import 'ongoingReq_page.dart';
 
 late globals.FireBase db=new globals.FireBase();
@@ -97,6 +101,8 @@ class _NotificationPageState extends State<NotificationPage> {
     getData();
     super.initState();
   }
+  final localizationController=Get.find<LocalizationController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,7 +116,7 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         title: Center(
           child: Text(
-            "Notifications",
+            TKeys.WnotificationTitle.translate(context),
             style: TextStyle(
                 color: Colors.deepOrange,
                 fontSize: 25,
@@ -151,7 +157,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 return ListView.separated(
                   shrinkWrap: true,
                     itemBuilder: (context,i)=>Container(
-                    height: 100,
+                    height: 115,
                     margin: EdgeInsets.symmetric(vertical: 10),
                     padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                     decoration: BoxDecoration(
@@ -178,14 +184,14 @@ class _NotificationPageState extends State<NotificationPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?"Incoming Request":"Ongoing Request",style: TextStyle(color: Colors.indigo[900],fontSize: 15),),
+                              Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?TKeys.WnotiIncomingReq.translate(context):TKeys.WnotiOngoingReq.translate(context),style: TextStyle(color: Colors.red.shade200,fontSize: 15),),
                               Text("Name : ${snapshot.data?.docs[i]['customerName']}",style: TextStyle(color: Colors.black)),
                               MaterialButton(
                                   onPressed: (){
                                     showBottomSheet(backgroundColor:Colors.black26.withOpacity(0.5),context: context, builder: (context){
                                       return AlertDialog(
                                         backgroundColor: Colors.grey[500],
-                                        title: Text("Client's Details"),
+                                        title: Text(TKeys.WnotiMoreInfoTitle.translate(context)),
                                         shape: RoundedRectangleBorder(
                                             borderRadius: BorderRadius.circular(40)
                                         ),
@@ -216,7 +222,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                     Icon(Icons.star, color: Colors.deepOrange,size: 20,),
                                                     SizedBox(width: 5),
                                                     Text(
-                                                      "Rate : ${snapshot.data?.docs[i]['customerRate']}",
+                                                      "Rate : ${snapshot.data?.docs[i]['customerRate'].toStringAsFixed(2)}",
                                                       style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
                                                     ),
                                                   ],
@@ -248,7 +254,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                 onPressed: (){
                                                   Navigator.of(context).pop();
                                                 },
-                                                child: Text("Ok",style: TextStyle(color: Colors.white,fontSize: 20),),
+                                                child: Text(TKeys.WnotiMoreInfoOkButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 20),),
                                               ),
                                               SizedBox(width: 10,),
                                             ],
@@ -264,7 +270,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                 ),
                                 height: 30,
                                 color: Colors.indigo,
-                                child: Text("More info",style: TextStyle(color: Colors.white),),
+                                child: Text(TKeys.WnotiMoreInfoButton.translate(context),style: TextStyle(color: Colors.white),),
                               )
                             ],
                           ),
@@ -289,7 +295,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                   builder: (BuildContext context) =>OngoingRequestPage(id:snapshot.data?.docs[i].id),));
 
                               },
-                              child: Text("Accept",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
+                              child: Text(TKeys.WnotiAcceptReq.translate(context),style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
                             ),
                           ):Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.white,fontSize: 18),),
                           SizedBox(width: 5,),
@@ -307,7 +313,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                   deleteNoti(snapshot.data?.docs[i].id);
                                 });
                               },
-                              child: Text("Refuse",style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
+                              child: Text(TKeys.WnotiRefuseReq.translate(context),style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
                             ),
                           ):Expanded(child: Container()),
 
@@ -334,7 +340,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   return ListView.separated(
                       shrinkWrap: true,
                       itemBuilder: (context,i)=>Container(
-                        height: 100,
+                        height: 115,
                         margin: EdgeInsets.symmetric(vertical: 10),
                         padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                         decoration: BoxDecoration(
@@ -361,14 +367,14 @@ class _NotificationPageState extends State<NotificationPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?"Sending Request":"Ongoing Request",style: TextStyle(color: Colors.indigo[900],fontSize: 15),),
+                                  Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?TKeys.WnotiSendingReq.translate(context):TKeys.WnotiOngoingReq.translate(context),style: TextStyle(color: Colors.red.shade200,fontSize: 15),),
                                   Text("Worker Name : ${snapshot.data?.docs[i]['workerName']}",style: TextStyle(color: Colors.black)),
                                   MaterialButton(
                                     onPressed: (){
                                       showBottomSheet(backgroundColor:Colors.black26.withOpacity(0.5),context: context, builder: (context){
                                         return AlertDialog(
                                           backgroundColor: Colors.grey[500],
-                                          title: Text("Client's Details"),
+                                          title: Text(TKeys.WnotiMoreInfoTitle.translate(context)),
                                           shape: RoundedRectangleBorder(
                                               borderRadius: BorderRadius.circular(40)
                                           ),
@@ -399,7 +405,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                       Icon(Icons.star, color: Colors.deepOrange,size: 20,),
                                                       SizedBox(width: 5),
                                                       Text(
-                                                        "Rate : ${snapshot.data?.docs[i]['workerRate']}",
+                                                        "Rate : ${snapshot.data?.docs[i]['workerRate'].toStringAsFixed(2)}",
                                                         style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
                                                       ),
                                                     ],
@@ -431,7 +437,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                   onPressed: (){
                                                     Navigator.of(context).pop();
                                                   },
-                                                  child: Text("Ok",style: TextStyle(color: Colors.white,fontSize: 20),),
+                                                  child: Text(TKeys.WnotiMoreInfoOkButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 20),),
                                                 ),
                                                 SizedBox(width: 10,),
                                               ],
@@ -447,7 +453,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                     ),
                                     height: 30,
                                     color: Colors.indigo,
-                                    child: Text("More info",style: TextStyle(color: Colors.white),),
+                                    child: Text(TKeys.WnotiMoreInfoButton.translate(context),style: TextStyle(color: Colors.white),),
                                   )
                                 ],
                               ),
@@ -476,7 +482,7 @@ class _NotificationPageState extends State<NotificationPage> {
                   return ListView.separated(
                     shrinkWrap: true,
                       itemBuilder: (context,i)=>Container(
-                        height: 100,
+                        height: 115,
                         margin: EdgeInsets.symmetric(vertical: 10),
                         padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                         decoration: BoxDecoration(
@@ -495,11 +501,11 @@ class _NotificationPageState extends State<NotificationPage> {
                                    mainAxisAlignment: MainAxisAlignment.center,
                                    crossAxisAlignment: CrossAxisAlignment.center,
                                    children: [
-                                     Text("Complain About Customer : ",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                                     Text("${TKeys.WnotiInReplyComplainAbout.translate(context)} : ",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
                                      SizedBox(height: 5,),
                                      Text("${snapshot.data?.docs[i]['customerName']}",style: TextStyle(color: Colors.deepOrange,fontSize: 25,fontWeight: FontWeight.bold)),
                                      SizedBox(height: 10,),
-                                     Text("Complain Content :",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+                                     Text("${TKeys.WnotiInReplyCompalinContent.translate(context)} :",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
                                      SizedBox(height: 5,),
                                      Container(
                                        decoration: BoxDecoration(
@@ -510,7 +516,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                        child: Text("${snapshot.data?.docs[i]['content']}",style: TextStyle(color: Colors.deepOrange,fontSize: 25,fontWeight: FontWeight.bold)),
                                      ),
                                      SizedBox(height: 10,),
-                                     Text("Reply For Your Complain:",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+                                     Text("${TKeys.WnotiInReplyContent.translate(context)} :",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
                                      SizedBox(height: 5,),
                                      Container(
                                        decoration: BoxDecoration(
@@ -535,7 +541,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                      minWidth: 50,
                                      height: 30,
                                      color: Colors.indigo.shade900,
-                                     child: Text("Ok",style: TextStyle(color: Colors.white,fontSize: 20),),),
+                                     child: Text(TKeys.WnotiInReplyOkButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 20),),),
                                  ],
                                );
                              });
@@ -547,7 +553,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text("Reply For Your Previous Complain",style: TextStyle(color: Colors.indigo[900],fontSize: 20,fontWeight: FontWeight.bold),),
+                                  Text(TKeys.WnotiReplyForComplain.translate(context),style: TextStyle(color: Colors.indigo[900],fontSize: 20,fontWeight: FontWeight.bold),),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -3,9 +3,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import '../LogIn&signUp/login.dart';
 import 'package:flutter/services.dart';
+
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 
 
 late globals.FireBase db = new globals.FireBase();
@@ -68,6 +73,7 @@ class _UserProfileState extends State<UserProfile> {
     location(data['location']);
     super.initState();
   }
+  final localizationController=Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -80,18 +86,28 @@ class _UserProfileState extends State<UserProfile> {
             child: CircleAvatar(
               foregroundImage: AssetImage("images/worker-icon2.png"),
             )),
-        title: Center(
-          child: Text(
-            "My Profile",
-            style: TextStyle(
-                color: Colors.deepOrange,
-                fontSize: 25,
-                fontWeight: FontWeight.bold),
+        title: Container(
+          width: 150,
+          child: Center(
+            child: Text(
+              TKeys.WmyProfileTitle.translate(context),
+              style: TextStyle(
+                  color: Colors.deepOrange,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
           ),
         ),
         actions: [
           SizedBox(
             width: 5,
+          ),
+          Container(
+            child: TextButton(onPressed: (){
+              setState(() {
+                localizationController.toggleLanguge();
+              });
+            },child: Text(TKeys.WsettingLanguageButton.translate(context),style: TextStyle(color: Colors.deepOrange),),),
           ),
           IconButton(
               onPressed: () async {
@@ -214,7 +230,7 @@ class _UserProfileState extends State<UserProfile> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "Rate : ${data['rate']}",
+                                          "Rate : ${data['rate']..toStringAsFixed(2)}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
@@ -252,7 +268,7 @@ class _UserProfileState extends State<UserProfile> {
                                     .pushNamed("customerSettingPage");
                               },
                               child: Text(
-                                "Edit Info",
+                                TKeys.WnavbarEditButton.translate(context),
                                 style: TextStyle(
                                     color: Colors.deepOrange, fontSize: 20),
                               ),

@@ -1,7 +1,11 @@
 // @dart=2.9
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:easy_localization/easy_localization.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/LogIn&signUp/signup_page.dart';
+import 'package:gp_1/controller/localization_service.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,6 +20,7 @@ import 'package:gp_1/workerPages/notification_page.dart';
 import 'package:gp_1/workerPages/ongoingReq_page.dart';
 import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/workerPages/worker_profile_page.dart';
+import 'package:provider/provider.dart';
 import 'userPages/User_complain_page.dart';
 import 'userPages/User_ongoingReq_page.dart';
 import 'userPages/categories_page.dart';
@@ -35,10 +40,13 @@ List workers = [];
 CollectionReference Workers = db.worker();
 List customers = [];
 CollectionReference Customers = db.customer();
-
+SharedPreferences sharepref;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await EasyLocalization.ensureInitialized();
   await Firebase.initializeApp();
+  sharepref= await SharedPreferences.getInstance();
+
   var user = db.User();
   if (user == null) {
     isLogin = false;
@@ -89,40 +97,53 @@ class _MyAppState extends State<MyApp> {
 
   @override
   void initState() {
-    uid=FirebaseAuth.instance.currentUser.uid;
+    uid=db.Uid();
     getData();
     super.initState();
   }
 
+  final localizationController=Get.put(LocalizationController());
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: isLogin == false
-          ? LoginPage()
-          : globals.isUser == false
+    return GetBuilder<LocalizationController>(
+      init: localizationController,
+      builder:(LocalizationController _controller){
+        return  MaterialApp(
+          debugShowCheckedModeBanner: false,
+          localeResolutionCallback: LocalizationService.localeResolutionCallBack,
+          supportedLocales: LocalizationService.supportedLocales,
+          localizationsDelegates: LocalizationService.localizationsDelegate,
+          locale: _controller.currentLanguage != ''
+          ?Locale(_controller.currentLanguage,'')
+          :null,
+          home: isLogin == false
+              ? LoginPage()
+              : globals.isUser == false
               ? WorkerHomePage()
               : UserHomePage(),
-      routes: {
-        "login": (context) => LoginPage(),
-        "signup": (context) => SignupPage(),
-        "workerHomePage": (context) => WorkerHomePage(),
-        "workerProfilePage": (context) => WorkerProfilePage(),
-        "workerSettingPage": (context) => SettingPage(),
-        "workerNotificationPage": (context) => NotificationPage(),
-        "workeComplainPage": (context) => ComplainPage(),
-        "workerOngoingRequestPage": (context) => OngoingRequestPage(),
-        "workerCategoriesPage": (context) => workerCategoriesPage(),
-        "customerHomePage": (context) => UserHomePage(),
-        "customerProfilePage": (context) => UserProfile(),
-        "customerSettingPage": (context) => UserSettingPage(),
-        "customerNotificationPage": (context) => Notifications(),
-        "customerComplainPage": (context) => UserComplainPage(),
-        "customerOngoingRequestPage": (context) => UserOngoingRequestPage(),
-        "customerCategoriesPage": (context) => CategoriesPage(),
-        "customerFilterPage": (context) => FilterdPage(),
-        "customerWorkerProfilePage": (context) => WorkerInUserProfilePage(),
-      },
+          routes: {
+            "login": (context) => LoginPage(),
+            "signup": (context) => SignupPage(),
+            "workerHomePage": (context) => WorkerHomePage(),
+            "workerProfilePage": (context) => WorkerProfilePage(),
+            "workerSettingPage": (context) => SettingPage(),
+            "workerNotificationPage": (context) => NotificationPage(),
+            "workeComplainPage": (context) => ComplainPage(),
+            "workerOngoingRequestPage": (context) => OngoingRequestPage(),
+            "workerCategoriesPage": (context) => workerCategoriesPage(),
+            "customerHomePage": (context) => UserHomePage(),
+            "customerProfilePage": (context) => UserProfile(),
+            "customerSettingPage": (context) => UserSettingPage(),
+            "customerNotificationPage": (context) => Notifications(),
+            "customerComplainPage": (context) => UserComplainPage(),
+            "customerOngoingRequestPage": (context) => UserOngoingRequestPage(),
+            "customerCategoriesPage": (context) => CategoriesPage(),
+            "customerFilterPage": (context) => FilterdPage(),
+            "customerWorkerProfilePage": (context) => WorkerInUserProfilePage(),
+          },
+        );
+      }
     );
   }
 }

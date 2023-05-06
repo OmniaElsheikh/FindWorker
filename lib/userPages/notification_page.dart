@@ -1,8 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 import 'User_ongoingReq_page.dart';
 
 late globals.FireBase db = new globals.FireBase();
@@ -40,6 +44,7 @@ class _NotificationsState extends State<Notifications> {
     getData();
     super.initState();
   }
+  final localizationController=Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +53,7 @@ class _NotificationsState extends State<Notifications> {
         backgroundColor: Colors.white,
         title: Center(
             child: Text(
-          "Notifications",
+          TKeys.WnotificationTitle.translate(context),
           style: TextStyle(color: Colors.deepOrange),
         )),
         automaticallyImplyLeading: false,
@@ -98,13 +103,13 @@ class _NotificationsState extends State<Notifications> {
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20)),
                                   title: Text(
-                                    'Note',
+                                    TKeys.CnotiMessageTitle.translate(context),
                                     style: TextStyle(
                                         color: Colors.indigo.shade900,
                                         fontSize: 20),
                                   ),
                                   content: Text(
-                                    'You Can Come Back When The Worker Accept The Job',
+                                    TKeys.CnotiMessageContent.translate(context),
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold, fontSize: 20),
                                   ),
@@ -113,7 +118,7 @@ class _NotificationsState extends State<Notifications> {
                                       color: Colors.deepOrange,
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(15)),
-                                      child: Text('Ok'),
+                                      child: Text(TKeys.CnotiMessageOkButton.translate(context)),
                                       onPressed: () {
                                         Navigator.of(dialogContext)
                                             .pop(); // Dismiss alert dialog
@@ -188,7 +193,7 @@ class _NotificationsState extends State<Notifications> {
                                             padding: const EdgeInsets.symmetric(
                                                 vertical: 20.0),
                                             child: Text(
-                                              "Rate : ${snapshot.data?.docs[i]['workerRate']}",
+                                              "Rate : ${snapshot.data?.docs[i]['workerRate'].toStringAsFixed(2)}",
                                               style: TextStyle(
                                                   fontSize: 30,
                                                   fontWeight: FontWeight.bold,
@@ -241,11 +246,11 @@ class _NotificationsState extends State<Notifications> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Text("Complain About Worker : ",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
+                                    Text("${TKeys.CnotiInReplyComplainAbout.translate(context)} : ",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold),),
                                     SizedBox(height: 5,),
                                     Text("${snapshot.data?.docs[i]['workerName']}",style: TextStyle(color: Colors.deepOrange,fontSize: 25,fontWeight: FontWeight.bold)),
                                     SizedBox(height: 10,),
-                                    Text("Complain Content :",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+                                    Text("${TKeys.CnotiInReplyCompalinContent.translate(context)} :",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
                                     SizedBox(height: 5,),
                                     Container(
                                       decoration: BoxDecoration(
@@ -256,7 +261,7 @@ class _NotificationsState extends State<Notifications> {
                                       child: Text("${snapshot.data?.docs[i]['content']}",style: TextStyle(color: Colors.deepOrange,fontSize: 25,fontWeight: FontWeight.bold)),
                                     ),
                                     SizedBox(height: 10,),
-                                    Text("Reply For Your Complain:",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
+                                    Text("${TKeys.CnotiInReplyContent.translate(context)} :",style: TextStyle(color: Colors.black,fontSize: 20,fontWeight: FontWeight.bold)),
                                     SizedBox(height: 5,),
                                     Container(
                                       decoration: BoxDecoration(
@@ -281,7 +286,7 @@ class _NotificationsState extends State<Notifications> {
                                     minWidth: 50,
                                     height: 30,
                                     color: Colors.indigo.shade900,
-                                    child: Text("Ok",style: TextStyle(color: Colors.white,fontSize: 20),),),
+                                    child: Text(TKeys.CnotiInReplyOkButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 20),),),
                                 ],
                               );
                             });
@@ -293,7 +298,7 @@ class _NotificationsState extends State<Notifications> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text("Reply For Your Previous Complain",style: TextStyle(color: Colors.indigo[900],fontSize: 20,fontWeight: FontWeight.bold),),
+                                  Text(TKeys.CnotiReplyForComplain.translate(context),style: TextStyle(color: Colors.indigo[900],fontSize: 20,fontWeight: FontWeight.bold),),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,8 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import 'package:gp_1/t_key.dart';
 import 'package:gp_1/userPages/filterd_page.dart';
 import 'package:gp_1/userPages/home_page.dart';
+
+import '../controller/localization_service.dart';
 
 late globals.FireBase db=new globals.FireBase();
 
@@ -145,13 +150,15 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
     getData();
     super.initState();
   }
+  final localizationController=Get.find<LocalizationController>();
 
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text("Worker Profile",style: TextStyle(
+          child: Text(TKeys.WworkerInWorkerTitle.translate(context),style: TextStyle(
             color: Colors.deepOrange
           ),),
         ),
@@ -245,7 +252,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                             Icon(Icons.star, color: Colors.deepOrange),
                                             SizedBox(width: 5),
                                             Text(
-                                              "Rate : ${data['rate']}",
+                                              "Rate : ${data['rate'].toStringAsFixed(2)}",
                                               style: TextStyle(fontWeight: FontWeight.bold),
                                             ),
                                           ],
@@ -268,6 +275,33 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                                     }
                                                   else
                                                     {
+                                                      DocumentReference documentReference1 =
+                                                      db.worker().doc(Wid);
+                                                      FirebaseFirestore.instance.runTransaction((transaction) async {
+                                                        DocumentSnapshot snapshot1 = await transaction.get(documentReference1);
+                                                        if (!snapshot1.exists) {
+                                                          throw Exception("User does not exist!");
+                                                        }
+                                                        int newWarnCount = snapshot1['prevReq'] + 1;
+                                                        transaction.update(documentReference1, {'prevReq': newWarnCount});
+
+                                                        return newWarnCount;
+                                                      }).then((value) {
+                                                      }).catchError((error) => print("Failed to update worker prevReq: $error"));
+
+                                                      DocumentReference documentReference2 =
+                                                      db.customer().doc(Cid);
+                                                      FirebaseFirestore.instance.runTransaction((transaction) async {
+                                                        DocumentSnapshot snapshot1 = await transaction.get(documentReference2);
+                                                        if (!snapshot1.exists) {
+                                                          throw Exception("User does not exist!");
+                                                        }
+                                                        int newWarnCount = snapshot1['prevReq'] + 1;
+                                                        transaction.update(documentReference2, {'prevReq': newWarnCount});
+                                                      }).then((value) {
+                                                      }).catchError((error) => print("Failed to update customer prevReq: $error"));
+
+
                                                       Requests.add({
                                                         'customerId':Cid,
                                                         'workerId':Wid,
@@ -294,7 +328,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                                 ),
                                                 textColor: Colors.deepOrange,
                                                 color: Colors.white,
-                                                child: Text(reqstatus=='Pending'||reqstatus=='On'?"Cancel Request":"Send Request",style:reqstatus=='Pending'||reqstatus=='On'? TextStyle(color: Colors.red):TextStyle(color: Colors.green),),
+                                                child: Text(reqstatus=='Pending'||reqstatus=='On'?TKeys.WworkerInWorkerCancelReq.translate(context):TKeys.WworkerInWorkerSendReq.translate(context),style:reqstatus=='Pending'||reqstatus=='On'? TextStyle(color: Colors.red):TextStyle(color: Colors.green),),
                                               ),
                                             ),
                                             SizedBox(width: 5,),
@@ -302,7 +336,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                         ),
                                     Container(
                                         margin: EdgeInsets.only(top: 1),
-                                        child:Text( reqstatus=='Pending'||reqstatus=='On'?"You Are on Request":"You Can Send Request",style: reqstatus=='Pending'||reqstatus=='On'?TextStyle(color: Colors.red,fontWeight: FontWeight.bold):TextStyle(color: Colors.green,fontWeight: FontWeight.bold),))
+                                        child:Text( reqstatus=='Pending'||reqstatus=='On'?TKeys.WworkerInWorkerYouOnReq.translate(context):TKeys.WworkerInWorkerYouSendReq.translate(context),style: reqstatus=='Pending'||reqstatus=='On'?TextStyle(color: Colors.red,fontWeight: FontWeight.bold):TextStyle(color: Colors.green,fontWeight: FontWeight.bold),))
                                   ],
                                 ),
                               ),
@@ -314,7 +348,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                         color: Colors.black,
                         thickness: 1,
                       ),
-                      Center(child: Text("Worker's Work",style: TextStyle(color: Colors.white,fontSize: 25),),),
+                      Center(child: Text(TKeys.WworkerInWorkerWork.translate(context),style: TextStyle(color: Colors.white,fontSize: 25),),),
                       Divider(
                         color: Colors.black,
                         thickness: 1,

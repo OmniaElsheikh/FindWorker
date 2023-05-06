@@ -3,18 +3,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import '../t_key.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:path/path.dart';
 import 'dart:io';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:image_picker/image_picker.dart';
 
+import '../controller/localization_service.dart';
 import '../workerPages/home_page.dart';
 import '../workerPages/worker_profile_page.dart';
 import '../userPages/home_page.dart';
 
 var id;
-late Position position=new Position(longitude: 0, latitude: 0, timestamp: DateTime.now(), accuracy: 0, altitude: 0, heading: 0, speed: 0, speedAccuracy: 0);
+dynamic position;
 late double lat = 0.0, long = 0.0;
+var picked=XFile('images/worker.jpg');
+dynamic file=XFile(picked.path);
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -29,9 +35,6 @@ Future<Position> _determinePosition() async {
   // Test if location services are enabled.
   serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) {
-    // Location services are not enabled don't continue
-    // accessing the position and request users of the
-    // App to enable the location services.
     return Future.error('Location services are disabled.');
   }
 
@@ -39,17 +42,11 @@ Future<Position> _determinePosition() async {
   if (permission == LocationPermission.denied) {
     permission = await Geolocator.requestPermission();
     if (permission == LocationPermission.denied) {
-      // Permissions are denied, next time you could try
-      // requesting permissions again (this is also where
-      // Android's shouldShowRequestPermissionRationale
-      // returned true. According to Android guidelines
-      // your App should show an explanatory UI now.
       return Future.error('Location permissions are denied');
     }
   }
 
   if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately.
     return Future.error(
         'Location permissions are permanently denied, we cannot request permissions.');
   }
@@ -57,7 +54,7 @@ Future<Position> _determinePosition() async {
   // When we reach here, permissions are granted and we can
   // continue accessing the position of the device.
   return position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.low);
+      desiredAccuracy: LocationAccuracy.best);
 }
 
 
@@ -77,10 +74,11 @@ class _SignupPageState extends State<SignupPage> {
   initState() {
     getData();
     id = DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
+    _determinePosition();
     super.initState();
   }
 
-  late dynamic ref;
+  dynamic ref=FirebaseStorage.instance;
   var name, email, phone, password, category, imageurl;
   late UserCredential userCredential;
   final TextEditingController _userNameController = TextEditingController();
@@ -93,7 +91,7 @@ class _SignupPageState extends State<SignupPage> {
   var selectedJob = "Carpenter";
   bool showPassword = false;
   bool isLoading = false;
-  late final uid;
+  dynamic uid;
   // Email Validation
   final emailPattern =
       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -145,14 +143,63 @@ class _SignupPageState extends State<SignupPage> {
                 }));
               }
             } catch (e) {
+
               print(e.toString());
             }
             print("account created succefully");
           }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
+          showDialog(
+              context: context, builder: (context){
+            return AlertDialog(
+
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)
+              ),
+              icon: Icon(Icons.warning,color: Colors.red,size: 30,),
+              title: Text('Warning',style: TextStyle(color: Colors.red,fontSize: 30),),
+              content: Text('${e.code.toString()}',style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
+              actions: [
+                MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)
+                  ),
+                  color: Colors.deepOrange,
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Ok'),
+                )
+              ],
+            );
+          });
           print('The password provided is too weak.');
         } else if (e.code == 'email-already-in-use') {
+          showDialog(
+              context: context, builder: (context){
+            return AlertDialog(
+
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)
+              ),
+              icon: Icon(Icons.warning,color: Colors.red,size: 30,),
+              title: Text('Warning',style: TextStyle(color: Colors.red,fontSize: 30),),
+              content: Text('${e.code.toString()}',style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
+              actions: [
+                MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)
+                  ),
+                  color: Colors.deepOrange,
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Ok'),
+                )
+              ],
+            );
+          });
           print('The account already exists for that email.');
         }
       } catch (e) {
@@ -162,6 +209,8 @@ class _SignupPageState extends State<SignupPage> {
 
     }
   }
+
+  final localizationController=Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -175,8 +224,20 @@ class _SignupPageState extends State<SignupPage> {
           )),
           child: Column(
             children: [
-              SizedBox(
-                height: 20,
+              Padding(
+                  padding: EdgeInsets.all(30),
+                  child:Container(
+                    height:65,
+                    child: Column(children: [
+                      Row(children: [
+                        Expanded(child: TextButton(onPressed: (){
+                          setState(() {
+                            localizationController.toggleLanguge();
+                          });
+                        },child: Text(TKeys.WsettingLanguageButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 25,decoration: TextDecoration.underline, decorationThickness: 2,),),)),
+                      ],)
+                    ],),
+                  )
               ),
               Padding(
                 padding:
@@ -220,7 +281,7 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: 'Enter Your Name',
+                          hintText: '${TKeys.signupUserName.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -259,7 +320,7 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                             filled: true,
-                            hintText: 'Enter Your Email',
+                            hintText: '${TKeys.signupUserEmail.translate(context)}',
                             hintStyle: const TextStyle(
                               color: Colors.white70,
                               fontSize: 20,
@@ -297,7 +358,7 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: 'Password',
+                          hintText: '${TKeys.signupUserPass.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -333,7 +394,7 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: 'Confirm your password',
+                          hintText: '${TKeys.signupUserConPass.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -369,7 +430,7 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: 'Enter your phone Number',
+                          hintText: '${TKeys.signupUserPhone.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -397,13 +458,13 @@ class _SignupPageState extends State<SignupPage> {
                                 return Container(
                                   color: Colors.grey.withOpacity(0.7),
                                   padding: EdgeInsets.all(15),
-                                  height: 180,
+                                  height: 225,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Please Choose Image",
+                                        TKeys.WuploadPhotos.translate(context),
                                         style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold),
@@ -414,9 +475,9 @@ class _SignupPageState extends State<SignupPage> {
                                       ),
                                       InkWell(
                                         onTap: () async {
-                                          var picked = await ImagePicker()
+                                           picked = (await ImagePicker()
                                               .pickImage(
-                                                  source: ImageSource.gallery);
+                                                  source: ImageSource.gallery))!;
                                           if (picked != null) {
                                             setState(() {
                                               file = File(picked.path);
@@ -447,7 +508,7 @@ class _SignupPageState extends State<SignupPage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                "From Gallary",
+                                                TKeys.WphotoFromGal.translate(context),
                                                 style: TextStyle(
                                                     color:
                                                         Colors.indigo.shade900,
@@ -464,9 +525,9 @@ class _SignupPageState extends State<SignupPage> {
                                       ),
                                       InkWell(
                                         onTap: () async {
-                                          var picked = await ImagePicker()
+                                           picked = (await ImagePicker()
                                               .pickImage(
-                                                  source: ImageSource.camera);
+                                                  source: ImageSource.camera))!;
                                           if (picked != null) {
                                             setState(() {
                                               file = File(picked.path);
@@ -497,7 +558,7 @@ class _SignupPageState extends State<SignupPage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                "From Camera",
+                                                TKeys.WphotoFromCam.translate(context),
                                                 style: TextStyle(
                                                     color:
                                                         Colors.indigo.shade900,
@@ -513,7 +574,7 @@ class _SignupPageState extends State<SignupPage> {
                               });
                         },
                         child: Text(
-                          "Add Image",
+                          TKeys.signupUserAddImage.translate(context),
                           style:
                               TextStyle(color: Colors.deepOrange, fontSize: 20),
                         )),
@@ -553,7 +614,7 @@ class _SignupPageState extends State<SignupPage> {
                                           width: 5,
                                         ),
                                         Text(
-                                          'WORKER',
+                                          TKeys.signupChooseWorker.translate(context),
                                           style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,
@@ -611,7 +672,7 @@ class _SignupPageState extends State<SignupPage> {
                           ),
                         ),
                         Text(
-                          "Or",
+                          TKeys.signupChooseOr.translate(context),
                           style: TextStyle(fontSize: 25, color: Colors.white),
                         ),
                         Expanded(
@@ -636,7 +697,7 @@ class _SignupPageState extends State<SignupPage> {
                                   children: [
                                     const SizedBox(height: 10),
                                     Text(
-                                      'USER',
+                                      TKeys.signupChooseUser.translate(context),
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold),
                                     ),
@@ -675,8 +736,8 @@ class _SignupPageState extends State<SignupPage> {
                                       color: Colors.white,
                                     ),
                                   )
-                                : const Text(
-                                    'Signup',
+                                : Text(
+                                    TKeys.loginSignupButton.translate(context),
                                     style: TextStyle(
                                       color: Colors.deepOrange,
                                       fontSize: 25,
@@ -690,7 +751,7 @@ class _SignupPageState extends State<SignupPage> {
                     const SizedBox(height: 10),
                     Center(
                       child: Text(
-                        "Or",
+                        TKeys.signupChooseOr.translate(context),
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
@@ -715,8 +776,8 @@ class _SignupPageState extends State<SignupPage> {
                                       color: Colors.white,
                                     ),
                                   )
-                                : const Text(
-                                    'Login',
+                                : Text(
+                                    TKeys.loginButton.translate(context),
                                     style: TextStyle(
                                       color: Colors.deepOrange,
                                       fontSize: 25,
@@ -757,7 +818,6 @@ class worker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (true) {
-      _determinePosition();
       lat = position.latitude;
       long = position.longitude;
       print(lat);
@@ -769,6 +829,7 @@ class worker extends StatelessWidget {
         "phone": this.phone,
         "category": this.category,
         "id": "$id",
+        'rate':5,
         "onReq": "false",
         "status": "false",
         'prevReq': 0,
@@ -799,7 +860,9 @@ class customer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (true) {
-      _determinePosition();
+      print("------------------------------------------------------------------->");
+      print(position);
+      print("------------------------------------------------------------------->");
       lat = position.latitude;
       long = position.longitude;
       print(lat);
@@ -811,6 +874,7 @@ class customer extends StatelessWidget {
         "phone": this.phone,
         "id": "$id",
         'prevReq': 0,
+        'rate':5,
         "complain": 0,
         "warn": 0,
         "imageURL": this.imageurlIn,

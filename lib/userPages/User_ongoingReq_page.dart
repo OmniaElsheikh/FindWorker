@@ -2,7 +2,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 import 'User_complain_page.dart';
 import 'home_page.dart';
 
@@ -49,6 +53,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
     getData();
     super.initState();
   }
+  final localizationController=Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +68,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
             )),
         title: Center(
           child: Text(
-            "Ongoing Request",
+            TKeys.WongoingTitle.translate(context),
             style: TextStyle(
                 color: Colors.deepOrange,
                 fontSize: 25,
@@ -89,7 +94,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
           child: Column(
             children: [
               Text(
-                "Ongoing Request",
+                TKeys.WongoingTitle.translate(context),
                 style: TextStyle(color: Colors.indigo[900], fontSize: 30),
               ),
               SizedBox(
@@ -111,176 +116,184 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                 padding: EdgeInsets.all(10),
                 child: Row(
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "Client Name ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "Phone ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "Location ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "Distance in KM ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "Estimated Time ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "Transportation Fee ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                      ],
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "Client Name ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "Phone ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "Location ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "Distance in KM ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "Estimated Time ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "Transportation Fee ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                        ],
+                      ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          ": ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          ": ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          ": ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          ": ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          ": ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          ": ",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            ": ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            ": ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            ": ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            ": ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            ": ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            ": ",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                        ],
+                      ),
                     ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "${data['workerName']}",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "${data['workerPhone']}",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "Giza,El-Hwamdia",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "10 KM",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "5 Minutes",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                        Text(
-                          "30 L.E.",
-                          style: TextStyle(
-                              fontSize: fontSize, fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: sizedBox,
-                        ),
-                      ],
+                    Expanded(
+                      flex: 2,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "${data['workerName']}",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "${data['workerPhone']}",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "Giza,El-Hwamdia",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "10 KM",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "5 Minutes",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                          Text(
+                            "30 L.E.",
+                            style: TextStyle(
+                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                          ),
+                          SizedBox(
+                            height: sizedBox,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -305,11 +318,11 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                             builder: (context) {
                               return AlertDialog(
                                 // icon: Icon(Icons.note,color: Colors.red,size: 50,),
-                                title: Text("Note"),
+                                title: Text(TKeys.WongoingInEndMessageTitle.translate(context)),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(40)),
                                 content:
-                                    Text("Are you sure you want to end it?"),
+                                    Text(TKeys.WongoingInEndMessageContent.translate(context)),
                                 actions: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -340,7 +353,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                 return AlertDialog(
                                                   backgroundColor: Colors.white,
                                                   title: Text(
-                                                      "Review On Client : ${data['workerName']}"),
+                                                      "${TKeys.CongoingInReviewTitle.translate(context)} : ${data['workerName']}"),
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -390,7 +403,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                                   .center,
                                                           children: [
                                                             Text(
-                                                              "Rate : ${data['workerRate']}",
+                                                              "Rate : ${data['workerRate'].toStringAsFixed(2)}",
                                                               style: TextStyle(
                                                                   fontWeight:
                                                                       FontWeight
@@ -415,7 +428,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                                 initialRating: data['workerRate'].toDouble(),
                                                                 itemCount: 5,
                                                                 itemBuilder: (context,i){
-                                                                  return Icon(Icons.star,size:1,color:Colors.grey);
+                                                                  return Icon(Icons.star,size:1,color:Colors.amber);
                                                                 },
                                                                 onRatingUpdate: (newRating){
                                                                   setState(() {
@@ -460,7 +473,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                                 ));
                                                               },
                                                               child: Text(
-                                                                "Done",
+                                                                TKeys.WongoingInReviewDoneButton.translate(context),
                                                                 style: TextStyle(
                                                                     color: Colors
                                                                         .white,
@@ -502,7 +515,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                                 ));
                                                               },
                                                               child: Text(
-                                                                "Complain",
+                                                                TKeys.WongoingInComplainButton.translate(context),
                                                                 style: TextStyle(
                                                                     color: Colors
                                                                         .white,
@@ -519,7 +532,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                               });
                                         },
                                         child: Text(
-                                          "Done",
+                                          TKeys.WongoingInEndDoneButton.translate(context),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),
@@ -539,7 +552,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                           Navigator.of(context).pop();
                                         },
                                         child: Text(
-                                          "Cancel",
+                                          TKeys.WongoingInEndCancelButton.translate(context),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),
@@ -552,7 +565,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                             });
                       },
                       child: Text(
-                        "End Job",
+                        TKeys.WongoingInEndDoneButton.translate(context),
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),
@@ -576,11 +589,11 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                             builder: (context) {
                               return AlertDialog(
                                 // icon: Icon(Icons.note,color: Colors.red,size: 50,),
-                                title: Text("Note"),
+                                title: Text(TKeys.WongoingInCancelMessageTitle.translate(context)),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(40)),
                                 content:
-                                    Text("Are you sure you want to cancel it?"),
+                                    Text(TKeys.WongoingInCancelMessageContent.translate(context)),
                                 actions: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -610,7 +623,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                           ));
                                         },
                                         child: Text(
-                                          "Yes",
+                                          TKeys.WongoingInCancelMessageOkButton.translate(context),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),
@@ -630,7 +643,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                           Navigator.of(context).pop();
                                         },
                                         child: Text(
-                                          "No",
+                                          TKeys.WongoingInCancelMessageNoButton.translate(context),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),
@@ -643,7 +656,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                             });
                       },
                       child: Text(
-                        "Cancel Job",
+                        TKeys.WongoingInCancelJobButton.translate(context),
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
                     ),

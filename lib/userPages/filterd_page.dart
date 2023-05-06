@@ -15,7 +15,7 @@ class FilterdPage extends StatefulWidget {
   State<FilterdPage> createState() => _FilterdPageState();
 }
 
-late dynamic data='';
+late dynamic data=GeoPoint(11.11111, 12.11111);
 late dynamic id = '';
 late dynamic uid;
 
@@ -158,7 +158,7 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           textAlign: TextAlign.center,
-                                          "Rate : ${snapshot.data?.docs[i]['rate']}",
+                                          "Rate : ${snapshot.data?.docs[i]['rate'].toStringAsFixed(2)}",
                                           style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold,

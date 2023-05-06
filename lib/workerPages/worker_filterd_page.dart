@@ -2,11 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/userPages/home_page.dart';
 import 'package:gp_1/userPages/worker_profile_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:gp_1/workerPages/workerINworker_profile_page.dart';
 
+import '../controller/localization_service.dart';
 import 'home_page.dart';
 
 late globals.FireBase db = new globals.FireBase();
@@ -19,7 +22,7 @@ class WorkerFilterdPage extends StatefulWidget {
   State<WorkerFilterdPage> createState() => _WorkerFilterdPageState();
 }
 
-late dynamic data='';
+late dynamic data=GeoPoint(11.11111, 12.11111);
 late dynamic id = '';
 late dynamic uid;
 
@@ -59,6 +62,8 @@ class _WorkerFilterdPageState extends State<WorkerFilterdPage> with WidgetsBindi
     getData();
     super.initState();
   }
+  final localizationController=Get.find<LocalizationController>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +166,7 @@ class _WorkerFilterdPageState extends State<WorkerFilterdPage> with WidgetsBindi
                                         alignment: Alignment.topLeft,
                                         child: Text(
                                           textAlign: TextAlign.center,
-                                          "Rate : ${snapshot.data?.docs[i]['rate']}",
+                                          "Rate : ${snapshot.data?.docs[i]['rate'].toStringAsFixed(2)}",
                                           style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold,

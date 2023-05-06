@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/LogIn&signUp/signup_page.dart';
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 import '../userPages/home_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 
@@ -62,8 +66,8 @@ class _LoginPageState extends State<LoginPage> {
                   borderRadius: BorderRadius.circular(20)
               ),
               icon: Icon(Icons.warning,color: Colors.red,size: 30,),
-              title: Text("Warning",style: TextStyle(color: Colors.red,fontSize: 30),),
-              content: Text("You Are Not A User Or You Are Blocked",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
+              title: Text(TKeys.loginWrongEmailTitle.translate(context),style: TextStyle(color: Colors.red,fontSize: 30),),
+              content: Text(TKeys.loginWrongEmailContent.translate(context),style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
               actions: [
                 MaterialButton(
                   shape: RoundedRectangleBorder(
@@ -73,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: (){
                     Navigator.of(context).popAndPushNamed('login');
                   },
-                  child: Text("Ok"),
+                  child: Text(TKeys.loginWrongEmailOkButton.translate(context)),
                 )
               ],
             );
@@ -101,12 +105,13 @@ class _LoginPageState extends State<LoginPage> {
               showDialog(
                   context: context, builder: (context){
                 return AlertDialog(
+
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)
                   ),
                   icon: Icon(Icons.warning,color: Colors.red,size: 30,),
-                  title: Text("Warning",style: TextStyle(color: Colors.red,fontSize: 30),),
-                  content: Text("You Are Not A User Or You Are Blocked",style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
+                  title: Text(TKeys.loginWrongEmailTitle.translate(context),style: TextStyle(color: Colors.red,fontSize: 30),),
+                  content: Text(TKeys.loginWrongEmailContent.translate(context),style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
                   actions: [
                     MaterialButton(
                       shape: RoundedRectangleBorder(
@@ -116,7 +121,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: (){
                         Navigator.of(context).popAndPushNamed('login');
                       },
-                      child: Text("Ok"),
+                      child: Text(TKeys.loginWrongEmailOkButton.translate(context)),
                     )
                   ],
                 );
@@ -142,6 +147,30 @@ class _LoginPageState extends State<LoginPage> {
         await getData();
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
+          showDialog(
+              context: context, builder: (context){
+            return AlertDialog(
+
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)
+              ),
+              icon: Icon(Icons.warning,color: Colors.red,size: 30,),
+              title: Text(TKeys.loginWrongEmailTitle.translate(context),style: TextStyle(color: Colors.red,fontSize: 30),),
+              content: Text(TKeys.loginWrongEmailContent.translate(context),style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
+              actions: [
+                MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)
+                  ),
+                  color: Colors.deepOrange,
+                  onPressed: (){
+                    Navigator.of(context).popAndPushNamed('login');
+                  },
+                  child: Text(TKeys.loginWrongEmailOkButton.translate(context)),
+                )
+              ],
+            );
+          });
           print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
           print('Wrong password provided for that user.');
@@ -150,6 +179,8 @@ class _LoginPageState extends State<LoginPage> {
       isLoading = true;
     }
   }
+
+  final localizationController=Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -165,11 +196,25 @@ class _LoginPageState extends State<LoginPage> {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
           child: Column(
             children: [
-              const SizedBox(height: 15),
-              const Align(
+              Padding(
+                  padding: EdgeInsets.all(8),
+                  child:Container(
+                    height:65,
+                    child: Column(children: [
+                      Row(children: [
+                        Expanded(child: TextButton(onPressed: (){
+                          setState(() {
+                            localizationController.toggleLanguge();
+                          });
+                        },child: Text(TKeys.WsettingLanguageButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 25,decoration: TextDecoration.underline, decorationThickness: 2,),),)),
+                      ],)
+                    ],),
+                  )
+              ),
+              Align(
                 alignment: Alignment.center,
                 child: Text(
-                  'Welcome back',
+                  TKeys.loginTitle.translate(context),
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold,color: Colors.white),
                 ),
               ),
@@ -177,7 +222,7 @@ class _LoginPageState extends State<LoginPage> {
               Image.asset(
                 'images/worker-logo2-inside.png',
                 width: 250.0,
-                height: 250.0,
+                height: 245.0,
                 fit: BoxFit.fill,
               ),
               Form(
@@ -202,7 +247,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                           filled: true,
-                          hintText: 'Enter your email',
+                          hintText: TKeys.loginHintEmail.translate(context),
                           hintStyle: const TextStyle(color: Colors.white70,fontSize: 20,),
                           prefixIcon: const Icon(
                             Icons.email,
@@ -215,7 +260,7 @@ class _LoginPageState extends State<LoginPage> {
                           fillColor: globals.ContColor,
                           focusColor: Colors.white),
                     ),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 15),
                     TextFormField(
                       controller: _passwordController,
                       obscureText: showPassword ? false : true,
@@ -234,7 +279,7 @@ class _LoginPageState extends State<LoginPage> {
                       style: const TextStyle(color: Colors.white),
                       decoration: InputDecoration(
                         filled: true,
-                        hintText: 'Enter your password',
+                        hintText: TKeys.loginHintPass.translate(context),
                         hintStyle: const TextStyle(color: Colors.white70,fontSize: 20,),
                         prefixIcon: const Icon(
                           Icons.security,
@@ -280,8 +325,8 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.white,
                             ),
                           )
-                              : const Text(
-                            'Login',
+                              : Text(
+                            TKeys.loginButton.translate(context),
                             style: TextStyle(
                               color: Colors.deepOrange,
                               fontSize: 25,
@@ -293,7 +338,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10,bottom: 20),
-                      child: Container(child: Text("dont have account?",style: TextStyle(color: Colors.white,fontSize: 15),)),
+                      child: Container(child: Text(TKeys.loginDontHaveAccount.translate(context),style: TextStyle(color: Colors.white,fontSize: 15),)),
                     ),
                     InkWell(
                       onTap: () {
@@ -311,7 +356,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                         child: Center(
                           child: Text(
-                            'Sign Up',
+                            TKeys.loginSignupButton.translate(context),
                             style: TextStyle(
                               color: Colors.deepOrange,
                               fontSize: 25,

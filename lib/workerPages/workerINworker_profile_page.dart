@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:gp_1/userPages/filterd_page.dart';
 import 'package:gp_1/userPages/home_page.dart';
 import 'package:gp_1/workerPages/worker_filterd_page.dart';
 
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 import 'home_page.dart';
 
 late globals.FireBase db=new globals.FireBase();
@@ -149,12 +153,14 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
     super.initState();
   }
 
+  final localizationController=Get.find<LocalizationController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
-          child: Text("Worker Profile",style: TextStyle(
+          child: Text(TKeys.WworkerInWorkerTitle.translate(context),style: TextStyle(
             color: Colors.deepOrange
           ),),
         ),
@@ -248,7 +254,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                                             Icon(Icons.star, color: Colors.deepOrange),
                                             SizedBox(width: 5),
                                             Text(
-                                              "Rate : ${data['rate']}",
+                                              "Rate : ${data['rate']..toStringAsFixed(2)}",
                                               style: TextStyle(fontWeight: FontWeight.bold),
                                             ),
                                           ],
@@ -297,7 +303,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                                                 ),
                                                 textColor: Colors.deepOrange,
                                                 color: Colors.white,
-                                                child: Text(reqstatus=='Pending'||reqstatus=='On'?"Cancel Request":"Send Request",style:reqstatus=='Pending'||reqstatus=='On'? TextStyle(color: Colors.red):TextStyle(color: Colors.green),),
+                                                child: Text(reqstatus=='Pending'||reqstatus=='On'?TKeys.WworkerInWorkerCancelReq.translate(context):TKeys.WworkerInWorkerSendReq.translate(context),style:reqstatus=='Pending'||reqstatus=='On'? TextStyle(color: Colors.red):TextStyle(color: Colors.green),),
                                               ),
                                             ),
                                             SizedBox(width: 5,),
@@ -305,7 +311,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                                         ),
                                     Container(
                                         margin: EdgeInsets.only(top: 1),
-                                        child:Text( reqstatus=='Pending'||reqstatus=='On'?"You Are on Request":"You Can Send Request",style: reqstatus=='Pending'||reqstatus=='On'?TextStyle(color: Colors.red,fontWeight: FontWeight.bold):TextStyle(color: Colors.green,fontWeight: FontWeight.bold),))
+                                        child:Text( reqstatus=='Pending'||reqstatus=='On'?TKeys.WworkerInWorkerYouOnReq.translate(context):TKeys.WworkerInWorkerYouSendReq.translate(context),style: reqstatus=='Pending'||reqstatus=='On'?TextStyle(color: Colors.red,fontWeight: FontWeight.bold):TextStyle(color: Colors.green,fontWeight: FontWeight.bold),))
                                   ],
                                 ),
                               ),
@@ -317,7 +323,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                         color: Colors.black,
                         thickness: 1,
                       ),
-                      Center(child: Text("Worker's Work",style: TextStyle(color: Colors.white,fontSize: 25),),),
+                      Center(child: Text(TKeys.WworkerInWorkerWork.translate(context),style: TextStyle(color: Colors.white,fontSize: 25),),),
                       Divider(
                         color: Colors.black,
                         thickness: 1,

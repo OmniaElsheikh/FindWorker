@@ -1,12 +1,19 @@
 import 'dart:io';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:path/path.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:gp_1/workerPages/worker_categories_page.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+
+import '../LogIn&signUp/login.dart';
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 
 late globals.FireBase db = new globals.FireBase();
 
@@ -118,6 +125,8 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
     super.initState();
   }
 
+  final localizationController=Get.find<LocalizationController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -129,74 +138,41 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
             child: CircleAvatar(
               foregroundImage: AssetImage("images/worker-icon2.png"),
             )),
-        title: Center(
-          child: Text(
-            "My Profile",
-            style: TextStyle(
-                color: Colors.deepOrange,
-                fontSize: 25,
-                fontWeight: FontWeight.bold),
-          ),
-        ),
-        actions: [
-          Container(
-            padding: EdgeInsets.only(top: 5, right: 5),
-            height: 30,
-            width: 100,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  data['status']=='true' ? "Activated" : "Deactivated",
-                  style:
-                      TextStyle(color: noti ? Colors.green[900] : Colors.black),
-                ),
-                Expanded(
-                  child: Switch(
-                      value: isActiv == 'true' ? true : false,
-                      activeColor: Colors.green,
-                      onChanged: (val) {
-                        setState(() {
-                          getData();
-                          noti = val;
-                          Workers.doc(id).update({'status': '$noti'});
-                        });
-                      }),
-                ),
-              ],
+        title: Container(
+          width: 195,
+          child: Center(
+            child: Text(
+              TKeys.WmyProfileTitle.translate(context),
+              style: TextStyle(
+                  color: Colors.deepOrange,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
             ),
           ),
-          IconButton(onPressed: (){
-            showDialog(context: context, builder: (context){
+        ),
 
-              return AlertDialog(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-                icon:Icon(Icons.info_outline,color:Colors.deepOrange,size:50),
-                title:Text("Info About Active Button",style:TextStyle(fontSize:25,color:Colors.indigo.shade900)),
-                content:Text("When you Press this button you become active/disactive"
-                    "and thats controls whether you want to be available to the users and show up"
-                    "in filteration results or not",style:TextStyle(fontSize: 15,color:Colors.indigo.shade900)),
-                actions: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      MaterialButton(
-                          shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                          color:Colors.white,
-                          minWidth:40,
-                          onPressed: (){
-                            Navigator.of(context).pop();
-                          },
-                          child:Text("Ok",style: TextStyle(color:Colors.deepOrange),)
-                      )
-                    ],
-                  )
-                ],
-              );
-            });
-          }, icon: Icon(Icons.info_outline,color:Colors.deepOrange)),
-        ],
+        actions: [
+          SizedBox(
+            width: 5,
+          ),
+          Container(
+            child: TextButton(onPressed: (){
+              setState(() {
+                localizationController.toggleLanguge();
+              });
+            },child: Text(TKeys.WsettingLanguageButton.translate(context),style: TextStyle(color: Colors.deepOrange),),),
+          ),
+          IconButton(
+              onPressed: () async {
+                await db.signOut();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(
+                  builder: (BuildContext context) => const LoginPage(),
+                ));
+              },
+              icon: Icon(
+                Icons.logout_outlined,
+                color: Colors.deepOrange,
+              )),],
       ),
       body: workers.isEmpty || data == null
           ? Container(
@@ -239,26 +215,91 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
+                        height: 240,
                         width: double.infinity,
                         decoration: BoxDecoration(
                             color: Colors.grey.withOpacity(0.6),
                             borderRadius: BorderRadius.circular(15)),
-                        margin: EdgeInsets.only(top: 10),
+                        margin: EdgeInsets.only(top: 5),
                         child: Row(
                           children: [
-                            Container(
-                              height: 180,
-                              width: 150,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(20),
-                                  child: Image.network(
-                                    "${data['imageURL']}",
-                                    fit: BoxFit.fill,
+                            Column(
+                              children: [
+                                Container(
+                                  height: 165,
+                                  width: 150,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: Image.network(
+                                        "${data['imageURL']}",
+                                        fit: BoxFit.fill,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                              ),
+                                SizedBox(height: 4,),
+                                Row(
+                                  mainAxisAlignment:MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      IconButton(onPressed: (){
+                                        showDialog(context: context, builder: (context){
+                                          return AlertDialog(
+                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                                            icon:Icon(Icons.info_outline,color:Colors.deepOrange,size:50),
+                                            title:Text(TKeys.WactivButtonTitle.translate(context),style:TextStyle(fontSize:25,color:Colors.indigo.shade900)),
+                                            content:Text(TKeys.WactivButtonContent.translate(context),style:TextStyle(fontSize: 15,color:Colors.indigo.shade900)),
+                                            actions: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                children: [
+                                                  MaterialButton(
+                                                      shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                                      color:Colors.white,
+                                                      minWidth:40,
+                                                      onPressed: (){
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child:Text(TKeys.WactivButtonOk.translate(context),style: TextStyle(color:Colors.deepOrange),)
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          );
+                                        });
+                                      }, icon: Icon(Icons.info_outline,color:Colors.white)),
+                                      Container(
+                                    height: 50,
+                                    width: 65,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          data['status']=='true' ? TKeys.WactivButton.translate(context) : TKeys.WdeactivButton.translate(context),
+                                          style:
+                                          TextStyle(color:Colors.white,fontWeight: FontWeight.bold),
+                                        ),
+                                        SizedBox(height: 10,),
+                                        Expanded(
+                                          child: Switch(
+                                              value: isActiv == 'true' ? true : false,
+                                              activeColor: Colors.green,
+                                              onChanged: (val) {
+                                                setState(() {
+                                                  getData();
+                                                  noti = val;
+                                                  Workers.doc(id).update({'status': '$noti'});
+                                                });
+                                              }),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],)
+                              ],
                             ),
                             SizedBox(
                               width: 10,
@@ -312,7 +353,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "Rate : ${data['rate']}",
+                                          "Rate : ${data['rate']..toStringAsFixed(2)}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
@@ -335,7 +376,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                             onPressed: () {
                                               workerCategoriesPage();
                                             },
-                                            height: 50,
+                                            height: 40,
                                             shape: RoundedRectangleBorder(
                                                 borderRadius:
                                                     BorderRadius.circular(15)),
@@ -358,7 +399,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                                       height: 5,
                                                     ),
                                                     Text(
-                                                      "Search for Worker",
+                                                      TKeys.WsearchButton.translate(context),
                                                       style: TextStyle(
                                                         color: Colors.white,
                                                         fontSize: 15,
@@ -396,13 +437,13 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                 return Container(
                                   color: Colors.grey.withOpacity(0.7),
                                   padding: EdgeInsets.all(15),
-                                  height: 180,
+                                  height: 225,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Please Choose Image",
+                                  TKeys.WuploadPhotos.translate(context),
                                         style: TextStyle(
                                             fontSize: 25,
                                             fontWeight: FontWeight.bold),
@@ -448,7 +489,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                "From Gallary",
+                                TKeys.WphotoFromGal.translate(context),
                                                 style: TextStyle(
                                                     color:
                                                         Colors.indigo.shade900,
@@ -500,7 +541,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                "From Camera",
+                                                TKeys.WphotoFromCam.translate(context),
                                                 style: TextStyle(
                                                     color:
                                                         Colors.indigo.shade900,
@@ -516,7 +557,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                               });
                         },
                         child: Text(
-                          "Upload More",
+                          TKeys.WuploadPostsButton.translate(context),
                           style: TextStyle(color: Colors.deepOrange),
                         ),
                       ),
@@ -530,14 +571,14 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                         child: Column(
                           children: [
                             Text(
-                              "Your Uploded work ",
+                              TKeys.WuploadedWorkTitle.translate(context),
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
                             Divider(
                               color: Colors.white,
                               thickness: 1,
-                              height: 15,
+                              height: 8,
                             ),
                             StreamBuilder<QuerySnapshot>(
                                 stream: db
@@ -554,7 +595,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                     ));
                                   }
                                   return SizedBox(
-                                    height: 260,
+                                    height: 250,
                                     child: GridView.builder(
                                         scrollDirection: Axis.vertical,
                                         itemCount: snapshot.data?.docs.length,
@@ -599,14 +640,14 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                                             return AlertDialog(
                                                               //icon: Icon(Icons.warning,color: Colors.red,size: 50,),
                                                               title: Text(
-                                                                  "Warning"),
+                                                                TKeys.WdeletePostMessageTitle.translate(context),),
                                                               shape: RoundedRectangleBorder(
                                                                   borderRadius:
                                                                       BorderRadius
                                                                           .circular(
                                                                               40)),
                                                               content: Text(
-                                                                  "Are you sure you want to delete it?"),
+                                                                TKeys.WdeletePostMessageContent.translate(context),),
                                                               actions: [
                                                                 Row(
                                                                   mainAxisAlignment:
@@ -633,7 +674,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                                                       },
                                                                       child:
                                                                           Text(
-                                                                        "Agree",
+                                                                              TKeys.WdeletePostMessageAgree.translate(context),
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Colors.white,
@@ -645,7 +686,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                                                     ),
                                                                     MaterialButton(
                                                                       height:
-                                                                          40,
+                                                                          30,
                                                                       shape:
                                                                           RoundedRectangleBorder(
                                                                         borderRadius:
@@ -661,7 +702,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                                                       },
                                                                       child:
                                                                           Text(
-                                                                        "Cancel",
+                                                                            TKeys.WdeletePostMessageCancel.translate(context),
                                                                         style: TextStyle(
                                                                             color:
                                                                                 Colors.white,
@@ -675,7 +716,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                                           });
                                                     },
                                                     child: Text(
-                                                      "Delete",
+                                                      TKeys.WdeletePostButton.translate(context),
                                                       style: TextStyle(
                                                           color: Colors.red),
                                                     ),

@@ -1,7 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 import 'home_page.dart';
 import 'notification_page.dart';
 
@@ -56,6 +60,7 @@ class _UserComplainPageState extends State<UserComplainPage> {
         DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
     super.initState();
   }
+  final localizationController=Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +75,7 @@ class _UserComplainPageState extends State<UserComplainPage> {
             )),
         title: Center(
           child: Text(
-            "Complaining",
+            TKeys.WcomplainTitle.translate(context),
             style: TextStyle(
                 color: Colors.deepOrange,
                 fontSize: 25,
@@ -100,7 +105,7 @@ class _UserComplainPageState extends State<UserComplainPage> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    "Complain's Details",
+                    TKeys.WcomplainDetails.translate(context),
                     style: TextStyle(color: Colors.white, fontSize: 25),
                   ),
                   Divider(
@@ -119,7 +124,7 @@ class _UserComplainPageState extends State<UserComplainPage> {
                     height: 50,
                   ),
                   Text(
-                    "Content :",
+                    "${TKeys.WcomplainContent.translate(context)} :",
                     style: TextStyle(color: Colors.white, fontSize: 20),
                   ),
                   SizedBox(
@@ -143,7 +148,7 @@ class _UserComplainPageState extends State<UserComplainPage> {
                     maxLines: 15,
                     decoration: InputDecoration(
                       filled: true,
-                      hintText: 'Your Complain',
+                      hintText: '${TKeys.WcomplainTextField.translate(context)}',
                       hintStyle: const TextStyle(
                         color: Colors.grey,
                         fontSize: 20,
@@ -215,7 +220,7 @@ class _UserComplainPageState extends State<UserComplainPage> {
                         height: 50,
                         color: Colors.indigo.shade900,
                         child: Text(
-                          "Submit",
+                          TKeys.WcomplainSubmitButton.translate(context),
                           style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       )

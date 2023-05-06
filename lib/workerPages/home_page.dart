@@ -1,8 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/workerPages/worker_profile_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 import 'notification_page.dart';
 
 class WorkerHomePage extends StatefulWidget {
@@ -20,6 +24,9 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
     WorkerProfilePage(),
     SettingPage(),
   ];
+
+  final localizationController=Get.find<LocalizationController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,9 +42,9 @@ class _WorkerHomePageState extends State<WorkerHomePage> {
             });
           },
           items: [
-            BottomNavigationBarItem(label: "Notification", icon: Icon(Icons.notifications)),
-            BottomNavigationBarItem(label: "My Profile", icon: Icon(Icons.person)),
-            BottomNavigationBarItem(label: "Edit Info", icon: Icon(Icons.settings)),
+            BottomNavigationBarItem(label: TKeys.WnavbarNotificationButton.translate(context), icon: Icon(Icons.notifications)),
+            BottomNavigationBarItem(label: TKeys.WnavbarProfileButton.translate(context), icon: Icon(Icons.person)),
+            BottomNavigationBarItem(label: TKeys.WnavbarEditButton.translate(context), icon: Icon(Icons.settings)),
           ],
         ),
             body: Widgets.elementAt(selectedindex),

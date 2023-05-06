@@ -1,10 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/LogIn&signUp/login.dart';
 import 'package:gp_1/userPages/worker_profile_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:gp_1/workerPages/worker_filterd_page.dart';
+
+import '../controller/localization_service.dart';
+import '../t_key.dart';
 //import 'filterd_page.dart';
 
 late globals.FireBase db = new globals.FireBase();
@@ -54,6 +59,8 @@ class _workerCategoriesPageState extends State<workerCategoriesPage> {
     });
   }
 
+  final localizationController=Get.find<LocalizationController>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,7 +78,7 @@ class _workerCategoriesPageState extends State<workerCategoriesPage> {
         ),
         title: Center(
             child: Text(
-          "Categories",
+          TKeys.WcategoriesTitle.translate(context),
           style: TextStyle(color: Colors.deepOrange),
         )),
         actions: [
