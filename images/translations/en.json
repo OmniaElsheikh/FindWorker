@@ -1,7 +1,7 @@
 {
   "_comment1": "===========> worker profile page <=============",
   "WmyProfileTitle": "My Profile",
-  "WsearchButton": "Search For Worker",
+  "WsearchButton": "Search",
   "WactivButton": "Active",
   "WdeactivButton": "Deactive",
   "WuploadPostsButton" : "Upload More",
@@ -90,6 +90,7 @@
   "loginSignupButton": "Sign Up",
   "loginWrongEmailTitle": "Warning",
   "loginWrongEmailContent": "You Are Not A User Or You Are Blocked",
+  "loginWrongPassContent": "You've enterd Wrong Password",
   "loginWrongEmailOkButton": "Ok",
 
   "_comment9": "===========>login page <=============",

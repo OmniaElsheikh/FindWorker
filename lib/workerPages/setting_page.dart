@@ -53,6 +53,13 @@ class _SettingPageState extends State<SettingPage> {
     final regExp = RegExp(emailPattern);
     return regExp.hasMatch(email);
   }
+  var phonePattern =
+      r'^(\+201|01)[1,2,0,5]{1}[0-9]{8}$';
+
+  bool validatePhone(String email) {
+    final regExp = RegExp(phonePattern);
+    return regExp.hasMatch(email);
+  }
 
   List workers = [];
   CollectionReference Workers = db.worker();
@@ -84,7 +91,6 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   void editinfo({required BuildContext context}) async {
-    if (_formKey.currentState!.validate()) {
       try {
         if (path == '') {
           Workers.doc(id).update({
@@ -115,7 +121,7 @@ class _SettingPageState extends State<SettingPage> {
       } catch (e) {
         print(e.toString());
       }
-    }
+
   }
 
   final localizationController=Get.find<LocalizationController>();
@@ -185,6 +191,13 @@ class _SettingPageState extends State<SettingPage> {
                             name = val;
                           });
                         },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (value!.length<=3) {
+                            return 'Please Enter valid username';
+                          }
+                          return null;
+                        },
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
@@ -212,6 +225,17 @@ class _SettingPageState extends State<SettingPage> {
                       child: TextFormField(
                         //initialValue: "0123134654",
                         controller: _phoneNumberController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please Enter Your phone Number';
+                          }
+                          if(!validatePhone(_phoneNumberController.text))
+                          {
+                            return 'Please Enter Valid phone Number';
+                          }
+                          return null;
+                        },
                         onChanged: (val) {
                           setState(() {
                             phone = val;

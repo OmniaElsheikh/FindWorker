@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import '../t_key.dart';
+import 'package:email_validator/email_validator.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:path/path.dart';
 import 'dart:io';
@@ -70,7 +71,13 @@ class _SignupPageState extends State<SignupPage> {
       });
     });
   }
+  var phonePattern =
+      r'^(\+201|01)[1,2,0,5]{1}[0-9]{8}$';
 
+  bool validatePhone(String email) {
+    final regExp = RegExp(phonePattern);
+    return regExp.hasMatch(email);
+  }
   initState() {
     getData();
     id = DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
@@ -93,17 +100,11 @@ class _SignupPageState extends State<SignupPage> {
   bool isLoading = false;
   dynamic uid;
   // Email Validation
-  final emailPattern =
-      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-  bool validateEmail(String email) {
-    final regExp = RegExp(emailPattern);
-    return regExp.hasMatch(email);
-  }
+
 
   Future<void> signup(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
-      bool normalEmail=validateEmail(email);
       try {
         if(position==null)
           {
@@ -265,6 +266,7 @@ class _SignupPageState extends State<SignupPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         controller: _userNameController,
+                        autovalidateMode: AutovalidateMode.always,
                         //initialValue: "user old name",
                         validator: (value) {
                           if (value!.isEmpty) {
@@ -305,11 +307,12 @@ class _SignupPageState extends State<SignupPage> {
                       child: TextFormField(
                         //   initialValue: "old use email",
                         controller: _emailController,
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please Enter Your email';
                           }
-                          if (!validateEmail(_emailController.text)) {
+                          if (!EmailValidator.validate(_emailController.text)) {
                             return 'Please Enter Valid Email';
                           }
                           return null;
@@ -417,11 +420,16 @@ class _SignupPageState extends State<SignupPage> {
                       padding: const EdgeInsets.all(8.0),
                       child: TextFormField(
                         //initialValue: "0123134654",
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: _phoneNumberController,
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please Enter Your phone Number';
                           }
+                          if(!validatePhone(_phoneNumberController.text))
+                            {
+                              return 'Please Enter Valid phone Number';
+                            }
                           return null;
                         },
                         onChanged: (val) {

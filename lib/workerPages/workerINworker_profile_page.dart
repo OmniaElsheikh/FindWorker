@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
@@ -10,7 +11,7 @@ import 'package:gp_1/workerPages/worker_filterd_page.dart';
 import '../controller/localization_service.dart';
 import '../t_key.dart';
 import 'home_page.dart';
-
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 late globals.FireBase db=new globals.FireBase();
 
 class WorkerInWorkerProfilePage extends StatefulWidget {
@@ -226,6 +227,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                               child: Container(
                                 padding: EdgeInsets.all(10),
                                 child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
                                     Text(
                                       "${data['workerName']}",
@@ -237,28 +239,62 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                                     SizedBox(
                                       height: 10,
                                     ),
-                                    Text(
-                                      "Phone: ${data['phone']}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${data['phone']}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15),
+                                        ),
+                                        SizedBox(width:8),
+                                        MaterialButton(
+                                            height: 20,
+                                            color:Colors.white,
+                                            minWidth:15,
+                                            shape:RoundedRectangleBorder(
+                                                borderRadius:BorderRadius.circular(35)
+                                            ),
+                                            onPressed: ()=>UrlLauncher.launchUrl(Uri.parse('tel:${data['phone']}')), child: Icon(Icons.phone,color:Colors.green,size:18)
+                                        )
+                                      ],
                                     ),
                                     SizedBox(
                                       height: 10,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                                      child: Center(
-                                        child: Row(
-                                          children: [
-                                            Icon(Icons.star, color: Colors.deepOrange),
-                                            SizedBox(width: 5),
-                                            Text(
-                                              "Rate : ${data['rate']..toStringAsFixed(2)}",
-                                              style: TextStyle(fontWeight: FontWeight.bold),
-                                            ),
-                                          ],
-                                        ),
+                                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Rate : ",
+                                            style: TextStyle(fontWeight: FontWeight.bold),
+                                          ),
+                                          RatingBar.builder(
+                                            updateOnDrag:
+                                            true,
+                                            itemSize: 15,
+                                            glowColor:
+                                            Colors
+                                                .amber,
+                                            itemPadding: EdgeInsets
+                                                .symmetric(
+                                                horizontal:
+                                                4),
+                                            initialRating: data['rate']
+                                                .toDouble(),
+                                            itemCount: 5,
+                                            itemBuilder:
+                                                (context,
+                                                i) {
+                                              return Icon(
+                                                  Icons
+                                                      .star,
+                                                  color: Colors
+                                                      .amber);
+                                            }, onRatingUpdate: (double value) {  },),
+                                        ],
                                       ),
                                     ),
                                     Row(
@@ -267,6 +303,8 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                                               child: MaterialButton(
                                                 minWidth: 30,
                                                 onPressed: () {
+                                                  setState(() {
+                                                  });
                                                   if(reqstatus=="Pending"||reqstatus=='On')
                                                     {
                                                       Requests.doc(reqId).delete();

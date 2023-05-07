@@ -61,8 +61,8 @@ class _UserProfileState extends State<UserProfile> {
     GeoPoint position=location;
     List<Placemark> placemark = await placemarkFromCoordinates(position.latitude, position.longitude);
     setState(() {
-      country=placemark[0].locality;
-      city=placemark[0].subAdministrativeArea;
+      country=placemark[0].subAdministrativeArea;
+      city=placemark[0].administrativeArea;
       print('done');
     });
   }
@@ -155,7 +155,7 @@ class _UserProfileState extends State<UserProfile> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: ListView(shrinkWrap: false, children: [
                     Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Container(
                           width: double.infinity,

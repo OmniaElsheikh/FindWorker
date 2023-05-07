@@ -173,6 +173,29 @@ class _LoginPageState extends State<LoginPage> {
           });
           print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
+          showDialog(
+              context: context, builder: (context){
+            return AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)
+              ),
+              icon: Icon(Icons.warning,color: Colors.red,size: 30,),
+              title: Text(TKeys.loginWrongEmailTitle.translate(context),style: TextStyle(color: Colors.red,fontSize: 30),),
+              content: Text(TKeys.loginWrongPassContent.translate(context),style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
+              actions: [
+                MaterialButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)
+                  ),
+                  color: Colors.deepOrange,
+                  onPressed: (){
+                    Navigator.of(context).popAndPushNamed('login');
+                  },
+                  child: Text(TKeys.loginWrongEmailOkButton.translate(context)),
+                )
+              ],
+            );
+          });
           print('Wrong password provided for that user.');
         }
       }

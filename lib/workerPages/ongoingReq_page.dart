@@ -20,7 +20,7 @@ class OngoingRequestPage extends StatefulWidget {
 }
 
 bool isRequested = false;
-dynamic whereToUpdate=true;
+dynamic whereToUpdate = true;
 dynamic fontSize = 18.0;
 dynamic sizedBox = 15.0;
 late dynamic data = {'': dynamic};
@@ -39,20 +39,19 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
       onError: (e) => print("Error getting document: $e"),
     );
   }
+
   List workers = [];
   CollectionReference Workers = db.worker();
   List customers = [];
   CollectionReference Customers = db.customer();
 
-  updateRate(New,Old,Id)async{
-    double rate=(New+Old)/2.0;
+  updateRate(New, Old, Id) async {
+    double rate = (New + Old) / 2.0;
     var Wresponse = await Workers.get();
     var Cresponse = await Customers.get();
     Wresponse.docs.forEach((element) {
       if (element['id'] == Id) {
-        Workers.doc(Id).update({
-          'rate':rate
-        });
+        Workers.doc(Id).update({'rate': rate});
         print("==========================================");
         print('is worker');
         print("==========================================");
@@ -60,16 +59,13 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
     });
     Cresponse.docs.forEach((element) {
       if (element['id'] == Id) {
-        Customers.doc(Id).update({
-          'rate':rate
-        });
+        Customers.doc(Id).update({'rate': rate});
         print("==========================================");
         print('is customer');
         print("==========================================");
         print('done rate update for customer');
       }
     });
-
   }
 
   @override
@@ -78,7 +74,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
     super.initState();
   }
 
-  final localizationController=Get.find<LocalizationController>();
+  final localizationController = Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -90,7 +86,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
           icon: Icon(Icons.arrow_back),
           color: Colors.deepOrange,
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.of(context).pop;
           },
         ),
         title: Center(
@@ -154,7 +150,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "Client Name ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -162,7 +159,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "Phone ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -170,7 +168,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "Location ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -178,7 +177,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "Distance in KM ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -186,7 +186,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "Estimated Time ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -194,7 +195,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "Transportation Fee ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -213,7 +215,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             ": ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -221,7 +224,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             ": ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -229,7 +233,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             ": ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -237,7 +242,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             ": ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -245,7 +251,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             ": ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -253,7 +260,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             ": ",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -272,7 +280,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "${data['customerName']}",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -280,7 +289,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "${data['customerPhone']}",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -288,7 +298,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "Giza,El-Hwamdia",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -296,7 +307,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "10 KM",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -304,7 +316,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "5 Minutes",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -312,7 +325,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                           Text(
                             "30 L.E.",
                             style: TextStyle(
-                                fontSize: fontSize, fontWeight: FontWeight.w700),
+                                fontSize: fontSize,
+                                fontWeight: FontWeight.w700),
                           ),
                           SizedBox(
                             height: sizedBox,
@@ -342,11 +356,14 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                             builder: (context) {
                               return AlertDialog(
                                 // icon: Icon(Icons.note,color: Colors.red,size: 50,),
-                                title: Text(TKeys.WongoingInEndMessageTitle.translate(context)),
+                                title: Text(
+                                    TKeys.WongoingInEndMessageTitle.translate(
+                                        context)),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(40)),
-                                content:
-                                    Text(TKeys.WongoingInEndMessageContent.translate(context)),
+                                content: Text(
+                                    TKeys.WongoingInEndMessageContent.translate(
+                                        context)),
                                 actions: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -406,7 +423,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                       ),
                                                       Expanded(
                                                         child: Container(
-                                                          height:35,
+                                                          height: 35,
                                                           child: Text(
                                                             "Name : ${data['customerName']}",
                                                             style: TextStyle(
@@ -423,45 +440,67 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                       Expanded(
                                                         child: Row(
                                                           mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
+                                                              MainAxisAlignment
+                                                                  .center,
                                                           children: [
                                                             Text(
-                                                              "Rate : ${data['customerRate'].toStringAsFixed(2) }",
+                                                              "Rate : ${data['customerRate'].toStringAsFixed(2)}",
                                                               style: TextStyle(
                                                                   fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                                      FontWeight
+                                                                          .bold,
                                                                   fontSize: 15),
                                                             ),
                                                             SizedBox(width: 10),
-
                                                           ],
                                                         ),
                                                       ),
-                                                      Expanded(child:Container(
+                                                      Expanded(
+                                                          child: Container(
                                                         width: 180,
                                                         height: 70,
                                                         child: Column(
                                                           children: [
                                                             RatingBar.builder(
-                                                                updateOnDrag: true,
-                                                                itemSize:25,
-                                                                minRating:1,
-                                                                allowHalfRating:true,
-                                                                glowColor:Colors.amber,
-                                                                itemPadding: EdgeInsets.symmetric(horizontal: 4),
-                                                                initialRating: data['customerRate'].toDouble(),
+                                                                updateOnDrag:
+                                                                    true,
+                                                                itemSize: 25,
+                                                                minRating: 1,
+                                                                allowHalfRating:
+                                                                    true,
+                                                                glowColor:
+                                                                    Colors
+                                                                        .amber,
+                                                                itemPadding: EdgeInsets
+                                                                    .symmetric(
+                                                                        horizontal:
+                                                                            4),
+                                                                initialRating: data[
+                                                                        'customerRate']
+                                                                    .toDouble(),
                                                                 itemCount: 5,
-                                                                itemBuilder: (context,i){
-                                                                  return Icon(Icons.star,size:5,color:Colors.amber);
+                                                                itemBuilder:
+                                                                    (context,
+                                                                        i) {
+                                                                  return Icon(
+                                                                      Icons
+                                                                          .star,
+                                                                      size: 5,
+                                                                      color: Colors
+                                                                          .amber);
                                                                 },
-                                                                onRatingUpdate: (newRating){
+                                                                onRatingUpdate:
+                                                                    (newRating) {
                                                                   setState(() {
-                                                                    updateRate(newRating.toDouble(),data['customerRate'].toDouble(),data['customerId']);
+                                                                    updateRate(
+                                                                        newRating
+                                                                            .toDouble(),
+                                                                        data['customerRate']
+                                                                            .toDouble(),
+                                                                        data[
+                                                                            'customerId']);
                                                                   });
-                                                                }
-                                                            ),
+                                                                }),
                                                           ],
                                                         ),
                                                       ))
@@ -499,7 +538,9 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                                 ));
                                                               },
                                                               child: Text(
-                                                                TKeys.WongoingInReviewDoneButton.translate(context),
+                                                                TKeys.WongoingInReviewDoneButton
+                                                                    .translate(
+                                                                        context),
                                                                 style: TextStyle(
                                                                     color: Colors
                                                                         .white,
@@ -508,34 +549,35 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                               ),
                                                             ),
                                                           ),
-                                                          SizedBox(
-                                                            width: 15,
-                                                          ),
+                                                          SizedBox(width: 10,),
                                                           Expanded(
                                                             child:
-                                                                MaterialButton(
+                                                            MaterialButton(
                                                               height: 40,
                                                               shape:
-                                                                  RoundedRectangleBorder(
+                                                              RoundedRectangleBorder(
                                                                 borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            15.0),
+                                                                BorderRadius
+                                                                    .circular(
+                                                                    15.0),
                                                               ),
                                                               color: Colors.red,
                                                               onPressed: () {
                                                                 Navigator.of(
-                                                                        context)
+                                                                    context)
                                                                     .pushReplacement(
-                                                                        MaterialPageRoute(
-                                                                  builder: (BuildContext context) => ComplainPage(
-                                                                      Wid: data[
-                                                                          'workerId'],
-                                                                      Cid: data[
-                                                                          'customerId'],
-                                                                      Cname: data[
-                                                                          'customerName']),
-                                                                ));
+                                                                    MaterialPageRoute(
+                                                                      builder: (BuildContext
+                                                                      context) =>
+                                                                          ComplainPage(
+                                                                            Wid: data[
+                                                                            'workerId'],
+                                                                            Cid: data[
+                                                                            'customerId'],
+                                                                            Cname: data[
+                                                                            'customerName'],
+                                                                          ),
+                                                                    ));
                                                               },
                                                               child: Text(
                                                                 TKeys.WongoingInComplainButton.translate(context),
@@ -543,7 +585,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                                     color: Colors
                                                                         .white,
                                                                     fontSize:
-                                                                        20),
+                                                                    20),
                                                               ),
                                                             ),
                                                           ),
@@ -555,7 +597,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                               });
                                         },
                                         child: Text(
-                                          TKeys.WongoingInEndDoneButton.translate(context),
+                                          TKeys.WongoingInEndDoneButton
+                                              .translate(context),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),
@@ -575,7 +618,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                           Navigator.of(context).pop();
                                         },
                                         child: Text(
-                                          TKeys.WongoingInEndCancelButton.translate(context),
+                                          TKeys.WongoingInEndCancelButton
+                                              .translate(context),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),
@@ -612,11 +656,13 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                             builder: (context) {
                               return AlertDialog(
                                 // icon: Icon(Icons.note,color: Colors.red,size: 50,),
-                                title: Text(TKeys.WongoingInCancelMessageTitle.translate(context)),
+                                title: Text(TKeys.WongoingInCancelMessageTitle
+                                    .translate(context)),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(40)),
-                                content:
-                                    Text(TKeys.WongoingInCancelMessageContent.translate(context)),
+                                content: Text(
+                                    TKeys.WongoingInCancelMessageContent
+                                        .translate(context)),
                                 actions: [
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -646,7 +692,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                           ));
                                         },
                                         child: Text(
-                                          TKeys.WongoingInCancelMessageOkButton.translate(context),
+                                          TKeys.WongoingInCancelMessageOkButton
+                                              .translate(context),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),
@@ -666,7 +713,8 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                           Navigator.of(context).pop();
                                         },
                                         child: Text(
-                                          TKeys.WongoingInCancelMessageNoButton.translate(context),
+                                          TKeys.WongoingInCancelMessageNoButton
+                                              .translate(context),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 20),

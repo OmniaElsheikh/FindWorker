@@ -9,6 +9,7 @@ enum TKeys{
   loginSignupButton,
   loginWrongEmailTitle,
   loginWrongEmailContent,
+  loginWrongPassContent,
   loginWrongEmailOkButton,
 
   signupUserName,

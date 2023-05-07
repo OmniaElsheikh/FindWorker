@@ -17,7 +17,7 @@ class UserHomePage extends StatefulWidget {
 }
 
 class _UserHomePageState extends State<UserHomePage> {
-  int selectedindex = 2;
+  int selectedindex = 1;
   List <Widget> Widgets=[
     Notifications(),
     UserProfile(),

@@ -8,6 +8,7 @@ import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import '../controller/localization_service.dart';
 import '../t_key.dart';
+import 'home_page.dart';
 import 'ongoingReq_page.dart';
 
 late globals.FireBase db=new globals.FireBase();
@@ -144,187 +145,177 @@ class _NotificationPageState extends State<NotificationPage> {
         child: Column(
           children: [
             StreamBuilder<QuerySnapshot>(
-              stream: db.requests().where("workerId",isEqualTo: Wid).snapshots(),
-              builder: (context, snapshot) {
-                if(!snapshot.hasData)
+                stream: db.requests().where("workerId",isEqualTo: Wid).snapshots(),
+                builder: (context, snapshot) {
+                  if(!snapshot.hasData)
                   {
                     return const Center(child: Text("Loading",style: TextStyle(color: Colors.white,fontSize: 30),),);
                   }
-                if(snapshot.hasError)
-                {
-                  return const Center(child: Text("Loading",style: TextStyle(color: Colors.white,fontSize: 30),),);
-                }
-                return ListView.separated(
-                  shrinkWrap: true,
-                    itemBuilder: (context,i)=>Container(
-                    height: 115,
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-                    decoration: BoxDecoration(
-                        color: globals.ContColor,
-                        borderRadius: BorderRadius.circular(15)
-                    ),
-                    child: ListTile(
-                      onTap: (){
-                        if(snapshot.data?.docs[i]['reqStatus']=='Pending')
-                          {}
-                        else{
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                            return OngoingRequestPage(id: snapshot.data?.docs[i].id,);
-                          }));
-                        }
-                      },
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Container(
-                           child: CircleAvatar(foregroundImage: NetworkImage("${snapshot.data?.docs[i]['customerImage']}"),
-                          )),
-                          SizedBox(width: 5,),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                  if(snapshot.hasError)
+                  {
+                    return const Center(child: Text("Loading",style: TextStyle(color: Colors.white,fontSize: 30),),);
+                  }
+                  return ListView.separated(
+                      shrinkWrap: true,
+                      itemBuilder: (context,i)=>Container(
+                        height: 115,
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
+                        decoration: BoxDecoration(
+                            color: globals.ContColor,
+                            borderRadius: BorderRadius.circular(15)
+                        ),
+                        child: ListTile(
+                          onTap: (){
+                          },
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?TKeys.WnotiIncomingReq.translate(context):TKeys.WnotiOngoingReq.translate(context),style: TextStyle(color: Colors.red.shade200,fontSize: 15),),
-                              Text("Name : ${snapshot.data?.docs[i]['customerName']}",style: TextStyle(color: Colors.black)),
-                              MaterialButton(
-                                  onPressed: (){
-                                    showBottomSheet(backgroundColor:Colors.black26.withOpacity(0.5),context: context, builder: (context){
-                                      return AlertDialog(
-                                        backgroundColor: Colors.grey[500],
-                                        title: Text(TKeys.WnotiMoreInfoTitle.translate(context)),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(40)
-                                        ),
-                                        content: Container(
-                                          height: 300,
-                                            child: Column(
-                                              children: [
-                                                Container(
-                                                  height: 180,
-                                                  width: 150,
-                                                  child: Padding(
-                                                    padding: const EdgeInsets.all(10.0),
-                                                    child: ClipRRect(
-                                                      borderRadius: BorderRadius.circular(20),
-                                                      child: Image.network("${snapshot.data?.docs[i]['customerImage']}",
-                                                        fit: BoxFit.fill,
+                              Container(
+                                  child: CircleAvatar(foregroundImage: NetworkImage("${snapshot.data?.docs[i]['customerImage']}"),
+                                  )),
+                              SizedBox(width: 5,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?TKeys.WnotiIncomingReq.translate(context):TKeys.WnotiOngoingReq.translate(context),style: TextStyle(color: Colors.red.shade200,fontSize: 15),),
+                                  Text("Name : ${snapshot.data?.docs[i]['customerName']}",style: TextStyle(color: Colors.black)),
+                                  MaterialButton(
+                                    onPressed: (){
+                                      showBottomSheet(backgroundColor:Colors.black26.withOpacity(0.5),context: context, builder: (context){
+                                        return AlertDialog(
+                                          backgroundColor: Colors.grey[500],
+                                          title: Text(TKeys.WnotiMoreInfoTitle.translate(context)),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(40)
+                                          ),
+                                          content: Container(
+                                              height: 300,
+                                              child: Column(
+                                                children: [
+                                                  Container(
+                                                    height: 180,
+                                                    width: 150,
+                                                    child: Padding(
+                                                      padding: const EdgeInsets.all(10.0),
+                                                      child: ClipRRect(
+                                                        borderRadius: BorderRadius.circular(20),
+                                                        child: Image.network("${snapshot.data?.docs[i]['customerImage']}",
+                                                          fit: BoxFit.fill,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
+                                                  SizedBox(height: 10,),
+                                                  Text("Name : ${snapshot.data?.docs[i]['customerName']}",style: TextStyle(fontWeight: FontWeight.bold)),
+                                                  SizedBox(height: 5,),
+                                                  Text("Estimated Time : 5 Minutes",style: TextStyle(fontWeight: FontWeight.bold),),
+                                                  SizedBox(height: 5,),
+                                                  Row(
+                                                    children: [
+                                                      Icon(Icons.star, color: Colors.deepOrange,size: 20,),
+                                                      SizedBox(width: 5),
+                                                      Text(
+                                                        "Rate : ${snapshot.data?.docs[i]['customerRate'].toStringAsFixed(2)}",
+                                                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 5,),
+                                                  Row(
+                                                    children: [
+                                                      Icon(Icons.phone, color: Colors.deepOrange,size: 20,),
+                                                      SizedBox(width: 5),
+                                                      Text(
+                                                        "Phone : ${snapshot.data?.docs[i]['customerPhone']}",
+                                                        style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              )
+                                          ),
+                                          actions: [
+                                            Row(
+                                              mainAxisAlignment: MainAxisAlignment.center,
+                                              children: [
+                                                MaterialButton(
+                                                  height: 40,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius: BorderRadius.circular(15.0),
+                                                  ),
+                                                  color: Colors.indigo.shade900,
+                                                  onPressed: (){
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: Text(TKeys.WnotiMoreInfoOkButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 20),),
                                                 ),
-                                                SizedBox(height: 10,),
-                                                Text("Name : ${snapshot.data?.docs[i]['customerName']}",style: TextStyle(fontWeight: FontWeight.bold)),
-                                                SizedBox(height: 5,),
-                                                Text("Estimated Time : 5 Minutes",style: TextStyle(fontWeight: FontWeight.bold),),
-                                                SizedBox(height: 5,),
-                                                Row(
-                                                  children: [
-                                                    Icon(Icons.star, color: Colors.deepOrange,size: 20,),
-                                                    SizedBox(width: 5),
-                                                    Text(
-                                                      "Rate : ${snapshot.data?.docs[i]['customerRate'].toStringAsFixed(2)}",
-                                                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(height: 5,),
-                                                Row(
-                                                  children: [
-                                                    Icon(Icons.phone, color: Colors.deepOrange,size: 20,),
-                                                    SizedBox(width: 5),
-                                                    Text(
-                                                      "Phone : ${snapshot.data?.docs[i]['customerPhone']}",
-                                                      style: TextStyle(fontWeight: FontWeight.bold,fontSize: 15),
-                                                    ),
-                                                  ],
-                                                ),
+                                                SizedBox(width: 10,),
                                               ],
                                             )
-                                        ),
-                                        actions: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              MaterialButton(
-                                                height: 40,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(15.0),
-                                                ),
-                                                color: Colors.indigo.shade900,
-                                                onPressed: (){
-                                                  Navigator.of(context).pop();
-                                                },
-                                                child: Text(TKeys.WnotiMoreInfoOkButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 20),),
-                                              ),
-                                              SizedBox(width: 10,),
-                                            ],
-                                          )
 
-                                        ],
-                                      );
+                                          ],
+                                        );
+                                      });
+
+                                    },
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15)
+                                    ),
+                                    height: 30,
+                                    color: Colors.indigo,
+                                    child: Text(TKeys.WnotiMoreInfoButton.translate(context),style: TextStyle(color: Colors.white),),
+                                  )
+                                ],
+                              ),
+                              Expanded(child: Container()),
+                              snapshot.data?.docs[i]['reqStatus']=='Pending'?Expanded(
+                                flex: 18,
+                                child: MaterialButton(
+                                  minWidth: 80,
+                                  height: 30,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  color: Colors.green,
+                                  onPressed: (){
+                                    setState(() {
+                                      Cid=snapshot.data?.docs[i]['customerId'];
                                     });
-
+                                    updateCustomerReq();
+                                    updateWorkerReq();
+                                    statusNoti(context,snapshot.data?.docs[i].id);
                                   },
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15)
+                                  child: Text(TKeys.WnotiAcceptReq.translate(context),style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
                                 ),
-                                height: 30,
-                                color: Colors.indigo,
-                                child: Text(TKeys.WnotiMoreInfoButton.translate(context),style: TextStyle(color: Colors.white),),
-                              )
+                              ):Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.white,fontSize: 18),),
+                              SizedBox(width: 5,),
+                              snapshot.data?.docs[i]['reqStatus']=='Pending'?Expanded(
+                                flex: 18,
+                                child: MaterialButton(
+                                  minWidth: 80,
+                                  height: 30,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                  ),
+                                  color: Colors.deepOrange[400],
+                                  onPressed: (){
+                                    setState(() {
+                                      deleteNoti(snapshot.data?.docs[i].id);
+                                    });
+                                  },
+                                  child: Text(TKeys.WnotiRefuseReq.translate(context),style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
+                                ),
+                              ):Expanded(child: Container()),
+
                             ],
                           ),
-                          Expanded(child: Container()),
-                          snapshot.data?.docs[i]['reqStatus']=='Pending'?Expanded(
-                            flex: 18,
-                            child: MaterialButton(
-                              minWidth: 80,
-                              height: 30,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              color: Colors.green,
-                              onPressed: (){
-                                setState(() {
-                                  Cid=snapshot.data?.docs[i]['customerId'];
-                                });
-                                updateCustomerReq();
-                                updateWorkerReq();
-                                statusNoti(context,snapshot.data?.docs[i].id);
-                                Navigator.of(context).push( MaterialPageRoute (
-                                  builder: (BuildContext context) =>OngoingRequestPage(id:snapshot.data?.docs[i].id),));
-
-                              },
-                              child: Text(TKeys.WnotiAcceptReq.translate(context),style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
-                            ),
-                          ):Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.white,fontSize: 18),),
-                          SizedBox(width: 5,),
-                          snapshot.data?.docs[i]['reqStatus']=='Pending'?Expanded(
-                            flex: 18,
-                            child: MaterialButton(
-                              minWidth: 80,
-                              height: 30,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15.0),
-                              ),
-                              color: Colors.deepOrange[400],
-                              onPressed: (){
-                                setState(() {
-                                  deleteNoti(snapshot.data?.docs[i].id);
-                                });
-                              },
-                              child: Text(TKeys.WnotiRefuseReq.translate(context),style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
-                            ),
-                          ):Expanded(child: Container()),
-
-                        ],
+                        ),
                       ),
-                    ),
-                  ),
                       separatorBuilder: (context,i)=>SizedBox(height: 5,),
                       itemCount: snapshot.data!.docs.length
                   );
-              }
+                }
             ),
             StreamBuilder<QuerySnapshot>(
                 stream: db.requests().where("customerId",isEqualTo: Wid).snapshots(),
@@ -350,12 +341,13 @@ class _NotificationPageState extends State<NotificationPage> {
                         child: ListTile(
                           onTap: (){
                             if(snapshot.data?.docs[i]['reqStatus']=='Pending')
-                            {}
-                            else{
-                              /*Navigator.of(context).push(MaterialPageRoute(builder: (context){
-                                return OngoingRequestPage(id: snapshot.data?.docs[i].id,);
-                              }));*/
-                            }
+                              {}
+                            else
+                              {
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                                  return OngoingRequestPage(id: snapshot.data?.docs[i].id,);
+                                }));
+                              }
                           },
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.start,

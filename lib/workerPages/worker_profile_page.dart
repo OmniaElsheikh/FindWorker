@@ -72,8 +72,8 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
     GeoPoint position=location;
     List<Placemark> placemark = await placemarkFromCoordinates(position.latitude, position.longitude);
     setState(() {
-      country=placemark[0].locality;
-      city=placemark[0].subAdministrativeArea;
+      country=placemark[0].subAdministrativeArea;
+      city=placemark[0].administrativeArea;
       print('done');
     });
   }
@@ -333,7 +333,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                       ),
                                     ),
                                     Text(
-                                      "Phone : ${data['phone']}",
+                                      "Phone: ${data['phone']}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
@@ -353,7 +353,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "Rate : ${data['rate']..toStringAsFixed(2)}",
+                                          "Rate : ${data['rate'].toStringAsFixed(2)}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
@@ -367,11 +367,12 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                       height: 5,
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Container(
-                                          width: 200,
+                                          margin:EdgeInsets.only(top:10),
+                                          width: 120,
                                           child: MaterialButton(
                                             onPressed: () {
                                               workerCategoriesPage();

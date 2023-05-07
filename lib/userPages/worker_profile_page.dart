@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:gp_1/t_key.dart';
 import 'package:gp_1/userPages/filterd_page.dart';
 import 'package:gp_1/userPages/home_page.dart';
-
+import 'package:url_launcher/url_launcher.dart' as UrlLauncher;
 import '../controller/localization_service.dart';
 
 late globals.FireBase db=new globals.FireBase();
-
 class WorkerInUserProfilePage extends StatefulWidget {
   final id;
   final cateName;
@@ -152,6 +152,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
   }
   final localizationController=Get.find<LocalizationController>();
 
+
   
   @override
   Widget build(BuildContext context) {
@@ -235,26 +236,61 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                     SizedBox(
                                       height: 10,
                                     ),
-                                    Text(
-                                      "Phone: ${data['phone']}",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          "${data['phone']}",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15),
+                                        ),
+                                        SizedBox(width:8),
+                                        MaterialButton(
+                                            height: 20,
+                                            color:Colors.white,
+                                            minWidth:15,
+                                            shape:RoundedRectangleBorder(
+                                                borderRadius:BorderRadius.circular(35)
+                                            ),
+                                            onPressed: ()=>UrlLauncher.launchUrl(Uri.parse('tel:${data['phone']}')), child: Icon(Icons.phone,color:Colors.green,size:18)
+                                        )
+                                      ],
                                     ),
                                     SizedBox(
                                       height: 10,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 40.0),
+                                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
                                       child: Center(
                                         child: Row(
                                           children: [
-                                            Icon(Icons.star, color: Colors.deepOrange),
-                                            SizedBox(width: 5),
                                             Text(
-                                              "Rate : ${data['rate'].toStringAsFixed(2)}",
+                                              "Rate : ",
                                               style: TextStyle(fontWeight: FontWeight.bold),
                                             ),
+                                            RatingBar.builder(
+                                              updateOnDrag:
+                                              true,
+                                              itemSize: 15,
+                                              glowColor:
+                                              Colors
+                                                  .amber,
+                                              itemPadding: EdgeInsets
+                                                  .symmetric(
+                                                  horizontal:
+                                                  4),
+                                              initialRating: data['rate']
+                                                  .toDouble(),
+                                              itemCount: 5,
+                                              itemBuilder:
+                                                  (context,
+                                                  i) {
+                                                return Icon(
+                                                    Icons
+                                                        .star,
+                                                    color: Colors
+                                                        .amber);
+                                              }, onRatingUpdate: (double value) {  },),
                                           ],
                                         ),
                                       ),
@@ -265,6 +301,8 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                               child: MaterialButton(
                                                 minWidth: 30,
                                                 onPressed: () {
+                                                  setState(() {
+                                                  });
                                                   if(reqstatus=="Pending"||reqstatus=='On')
                                                     {
                                                       Requests.doc(reqId).delete();

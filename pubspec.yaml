@@ -49,6 +49,8 @@ dependencies:
     sdk: flutter
   get: ^4.6.1
   shared_preferences: ^2.1.0
+  email_validator: ^2.1.16
+  url_launcher: ^6.0.4
 
 
   # flutter_launcher_icons: ^0.12.0

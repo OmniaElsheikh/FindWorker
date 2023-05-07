@@ -34,6 +34,13 @@ class _UserSettingPageState extends State<UserSettingPage> {
     getData();
     super.initState();
   }
+  var phonePattern =
+      r'^(\+201|01)[1,2,0,5]{1}[0-9]{8}$';
+
+  bool validatePhone(String email) {
+    final regExp = RegExp(phonePattern);
+    return regExp.hasMatch(email);
+  }
 
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _userNameController = TextEditingController();
@@ -65,7 +72,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
   }
 
   void editinfo(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
+
       try {
         if (path == '') {
           Customers.doc(id).update({
@@ -91,7 +98,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
       } catch (e) {
         print(e.toString());
       }
-    }
+
   }
   final localizationController=Get.find<LocalizationController>();
 
@@ -152,6 +159,13 @@ class _UserSettingPageState extends State<UserSettingPage> {
                             name = val;
                           });
                         },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (value!.length<=3) {
+                            return 'Please Enter valid username';
+                          }
+                          return null;
+                        },
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
@@ -183,6 +197,17 @@ class _UserSettingPageState extends State<UserSettingPage> {
                           setState(() {
                             phone = val;
                           });
+                        },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please Enter Your phone Number';
+                          }
+                          if(!validatePhone(_phoneNumberController.text))
+                          {
+                            return 'Please Enter Valid phone Number';
+                          }
+                          return null;
                         },
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(

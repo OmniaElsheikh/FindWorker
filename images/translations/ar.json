@@ -1,7 +1,7 @@
 {
   "_comment1": "===========> worker profile page <=============",
   "WmyProfileTitle": "الصفحه الشخصيه",
-  "WsearchButton": "ابحث عن عامل",
+  "WsearchButton": "ابحث",
   "WactivButton": "نشط",
   "WdeactivButton": "غير نشط",
   "WuploadPostsButton" : "ارفع المزيد",
@@ -90,6 +90,7 @@
   "loginSignupButton": "انشاء حساب",
   "loginWrongEmailTitle": "تحذير",
   "loginWrongEmailContent": "انت لست مستخدم او انك محظور",
+  "loginWrongPassContent": "لقد ادخلت كلمة سر خاطئة",
   "loginWrongEmailOkButton": "حسنا",
 
   "_comment9": "===========>login page <=============",
