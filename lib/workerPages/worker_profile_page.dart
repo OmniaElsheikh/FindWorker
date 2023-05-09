@@ -31,7 +31,7 @@ bool noti = false;
 late File file;
 late dynamic imageurl;
 late dynamic isActiv = '';
-late dynamic ref;
+late dynamic ref=FirebaseStorage.instance.ref('posts');
 late dynamic imageId;
 late dynamic id = '';
 late dynamic city='';

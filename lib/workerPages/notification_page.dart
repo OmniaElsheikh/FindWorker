@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/LogIn&signUp/login.dart';
@@ -8,11 +9,12 @@ import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import '../controller/localization_service.dart';
 import '../t_key.dart';
+import 'complain_page.dart';
 import 'home_page.dart';
 import 'ongoingReq_page.dart';
 
 late globals.FireBase db=new globals.FireBase();
-
+dynamic isCustomer;
 late dynamic Wid='';
 late dynamic Cid='';
 class NotificationPage extends StatefulWidget {
@@ -102,6 +104,18 @@ class _NotificationPageState extends State<NotificationPage> {
     getData();
     super.initState();
   }
+
+  updateRate(New, Old, Id) async {
+    double rate = (New + Old) / 2.0;
+    var Cresponse = await Customers.get();
+    Cresponse.docs.forEach((element) {
+      if (element['id'] == Id) {
+        Customers.doc(Id).update({'rate': rate});
+        print("==========================================");
+        print('done rate update for customer');
+      }
+    });
+  }
   final localizationController=Get.find<LocalizationController>();
 
   @override
@@ -144,6 +158,7 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         child: Column(
           children: [
+            //read from requests from customer to worker
             StreamBuilder<QuerySnapshot>(
                 stream: db.requests().where("workerId",isEqualTo: Wid).snapshots(),
                 builder: (context, snapshot) {
@@ -167,6 +182,16 @@ class _NotificationPageState extends State<NotificationPage> {
                         ),
                         child: ListTile(
                           onTap: (){
+                           FirebaseFirestore.instance.collection('customer').get().then((value){
+                              value.docs.forEach((element) {
+                                if(element['id']==snapshot.data?.docs[i]['customerId'])
+                                  {
+                                    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                                      return OngoingRequestPage(id: snapshot.data?.docs[i].id,);
+                                    }));
+                                  }
+                              });
+                            });
                           },
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -288,7 +313,323 @@ class _NotificationPageState extends State<NotificationPage> {
                                   },
                                   child: Text(TKeys.WnotiAcceptReq.translate(context),style: TextStyle(color: Colors.white,fontSize: 14,fontWeight: FontWeight.bold),),
                                 ),
-                              ):Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.white,fontSize: 18),),
+                              ):Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.white,fontSize: 18),),
+                                  SizedBox(height:5),
+                                  snapshot.data?.docs[i]['reqStatus']=='On'
+                                      ?MaterialButton(
+                                    height: 40,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    color: Colors.deepOrange,
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(50)),
+                                          backgroundColor: Colors.white.withOpacity(0.0),
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              // icon: Icon(Icons.note,color: Colors.red,size: 50,),
+                                              title: Text(
+                                                  TKeys.WongoingInEndMessageTitle.translate(
+                                                      context)),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(40)),
+                                              content: Text(
+                                                  TKeys.WongoingInEndMessageContent.translate(
+                                                      context)),
+                                              actions: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    MaterialButton(
+                                                      height: 40,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadius.circular(15.0),
+                                                      ),
+                                                      color: Colors.green,
+                                                      onPressed: () async {
+                                                        CollectionReference Noti =
+                                                        db.requests();
+                                                        showCustomerRate(){
+                                                          db.customer().get().then((value) {
+                                                            value.docs.forEach((element) {
+                                                              if(element['id']==snapshot.data?.docs[i]['customerId'])
+                                                              {
+                                                                showModalBottomSheet(
+                                                                    backgroundColor: Colors.black26
+                                                                        .withOpacity(0.5),
+                                                                    context: context,
+                                                                    builder: (context) {
+                                                                      return AlertDialog(
+                                                                        backgroundColor: Colors.white,
+                                                                        title: Text(
+                                                                            "${TKeys.WongoingInReviewTitle.translate(context)} : ${snapshot.data?.docs[i]['customerName']}"),
+                                                                        shape: RoundedRectangleBorder(
+                                                                            borderRadius:
+                                                                            BorderRadius.circular(
+                                                                                40)),
+                                                                        content: Container(
+                                                                          //height: 400,
+                                                                            child: Column(
+                                                                              mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .center,
+                                                                              children: [
+                                                                                Expanded(
+                                                                                  child: Container(
+                                                                                    child: ClipRRect(
+                                                                                      borderRadius:
+                                                                                      BorderRadius
+                                                                                          .circular(
+                                                                                          20),
+                                                                                      child:
+                                                                                      Image.network(
+                                                                                        "${snapshot.data?.docs[i]['customerImage']}",
+                                                                                        fit: BoxFit.fill,
+                                                                                      ),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                Expanded(
+                                                                                  child: Container(
+                                                                                    height: 35,
+                                                                                    child: Text(
+                                                                                      "Name : ${snapshot.data?.docs[i]['customerName']}",
+                                                                                      style: TextStyle(
+                                                                                          fontSize: 20,
+                                                                                          fontWeight:
+                                                                                          FontWeight
+                                                                                              .bold),
+                                                                                    ),
+                                                                                    margin: EdgeInsets
+                                                                                        .symmetric(
+                                                                                        vertical: 5),
+                                                                                  ),
+                                                                                ),
+                                                                                Expanded(
+                                                                                  child: Row(
+                                                                                    mainAxisAlignment:
+                                                                                    MainAxisAlignment
+                                                                                        .center,
+                                                                                    children: [
+                                                                                      Text(
+                                                                                        "Rate : ${snapshot.data?.docs[i]['customerRate'].toStringAsFixed(2)}",
+                                                                                        style: TextStyle(
+                                                                                            fontWeight:
+                                                                                            FontWeight
+                                                                                                .bold,
+                                                                                            fontSize: 15),
+                                                                                      ),
+                                                                                      SizedBox(width: 10),
+                                                                                    ],
+                                                                                  ),
+                                                                                ),
+                                                                                Expanded(
+                                                                                    child: Container(
+                                                                                      width: 180,
+                                                                                      height: 70,
+                                                                                      child: Column(
+                                                                                        children: [
+                                                                                          RatingBar.builder(
+                                                                                              updateOnDrag:
+                                                                                              true,
+                                                                                              itemSize: 25,
+                                                                                              minRating: 1,
+                                                                                              allowHalfRating:
+                                                                                              true,
+                                                                                              glowColor:
+                                                                                              Colors
+                                                                                                  .amber,
+                                                                                              itemPadding: EdgeInsets
+                                                                                                  .symmetric(
+                                                                                                  horizontal:
+                                                                                                  4),
+                                                                                              initialRating: snapshot.data?.docs[i][
+                                                                                              'customerRate']
+                                                                                                  .toDouble(),
+                                                                                              itemCount: 5,
+                                                                                              itemBuilder:
+                                                                                                  (context,
+                                                                                                  i) {
+                                                                                                return Icon(
+                                                                                                    Icons
+                                                                                                        .star,
+                                                                                                    size: 5,
+                                                                                                    color: Colors
+                                                                                                        .amber);
+                                                                                              },
+                                                                                              onRatingUpdate:
+                                                                                                  (newRating) {
+                                                                                                setState(() {
+                                                                                                  updateRate(
+                                                                                                      newRating
+                                                                                                          .toDouble(),
+                                                                                                      snapshot.data?.docs[i]['customerRate']
+                                                                                                          .toDouble(),
+                                                                                                      snapshot.data?.docs[i][
+                                                                                                      'customerId']);
+                                                                                                });
+                                                                                              }),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ))
+                                                                              ],
+                                                                            )),
+                                                                        actions: [
+                                                                          Container(
+                                                                            margin: EdgeInsets.all(5),
+                                                                            child: Row(
+                                                                              mainAxisAlignment:
+                                                                              MainAxisAlignment
+                                                                                  .center,
+                                                                              children: [
+                                                                                Expanded(
+                                                                                  child:
+                                                                                  MaterialButton(
+                                                                                    height: 40,
+                                                                                    shape:
+                                                                                    RoundedRectangleBorder(
+                                                                                      borderRadius:
+                                                                                      BorderRadius
+                                                                                          .circular(
+                                                                                          15.0),
+                                                                                    ),
+                                                                                    color:
+                                                                                    Colors.green,
+                                                                                    onPressed: () {
+                                                                                      Navigator.of(
+                                                                                          context)
+                                                                                          .pushReplacement(
+                                                                                          MaterialPageRoute(
+                                                                                            builder: (BuildContext
+                                                                                            context) =>
+                                                                                            const WorkerHomePage(),
+                                                                                          ));
+                                                                                    },
+                                                                                    child: Text(
+                                                                                      TKeys.WongoingInReviewDoneButton
+                                                                                          .translate(
+                                                                                          context),
+                                                                                      style: TextStyle(
+                                                                                          color: Colors
+                                                                                              .white,
+                                                                                          fontSize:
+                                                                                          20),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                SizedBox(width: 10,),
+                                                                                Expanded(
+                                                                                  child:
+                                                                                  MaterialButton(
+                                                                                    height: 40,
+                                                                                    shape:
+                                                                                    RoundedRectangleBorder(
+                                                                                      borderRadius:
+                                                                                      BorderRadius
+                                                                                          .circular(
+                                                                                          15.0),
+                                                                                    ),
+                                                                                    color: Colors.red,
+                                                                                    onPressed: () {
+                                                                                      Navigator.of(
+                                                                                          context)
+                                                                                          .pushReplacement(
+                                                                                          MaterialPageRoute(
+                                                                                            builder: (BuildContext
+                                                                                            context) =>
+                                                                                                ComplainPage(
+                                                                                                  Wid: snapshot.data?.docs[i][
+                                                                                                  'workerId'],
+                                                                                                  Cid: snapshot.data?.docs[i][
+                                                                                                  'customerId'],
+                                                                                                  Cname: snapshot.data?.docs[i][
+                                                                                                  'customerName'],
+                                                                                                ),
+                                                                                          ));
+                                                                                    },
+                                                                                    child: Text(
+                                                                                      TKeys.WongoingInComplainButton.translate(context),
+                                                                                      style: TextStyle(
+                                                                                          color: Colors
+                                                                                              .white,
+                                                                                          fontSize:
+                                                                                          20),
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                              ],
+                                                                            ),
+                                                                          )
+                                                                        ],
+                                                                      );
+                                                                    });
+                                                              }
+                                                            });
+                                                          });
+                                                        };
+                                                        showCustomerRate();
+                                                        var response = await Noti.get();
+                                                        response.docs.forEach((element) {
+                                                          setState(() {
+                                                            if (element.id == snapshot.data?.docs[i].id) {
+                                                              Noti.doc(snapshot.data?.docs[i].id).delete();
+
+                                                            }
+                                                          });
+                                                        });
+                                                        Navigator.of(context).pop;
+
+                                                      },
+                                                      child: Text(
+                                                        TKeys.WongoingInEndDoneButton
+                                                            .translate(context),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    MaterialButton(
+                                                      height: 40,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadius.circular(15.0),
+                                                      ),
+                                                      color: Colors.deepOrange[400],
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text(
+                                                        TKeys.WongoingInEndCancelButton
+                                                            .translate(context),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: Text(
+                                      TKeys.WongoingInEndDoneButton.translate(context),
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                  )
+                                      :Container()
+                                ],
+                              ),
                               SizedBox(width: 5,),
                               snapshot.data?.docs[i]['reqStatus']=='Pending'?Expanded(
                                 flex: 18,
@@ -317,6 +658,8 @@ class _NotificationPageState extends State<NotificationPage> {
                   );
                 }
             ),
+
+            //read from requests from worker(customer) to worker
             StreamBuilder<QuerySnapshot>(
                 stream: db.requests().where("customerId",isEqualTo: Wid).snapshots(),
                 builder: (context, snapshot) {
@@ -341,13 +684,13 @@ class _NotificationPageState extends State<NotificationPage> {
                         child: ListTile(
                           onTap: (){
                             if(snapshot.data?.docs[i]['reqStatus']=='Pending')
-                              {}
+                            {}
                             else
-                              {
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context){
+                            {
+                              /*Navigator.of(context).push(MaterialPageRoute(builder: (context){
                                   return OngoingRequestPage(id: snapshot.data?.docs[i].id,);
-                                }));
-                              }
+                                }));*/
+                            }
                           },
                           title: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -360,7 +703,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?TKeys.WnotiSendingReq.translate(context):TKeys.WnotiOngoingReq.translate(context),style: TextStyle(color: Colors.red.shade200,fontSize: 15),),
-                                  Text("Worker Name : ${snapshot.data?.docs[i]['workerName']}",style: TextStyle(color: Colors.black)),
+                                  Text("Name : ${snapshot.data?.docs[i]['workerName']}",style: TextStyle(color: Colors.black)),
                                   MaterialButton(
                                     onPressed: (){
                                       showBottomSheet(backgroundColor:Colors.black26.withOpacity(0.5),context: context, builder: (context){
@@ -371,12 +714,11 @@ class _NotificationPageState extends State<NotificationPage> {
                                               borderRadius: BorderRadius.circular(40)
                                           ),
                                           content: Container(
-                                              height: 300,
+
                                               child: Column(
                                                 children: [
                                                   Container(
                                                     height: 180,
-                                                    width: 150,
                                                     child: Padding(
                                                       padding: const EdgeInsets.all(10.0),
                                                       child: ClipRRect(
@@ -450,7 +792,101 @@ class _NotificationPageState extends State<NotificationPage> {
                                 ],
                               ),
                               Expanded(child: Container()),
-                              Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.white,fontSize: 15),),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.white,fontSize: 16),),
+                                  SizedBox(height:5),
+                                  snapshot.data?.docs[i]['reqStatus']=='On'
+                                      ?MaterialButton(
+                                    height: 40,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    color: Colors.deepOrange,
+                                    onPressed: () {
+                                      showModalBottomSheet(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(50)),
+                                          backgroundColor: Colors.white.withOpacity(0.0),
+                                          context: context,
+                                          builder: (context) {
+                                            return AlertDialog(
+                                              // icon: Icon(Icons.note,color: Colors.red,size: 50,),
+                                              title: Text(
+                                                  TKeys.WongoingInEndMessageTitle.translate(
+                                                      context)),
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(40)),
+                                              content: Text(
+                                                  TKeys.WongoingInEndMessageContent.translate(
+                                                      context)),
+                                              actions: [
+                                                Row(
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: [
+                                                    MaterialButton(
+                                                      height: 40,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadius.circular(15.0),
+                                                      ),
+                                                      color: Colors.green,
+                                                      onPressed: () async {
+                                                        CollectionReference Noti =
+                                                        db.requests();
+                                                        var response = await Noti.get();
+                                                        response.docs.forEach((element) {
+                                                          setState(() {
+                                                            if (element.id == snapshot.data?.docs[i].id) {
+                                                              Noti.doc(snapshot.data?.docs[i].id).delete();
+                                                            }
+                                                          });
+                                                        });
+                                                      },
+                                                      child: Text(
+                                                        TKeys.WongoingInEndDoneButton
+                                                            .translate(context),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      width: 20,
+                                                    ),
+                                                    MaterialButton(
+                                                      height: 40,
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadius.circular(15.0),
+                                                      ),
+                                                      color: Colors.deepOrange[400],
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop();
+                                                      },
+                                                      child: Text(
+                                                        TKeys.WongoingInEndCancelButton
+                                                            .translate(context),
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 20),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            );
+                                          });
+                                    },
+                                    child: Text(
+                                      TKeys.WongoingInEndDoneButton.translate(context),
+                                      style: TextStyle(color: Colors.white, fontSize: 20),
+                                    ),
+                                  )
+                                      :Container()
+                                ],
+                              ),
                             ],
                           ),
                         ),
