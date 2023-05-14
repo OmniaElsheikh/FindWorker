@@ -102,6 +102,10 @@
   "signupUserAddImage": "Add Image",
   "signupChooseWorker": "WORKER",
   "signupChooseOr": "Or",
+  "signupNoPhotoContent": "There is no photo choosed, please try again",
+  "signupNoPositionContent": "There has been an error please try again",
+  "signupEmailAlreaduUsed": "Email Already Used",
+  "signupPassTooWeak": "Password Too Weak!",
   "signupChooseUser": "USER",
 
   "_comment10": "===========>user notification page <=============",
@@ -114,5 +118,23 @@
   "CnotiInReplyContent": "Reply For Your Complain",
   "CnotiInReplyOkButton": "Ok",
 
-  "CongoingInReviewTitle": "Review On Worker"
+  "CongoingInReviewTitle": "Review On Worker",
+
+  "_comment11": "===========>user filtered page <=============",
+  "CfilterdNearby": "Nearby",
+  "CfilterdAway": "Away",
+  "CfilterdOnline": "Online",
+  "CfilterdOffiline": "Offiline",
+  "CfilterdRate": "Rate",
+  "CfilterdKM": "KM",
+
+  "_comment12": "===========>user guide page <=============",
+  "CguideNavbar": "Guide",
+  "CguideTitle": "You don't need to Worry because (Find Worker) application is Very Easy to Use!",
+  "CguideNotifcatin": "Notification Button In \"Navigation Bar\" Shows the (Pending/Ongoing) Requests\" that You have requested for , it also Shows the \"replys\" coming from app's admin to a previous complain you have filed about a worker",
+  "CguideProfile": " Profile Button In \"Navigation Bar\" Shows Your Profile & your data , it also have \"Edit Info\" button that with it you can edit/update Your Data.",
+  "CguideCategory": " Categories Button In \"Navigation Bar\" Shows to you the existing categories and from within you can choose the category you want a technician from ; and inside it You will find Technicians that are bound to this category and will show to you if the technician is online/offline and how far \n him/her from you.",
+  "CguideLogout": " Logout Button In \"App Bar\" Logs you out of the application.",
+  "CguideLanguage": "Language Button In \"App Bar\" changes the language of application.",
+  "CguideSearch": " Search Button In \"App Bar\" inside categories page allow you to find the technician you want with simply typing \n his/her full name."
 }

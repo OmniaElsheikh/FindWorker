@@ -268,7 +268,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
                                           Text(
-                                            "Rate : ",
+                                            "${TKeys.CfilterdRate.translate(context)} : ",
                                             style: TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                           RatingBar.builder(

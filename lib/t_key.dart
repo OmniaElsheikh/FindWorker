@@ -20,6 +20,10 @@ enum TKeys{
   signupUserAddImage,
   signupChooseWorker,
   signupChooseOr,
+  signupNoPhotoContent,
+  signupNoPositionContent,
+  signupEmailAlreaduUsed,
+  signupPassTooWeak,
   signupChooseUser,
 
   WmyProfileTitle,
@@ -107,7 +111,23 @@ enum TKeys{
   CnotiInReplyContent,
   CnotiInReplyOkButton,
 
-  CongoingInReviewTitle
+  CongoingInReviewTitle,
+
+  CfilterdNearby,
+  CfilterdAway,
+  CfilterdOnline,
+  CfilterdOffiline,
+  CfilterdRate,
+  CfilterdKM,
+
+  CguideNavbar,
+  CguideTitle,
+  CguideNotifcatin,
+  CguideProfile,
+  CguideCategory,
+  CguideLogout,
+  CguideLanguage,
+  CguideSearch
 }
 
 extension TKeysExtention on TKeys{

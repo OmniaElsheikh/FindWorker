@@ -230,7 +230,7 @@ class _UserProfileState extends State<UserProfile> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "Rate : ${data['rate']..toStringAsFixed(2)}",
+                                          "Rate : ${data['rate'].toStringAsFixed(2)}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),

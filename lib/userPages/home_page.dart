@@ -5,6 +5,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/t_key.dart';
 import 'package:gp_1/userPages/categories_page.dart';
 import 'package:gp_1/userPages/notification_page.dart';
+import 'package:gp_1/userPages/userGuide_page.dart';
 import 'package:gp_1/userPages/user_profile.dart';
 
 import '../controller/localization_service.dart';
@@ -22,6 +23,7 @@ class _UserHomePageState extends State<UserHomePage> {
     Notifications(),
     UserProfile(),
     CategoriesPage(),
+    UserGuidePage()
   ];
 
   final localizationController=Get.find<LocalizationController>();
@@ -42,8 +44,8 @@ class _UserHomePageState extends State<UserHomePage> {
           items: [
             BottomNavigationBarItem(label: TKeys.WnavbarNotificationButton.translate(context), icon: Icon(Icons.notifications)),
             BottomNavigationBarItem(label: TKeys.WnavbarProfileButton.translate(context), icon: Icon(Icons.person_pin)),
-            BottomNavigationBarItem(label: TKeys.WcategoriesTitle.translate(context), icon: Icon(Icons.home)),
-
+            BottomNavigationBarItem(label: TKeys.WcategoriesTitle.translate(context), icon: Icon(Icons.category)),
+            BottomNavigationBarItem(label: TKeys.CguideNavbar.translate(context), icon: Icon(Icons.question_mark_rounded)),
           ],
         ),
             body: Widgets.elementAt(selectedindex),

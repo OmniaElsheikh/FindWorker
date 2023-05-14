@@ -137,7 +137,8 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
             margin: EdgeInsets.all(3),
             child: CircleAvatar(
               foregroundImage: AssetImage("images/worker-icon2.png"),
-            )),
+            )
+        ),
         title: Container(
           width: 195,
           child: Center(
@@ -215,7 +216,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        height: 240,
+                        height: 250,
                         width: double.infinity,
                         decoration: BoxDecoration(
                             color: Colors.grey.withOpacity(0.6),
@@ -338,9 +339,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
                                     ),
-                                    SizedBox(
-                                      height: 5,
-                                    ),
+
                                     Row(
                                       mainAxisAlignment: MainAxisAlignment.center,
                                       crossAxisAlignment:
@@ -353,7 +352,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "Rate : ${data['rate'].toStringAsFixed(2)}",
+                                          "${TKeys.CfilterdRate.translate(context)} : ${data['rate'].toStringAsFixed(2)}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),
@@ -371,7 +370,6 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Container(
-                                          margin:EdgeInsets.only(top:10),
                                           width: 120,
                                           child: MaterialButton(
                                             onPressed: () {
@@ -426,7 +424,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                         thickness: 2,
                       ),
                       MaterialButton(
-                        height: 50,
+                        height: 40,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(15.0),
                         ),
@@ -438,7 +436,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                 return Container(
                                   color: Colors.grey.withOpacity(0.7),
                                   padding: EdgeInsets.all(15),
-                                  height: 225,
+                                  height: 235,
                                   child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -446,7 +444,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                       Text(
                                   TKeys.WuploadPhotos.translate(context),
                                         style: TextStyle(
-                                            fontSize: 25,
+                                            fontSize: 20,
                                             fontWeight: FontWeight.bold),
                                       ),
                                       Divider(
@@ -568,7 +566,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                       ),
                       Container(
                         padding:
-                            EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 1),
                         child: Column(
                           children: [
                             Text(

@@ -71,7 +71,7 @@
   "WcomplainSubmitButton": "اتمام",
 
   "_comment6": "===========> worker categories page <=============",
-  "WcategoriesTitle": "الفئات",
+  "WcategoriesTitle": "المهن",
 
   "_comment7": "===========>worker-profile in worker page <=============",
   "WworkerInWorkerTitle": "صفحه العامل",
@@ -102,6 +102,10 @@
   "signupUserAddImage": "اضافة صورة",
   "signupChooseWorker": "عامل",
   "signupChooseOr": "او",
+  "signupNoPhotoContent": "انت لم تختر اى صورة : برجاء الاختيار !",
+  "signupNoPositionContent": "لقد حدث خطأ : برجاء المحاوله مره اخرى",
+  "signupEmailAlreaduUsed": "الحساب مسجل بالفعل!",
+  "signupPassTooWeak": "كلمة السر ضعيفه جدا !",
   "signupChooseUser": "مستخدم",
 
   "_comment10": "===========>user notification page <=============",
@@ -114,6 +118,23 @@
   "CnotiInReplyContent": "رد على الشكوى",
   "CnotiInReplyOkButton": "حسنا",
 
-  "CongoingInReviewTitle": "تقييم العامل"
+  "CongoingInReviewTitle": "تقييم العامل",
 
+  "_comment11": "===========>user filtered page <=============",
+  "CfilterdNearby": "قريب",
+  "CfilterdAway": "بعيد",
+  "CfilterdOnline": "نشط",
+  "CfilterdOffiline": "غير نشط",
+  "CfilterdRate": "التقييم",
+  "CfilterdKM": "كم",
+
+  "_comment12": "===========>user guide page <=============",
+  "CguideNavbar": "دليلك",
+  "CguideTitle": "لا تقلق لأن تطبيق \n(Find Worker) سهل الأستخدام!",
+  "CguideNotifcatin": "زر الأشعارات فى (شريط التنقل) يظهر لك الطلبات التى تكون (قيد التنفيذ/جارى تنفيذها) التى طلبتها, ويظهر لك ايضا اذا كان يوجد رد على شكوى سابقه.",
+  "CguideProfile": " زر الملف الشخصي في \"شريط التنقل\" يعرض ملفك الشخصي وبياناتك ، كما أنه يحتوي على زر \"تعديل المعلومات\" الذي يمكنك من خلاله تعديل / تحديث بياناتك.",
+  "CguideCategory": " زر المهن في \"شريط التنقل\" يظهر لك الفئات الموجودة ومن الداخل يمكنك اختيار المهنه التي تريد فنيا منها ؛ وبداخل المهنه ستجد فنيين مرتبطين بهذه الفئة وسيظهرون لك ما إذا كان الفني نشط/غير نشط ومدى بعده عنك.",
+  "CguideLogout": " زر تسجيل الخروج في \"شريط التطبيقات\" لتسجيل خروجك من التطبيق.",
+  "CguideLanguage": "زر اللغة في \"شريط التطبيقات\" يغير لغة التطبيق.",
+  "CguideSearch": " زر البحث في \"شريط التطبيقات\" داخل صفحة المهن يسمح لك بالعثور على الفني الذي تريده بمجرد كتابة \n اسمه الكامل."
 }

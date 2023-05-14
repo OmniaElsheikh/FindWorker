@@ -20,8 +20,8 @@ import '../userPages/home_page.dart';
 var id;
 dynamic position;
 late double lat = 0.0, long = 0.0;
-var picked=XFile('images/worker.jpg');
-dynamic file=XFile(picked.path);
+dynamic picked;
+File? file;
 
 class SignupPage extends StatefulWidget {
   const SignupPage({Key? key}) : super(key: key);
@@ -58,7 +58,6 @@ Future<Position> _determinePosition() async {
       desiredAccuracy: LocationAccuracy.best);
 }
 
-
 class _SignupPageState extends State<SignupPage> {
   late List<dynamic> categorie = [];
   CollectionReference categories =
@@ -71,13 +70,14 @@ class _SignupPageState extends State<SignupPage> {
       });
     });
   }
-  var phonePattern =
-      r'^(\+201|01)[1,2,0,5]{1}[0-9]{8}$';
+
+  var phonePattern = r'^(\+201|01)[1,2,0,5]{1}[0-9]{8}$';
 
   bool validatePhone(String email) {
     final regExp = RegExp(phonePattern);
     return regExp.hasMatch(email);
   }
+
   initState() {
     getData();
     id = DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
@@ -85,7 +85,7 @@ class _SignupPageState extends State<SignupPage> {
     super.initState();
   }
 
-  dynamic ref=FirebaseStorage.instance;
+  dynamic ref = FirebaseStorage.instance;
   var name, email, phone, password, category, imageurl;
   late UserCredential userCredential;
   final TextEditingController _userNameController = TextEditingController();
@@ -101,17 +101,63 @@ class _SignupPageState extends State<SignupPage> {
   dynamic uid;
   // Email Validation
 
-
   Future<void> signup(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       isLoading = true;
       try {
-        if(position==null)
-          {
-            print("position is null");
-          }
-        else
-          {
+        if (position == null) {
+         showDialog(context: context, builder: (contexts){
+            return AlertDialog(
+              shape:RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)
+              ),
+              icon:Icon(Icons.warning,color:Colors.red),
+              title:Text(TKeys.loginWrongEmailTitle.translate(context)),
+              content:Text(TKeys.signupNoPositionContent.translate(context)),
+              actions: [
+                MaterialButton(
+                  shape:RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20)
+                  ),
+                  color:Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).popAndPushNamed('signup');
+                  },
+                  child:Text(TKeys.loginWrongEmailOkButton.translate(context),style:TextStyle(color:Colors.white))
+                )
+              ],
+            );
+          });
+          print("position is null");
+        }
+        else {
+          if(picked==null)
+            {
+             showDialog(context: context, builder: (contexts){
+                return AlertDialog(
+                  shape:RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)
+                  ),
+                  icon:Icon(Icons.warning,color:Colors.red),
+                  title:Text(TKeys.loginWrongEmailTitle.translate(context)),
+                  content:Text(TKeys.signupNoPhotoContent.translate(context)),
+                  actions: [
+                    MaterialButton(
+                        shape:RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)
+                        ),
+                        color:Colors.red,
+                        onPressed: () {
+                          Navigator.of(context).popAndPushNamed('signup');
+                        },
+                        child:Text(TKeys.loginWrongEmailOkButton.translate(context),style:TextStyle(color:Colors.white))
+                    )
+                  ],
+                );
+              });
+             print('photo not picked');
+            }
+          else{
             userCredential = await FirebaseAuth.instance
                 .createUserWithEmailAndPassword(
                 email: "$email", password: "$password");
@@ -144,74 +190,91 @@ class _SignupPageState extends State<SignupPage> {
                 }));
               }
             } catch (e) {
-
               print(e.toString());
             }
             print("account created succefully");
           }
+        }
       } on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           showDialog(
-              context: context, builder: (context){
-            return AlertDialog(
-
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)
-              ),
-              icon: Icon(Icons.warning,color: Colors.red,size: 30,),
-              title: Text('Warning',style: TextStyle(color: Colors.red,fontSize: 30),),
-              content: Text('${e.code.toString()}',style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
-              actions: [
-                MaterialButton(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)
+                      borderRadius: BorderRadius.circular(20)),
+                  icon: Icon(
+                    Icons.warning,
+                    color: Colors.red,
+                    size: 30,
                   ),
-                  color: Colors.deepOrange,
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Ok'),
-                )
-              ],
-            );
-          });
+                  title: Text(
+                    TKeys.loginWrongEmailTitle.translate(context),
+                    style: TextStyle(color: Colors.red, fontSize: 30),
+                  ),
+                  content: Text(
+                    TKeys.signupPassTooWeak.translate(context),
+                    style:
+                        TextStyle(color: Colors.indigo.shade900, fontSize: 25),
+                  ),
+                  actions: [
+                    MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color: Colors.deepOrange,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(TKeys.loginWrongEmailOkButton.translate(context)),
+                    )
+                  ],
+                );
+              });
           print('The password provided is too weak.');
         } else if (e.code == 'email-already-in-use') {
           showDialog(
-              context: context, builder: (context){
-            return AlertDialog(
-
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)
-              ),
-              icon: Icon(Icons.warning,color: Colors.red,size: 30,),
-              title: Text('Warning',style: TextStyle(color: Colors.red,fontSize: 30),),
-              content: Text('${e.code.toString()}',style: TextStyle(color: Colors.indigo.shade900,fontSize: 25),),
-              actions: [
-                MaterialButton(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)
+                      borderRadius: BorderRadius.circular(20)),
+                  icon: Icon(
+                    Icons.warning,
+                    color: Colors.red,
+                    size: 30,
                   ),
-                  color: Colors.deepOrange,
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Ok'),
-                )
-              ],
-            );
-          });
+                  title: Text(
+                    TKeys.loginWrongEmailTitle.translate(context),
+                    style: TextStyle(color: Colors.red, fontSize: 30),
+                  ),
+                  content: Text(
+                    TKeys.signupEmailAlreaduUsed.translate(context),
+                    style:
+                        TextStyle(color: Colors.indigo.shade900, fontSize: 25),
+                  ),
+                  actions: [
+                    MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15)),
+                      color: Colors.deepOrange,
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: Text(TKeys.loginWrongEmailOkButton.translate(context)),
+                    )
+                  ],
+                );
+              });
           print('The account already exists for that email.');
         }
       } catch (e) {
         print(e);
       }
       isLoading = false;
-
     }
   }
 
-  final localizationController=Get.find<LocalizationController>();
+  final localizationController = Get.find<LocalizationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -227,19 +290,34 @@ class _SignupPageState extends State<SignupPage> {
             children: [
               Padding(
                   padding: EdgeInsets.all(30),
-                  child:Container(
-                    height:65,
-                    child: Column(children: [
-                      Row(children: [
-                        Expanded(child: TextButton(onPressed: (){
-                          setState(() {
-                            localizationController.toggleLanguge();
-                          });
-                        },child: Text(TKeys.WsettingLanguageButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 25,decoration: TextDecoration.underline, decorationThickness: 2,),),)),
-                      ],)
-                    ],),
-                  )
-              ),
+                  child: Container(
+                    height: 65,
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                                child: TextButton(
+                              onPressed: () {
+                                setState(() {
+                                  localizationController.toggleLanguge();
+                                });
+                              },
+                              child: Text(
+                                TKeys.WsettingLanguageButton.translate(context),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 25,
+                                  decoration: TextDecoration.underline,
+                                  decorationThickness: 2,
+                                ),
+                              ),
+                            )),
+                          ],
+                        )
+                      ],
+                    ),
+                  )),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
@@ -267,7 +345,6 @@ class _SignupPageState extends State<SignupPage> {
                       child: TextFormField(
                         controller: _userNameController,
                         autovalidateMode: AutovalidateMode.always,
-                        //initialValue: "user old name",
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Please Enter Your User Name';
@@ -283,7 +360,8 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: '${TKeys.signupUserName.translate(context)}',
+                          hintText:
+                              '${TKeys.signupUserName.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -323,7 +401,8 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                             filled: true,
-                            hintText: '${TKeys.signupUserEmail.translate(context)}',
+                            hintText:
+                                '${TKeys.signupUserEmail.translate(context)}',
                             hintStyle: const TextStyle(
                               color: Colors.white70,
                               fontSize: 20,
@@ -361,7 +440,8 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: '${TKeys.signupUserPass.translate(context)}',
+                          hintText:
+                              '${TKeys.signupUserPass.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -397,7 +477,8 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: '${TKeys.signupUserConPass.translate(context)}',
+                          hintText:
+                              '${TKeys.signupUserConPass.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -426,10 +507,9 @@ class _SignupPageState extends State<SignupPage> {
                           if (value!.isEmpty) {
                             return 'Please Enter Your phone Number';
                           }
-                          if(!validatePhone(_phoneNumberController.text))
-                            {
-                              return 'Please Enter Valid phone Number';
-                            }
+                          if (!validatePhone(_phoneNumberController.text)) {
+                            return 'Please Enter Valid phone Number';
+                          }
                           return null;
                         },
                         onChanged: (val) {
@@ -438,7 +518,8 @@ class _SignupPageState extends State<SignupPage> {
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           filled: true,
-                          hintText: '${TKeys.signupUserPhone.translate(context)}',
+                          hintText:
+                              '${TKeys.signupUserPhone.translate(context)}',
                           hintStyle: const TextStyle(
                             color: Colors.white70,
                             fontSize: 20,
@@ -483,9 +564,10 @@ class _SignupPageState extends State<SignupPage> {
                                       ),
                                       InkWell(
                                         onTap: () async {
-                                           picked = (await ImagePicker()
+                                          picked = (await ImagePicker()
                                               .pickImage(
-                                                  source: ImageSource.gallery))!;
+                                                  source:
+                                                      ImageSource.gallery))!;
                                           if (picked != null) {
                                             setState(() {
                                               file = File(picked.path);
@@ -516,7 +598,8 @@ class _SignupPageState extends State<SignupPage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                TKeys.WphotoFromGal.translate(context),
+                                                TKeys.WphotoFromGal.translate(
+                                                    context),
                                                 style: TextStyle(
                                                     color:
                                                         Colors.indigo.shade900,
@@ -533,7 +616,7 @@ class _SignupPageState extends State<SignupPage> {
                                       ),
                                       InkWell(
                                         onTap: () async {
-                                           picked = (await ImagePicker()
+                                          picked = (await ImagePicker()
                                               .pickImage(
                                                   source: ImageSource.camera))!;
                                           if (picked != null) {
@@ -566,7 +649,8 @@ class _SignupPageState extends State<SignupPage> {
                                                 width: 15,
                                               ),
                                               Text(
-                                                TKeys.WphotoFromCam.translate(context),
+                                                TKeys.WphotoFromCam.translate(
+                                                    context),
                                                 style: TextStyle(
                                                     color:
                                                         Colors.indigo.shade900,
@@ -622,7 +706,8 @@ class _SignupPageState extends State<SignupPage> {
                                           width: 5,
                                         ),
                                         Text(
-                                          TKeys.signupChooseWorker.translate(context),
+                                          TKeys.signupChooseWorker
+                                              .translate(context),
                                           style: TextStyle(
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold,
@@ -837,7 +922,7 @@ class worker extends StatelessWidget {
         "phone": this.phone,
         "category": this.category,
         "id": "$id",
-        'rate':5,
+        'rate': 5,
         "onReq": "false",
         "status": "false",
         'prevReq': 0,
@@ -868,9 +953,11 @@ class customer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (true) {
-      print("------------------------------------------------------------------->");
+      print(
+          "------------------------------------------------------------------->");
       print(position);
-      print("------------------------------------------------------------------->");
+      print(
+          "------------------------------------------------------------------->");
       lat = position.latitude;
       long = position.longitude;
       print(lat);
@@ -882,7 +969,7 @@ class customer extends StatelessWidget {
         "phone": this.phone,
         "id": "$id",
         'prevReq': 0,
-        'rate':5,
+        'rate': 5,
         "complain": 0,
         "warn": 0,
         "imageURL": this.imageurlIn,

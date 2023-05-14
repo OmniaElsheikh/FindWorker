@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:gp_1/t_key.dart';
 import 'package:gp_1/userPages/home_page.dart';
 import 'package:gp_1/userPages/worker_profile_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
@@ -42,10 +43,10 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
     double distanceInMeters = Geolocator.distanceBetween(CLatitude, CLongtitude, WLatitude, WLongtitude)/1000;
     if(distanceInMeters>10) {
       print(distanceInMeters);
-      return false;
+      return distanceInMeters;
     } else if(distanceInMeters<=10){
       print(distanceInMeters);
-      return true;
+      return distanceInMeters;
     }
   }
   @override
@@ -87,7 +88,7 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
             stream: db
                 .worker()
                 .where("category", isEqualTo: widget.cateName.toString())
-                .where("status", isEqualTo: "true").orderBy("rate",descending: true)
+                .orderBy("rate",descending: true)
                 .snapshots(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (snapshot.hasError) {
@@ -112,7 +113,7 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
                   child: ListView.separated(
                       itemBuilder: (context, i) => Padding(
                           padding: const EdgeInsets.all(20.0),
-                          child: location(snapshot.data?.docs[i]['location'])==true?InkWell(
+                          child:InkWell(
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15.0),
@@ -126,54 +127,130 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
                                 ],
                               ),
                               child: Container(
+                                height:100,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   color: globals.ContColor,
                                 ),
-                                child: Row(
+                                child: Column(
                                   children: [
-                                    SizedBox(
-                                      width: 5,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 10.0),
-                                      child: Container(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          textAlign: TextAlign.start,
-                                          "${snapshot.data?.docs[i]['workerName']}",
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold,
+                                    Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5.0,horizontal: 3),
+                                          child: Container(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              textAlign: TextAlign.start,
+                                              "${snapshot.data?.docs[i]['workerName']}",
+                                              style: TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                    ),
-                                    Expanded(child:Container()),
-                                    Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 5.0),
-                                      child: Container(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          textAlign: TextAlign.center,
-                                          "Rate : ${snapshot.data?.docs[i]['rate'].toStringAsFixed(2)}",
-                                          style: TextStyle(
-                                            fontSize: 25,
-                                            fontWeight: FontWeight.bold,
+                                        Expanded(child:Container()),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5.0),
+                                          child: Container(
+                                            alignment: Alignment.topLeft,
+                                            child: Text(
+                                              textAlign: TextAlign.center,
+                                              "${TKeys.CfilterdRate.translate(context)} : ${snapshot.data?.docs[i]['rate'].toStringAsFixed(2)}",
+                                              style: TextStyle(
+                                                fontSize: 25,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: Icon(
+                                            Icons.star,
+                                            color: Colors
+                                                .deepOrange,
+                                            size: 20,
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.all(5.0),
-                                      child: Icon(
-                                        Icons.star,
-                                        color: Colors
-                                            .deepOrange,
-                                        size: 20,
-                                      ),
+                                   Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5.0,horizontal: 3),
+                                          child: Container(
+                                            alignment: Alignment.centerRight,
+                                            child:  snapshot.data?.docs[i]['status']=='true'
+                                                ?Row(
+                                                  children: [
+                                                    Text(
+                                              textAlign: TextAlign.start,
+                                                      TKeys.CfilterdOnline.translate(context),
+                                              style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                                    SizedBox(width:4),
+                                                    Icon(Icons.circle,color:Colors.green.shade700,size: 10,)
+                                                  ],
+                                                )
+                                            :Row(
+                                              children: [
+                                                Text(
+                                                  textAlign: TextAlign.start,
+                                                  TKeys.CfilterdOffiline.translate(context),
+                                                  style: TextStyle(
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                SizedBox(width:4),
+                                                Icon(Icons.circle,color:Colors.grey.shade900,size: 10,)
+                                              ],
+                                            )
+                                          ),
+                                        ),
+                                        Expanded(child: Container()),
+                                        Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 5.0,horizontal: 5),
+                                          child: Container(
+                                              alignment: Alignment.centerRight,
+                                              child:Row(
+                                                children: [
+                                                  location(snapshot.data?.docs[i]['location'])>10.00
+                                                      ?Icon(Icons.social_distance,color:Colors.black,size: 20,)
+                                                  :Icon(Icons.social_distance,color:Colors.green.shade900,size: 20,),
+                                                  SizedBox(width:4),
+                                                  location(snapshot.data?.docs[i]['location'])>10.00?Text(
+                                                    textAlign: TextAlign.start,
+                                                    "(${TKeys.CfilterdAway.translate(context)}) ${location(snapshot.data?.docs[i]['location']).toStringAsFixed(2)} ${TKeys.CfilterdKM.translate(context)}",
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ):Text(
+                                                    textAlign: TextAlign.start,
+                                                    "(${TKeys.CfilterdNearby.translate(context)}) ${location(snapshot.data?.docs[i]['location']).toStringAsFixed(2)} ${TKeys.CfilterdKM.translate(context)}",
+                                                    style: TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+
+
+                                                ],
+                                              )
+
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -189,7 +266,7 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
                                 },
                               ));
                             },
-                          ):Container()
+                          )
                       ),
                       separatorBuilder: (context, i) => Divider(
                             height: 10,
