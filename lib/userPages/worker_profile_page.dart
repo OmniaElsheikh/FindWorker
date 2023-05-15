@@ -183,8 +183,8 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
       ),
       body:workers.isEmpty
           ?Container(child:Center(child: Text("Loading",style: TextStyle(color: Colors.indigo.shade900,fontSize: 35),),),)
-          :StreamBuilder(
-          stream:Workers.doc(widget.id).get().asStream(),
+          :StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+          stream:FirebaseFirestore.instance.collection('worker').doc(widget.id).snapshots(),
           builder: (BuildContext context,snapshot){
             print(reqstatus+"=========================here===========");
             if (snapshot.hasError) {
@@ -217,7 +217,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                               padding: const EdgeInsets.all(15.0),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(20),
-                                child: Image.network("${data['imageURL']}",fit: BoxFit.fill,width: 109,height: 180,
+                                child: Image.network("${snapshot.data!['imageURL']}",fit: BoxFit.fill,width: 109,height: 180,
                                 ),
                               ),
                             ),
@@ -227,7 +227,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                 child: Column(
                                   children: [
                                     Text(
-                                      "${data['workerName']}",
+                                      "${snapshot.data!['workerName']}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 30,
@@ -239,7 +239,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                     Row(
                                       children: [
                                         Text(
-                                          "${data['phone']}",
+                                          "${snapshot.data!['phone']}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 15),
@@ -252,7 +252,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                             shape:RoundedRectangleBorder(
                                                 borderRadius:BorderRadius.circular(35)
                                             ),
-                                            onPressed: ()=>UrlLauncher.launchUrl(Uri.parse('tel:${data['phone']}')), child: Icon(Icons.phone,color:Colors.green,size:18)
+                                            onPressed: ()=>UrlLauncher.launchUrl(Uri.parse('tel:${snapshot.data!['phone']}')), child: Icon(Icons.phone,color:Colors.green,size:18)
                                         )
                                       ],
                                     ),
@@ -279,7 +279,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                                   .symmetric(
                                                   horizontal:
                                                   4),
-                                              initialRating: data['rate']
+                                              initialRating: snapshot.data!['rate']
                                                   .toDouble(),
                                               itemCount: 5,
                                               itemBuilder:

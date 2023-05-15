@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
 import 'package:gp_1/t_key.dart';
+import 'package:gp_1/workerPages/workerSurvay.dart';
 import '../controller/localization_service.dart';
 import 'complain_page.dart';
 import 'home_page.dart';
@@ -348,6 +349,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                       ),
                       color: Colors.deepOrange,
                       onPressed: () {
+                        WorkerSurvayPage(customerId: data['customerId']);
                         showModalBottomSheet(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50)),
@@ -529,12 +531,13 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                                   Colors.green,
                                                               onPressed: () {
                                                                 Navigator.of(
+                                                                    context).pop();
+                                                                Navigator.of(
                                                                         context)
                                                                     .pushReplacement(
                                                                         MaterialPageRoute(
                                                                   builder: (BuildContext
-                                                                          context) =>
-                                                                      const WorkerHomePage(),
+                                                                          context) => WorkerSurvayPage(customerId: data['customerId'],),
                                                                 ));
                                                               },
                                                               child: Text(
@@ -549,43 +552,47 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                               ),
                                                             ),
                                                           ),
-                                                          SizedBox(width: 10,),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
                                                           Expanded(
                                                             child:
-                                                            MaterialButton(
+                                                                MaterialButton(
                                                               height: 40,
                                                               shape:
-                                                              RoundedRectangleBorder(
+                                                                  RoundedRectangleBorder(
                                                                 borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                    15.0),
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            15.0),
                                                               ),
                                                               color: Colors.red,
                                                               onPressed: () {
                                                                 Navigator.of(
-                                                                    context)
+                                                                        context)
                                                                     .pushReplacement(
-                                                                    MaterialPageRoute(
-                                                                      builder: (BuildContext
-                                                                      context) =>
-                                                                          ComplainPage(
-                                                                            Wid: data[
-                                                                            'workerId'],
-                                                                            Cid: data[
-                                                                            'customerId'],
-                                                                            Cname: data[
-                                                                            'customerName'],
-                                                                          ),
-                                                                    ));
+                                                                        MaterialPageRoute(
+                                                                  builder: (BuildContext
+                                                                          context) =>
+                                                                      ComplainPage(
+                                                                    Wid: data[
+                                                                        'workerId'],
+                                                                    Cid: data[
+                                                                        'customerId'],
+                                                                    Cname: data[
+                                                                        'customerName'],
+                                                                  ),
+                                                                ));
                                                               },
                                                               child: Text(
-                                                                TKeys.WongoingInComplainButton.translate(context),
+                                                                TKeys.WongoingInComplainButton
+                                                                    .translate(
+                                                                        context),
                                                                 style: TextStyle(
                                                                     color: Colors
                                                                         .white,
                                                                     fontSize:
-                                                                    20),
+                                                                        20),
                                                               ),
                                                             ),
                                                           ),

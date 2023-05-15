@@ -5,6 +5,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import 'package:gp_1/userPages/userSurvay.dart';
 import '../controller/localization_service.dart';
 import '../t_key.dart';
 import 'User_complain_page.dart';
@@ -310,6 +311,7 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                       ),
                       color: Colors.deepOrange,
                       onPressed: () {
+                        UserSurvayPage(workerId:data['workerId']);
                         showModalBottomSheet(
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(50)),
@@ -464,13 +466,10 @@ class _UserOngoingRequestPageState extends State<UserOngoingRequestPage> {
                                                                   Colors.green,
                                                               onPressed: () {
                                                                 Navigator.of(
-                                                                        context)
-                                                                    .pushReplacement(
-                                                                        MaterialPageRoute(
-                                                                  builder: (BuildContext
-                                                                          context) =>
-                                                                      const UserHomePage(),
-                                                                ));
+                                                                        context).pop();
+                                                                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context){
+                                                                  return UserSurvayPage(workerId: data['workerId'],);
+                                                                }));
                                                               },
                                                               child: Text(
                                                                 TKeys.WongoingInReviewDoneButton.translate(context),

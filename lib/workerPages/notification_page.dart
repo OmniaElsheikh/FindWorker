@@ -7,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/LogIn&signUp/login.dart';
 import 'package:gp_1/workerPages/setting_page.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
+import 'package:gp_1/workerPages/workerSurvay.dart';
 import '../controller/localization_service.dart';
 import '../t_key.dart';
 import 'complain_page.dart';
@@ -14,6 +15,7 @@ import 'home_page.dart';
 import 'ongoingReq_page.dart';
 
 late globals.FireBase db=new globals.FireBase();
+dynamic uid;
 dynamic isCustomer;
 late dynamic Wid='';
 late dynamic Cid='';
@@ -361,6 +363,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                             value.docs.forEach((element) {
                                                               if(element['id']==snapshot.data?.docs[i]['customerId'])
                                                               {
+                                                                WorkerSurvayPage(customerId:snapshot.data?.docs[i]['customerId'] ,);
                                                                 showModalBottomSheet(
                                                                     backgroundColor: Colors.black26
                                                                         .withOpacity(0.5),
@@ -503,13 +506,14 @@ class _NotificationPageState extends State<NotificationPage> {
                                                                                     color:
                                                                                     Colors.green,
                                                                                     onPressed: () {
+                                                                                      Navigator.of(context).pop();
                                                                                       Navigator.of(
                                                                                           context)
                                                                                           .pushReplacement(
                                                                                           MaterialPageRoute(
                                                                                             builder: (BuildContext
                                                                                             context) =>
-                                                                                            const WorkerHomePage(),
+                                                                                            WorkerSurvayPage(customerId: snapshot.data?.docs[i]['customerId'],),
                                                                                           ));
                                                                                     },
                                                                                     child: Text(
@@ -584,7 +588,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                             }
                                                           });
                                                         });
-                                                        Navigator.of(context).pop;
+                                                        Navigator.of(context).pop();
 
                                                       },
                                                       child: Text(

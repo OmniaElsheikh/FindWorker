@@ -34,8 +34,8 @@ late dynamic isActiv = '';
 late dynamic ref=FirebaseStorage.instance.ref('posts');
 late dynamic imageId;
 late dynamic id = '';
-late dynamic city='';
-late dynamic country='';
+dynamic city='';
+dynamic country='';
 late dynamic uid;
 late dynamic data = {'': dynamic};
 
@@ -50,6 +50,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
           setState(() {
             workers.add(element['id']);
             id = element['id'];
+            location(element['location']);
           });
         }
       });
@@ -68,13 +69,12 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
     print("==========================");
     print(data);
   }
-  location(location)async{
+location(location)async{
     GeoPoint position=location;
     List<Placemark> placemark = await placemarkFromCoordinates(position.latitude, position.longitude);
     setState(() {
-      country=placemark[0].subAdministrativeArea;
-      city=placemark[0].administrativeArea;
-      print('done');
+      city=placemark[0].subAdministrativeArea;
+      country=placemark[0].administrativeArea;
     });
   }
   List Posts = [];
@@ -113,14 +113,12 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
       });
     });
   }
-
   @override
   void initState() {
     uid = db.Uid();
     imageId =
         DateTime.now().millisecondsSinceEpoch.remainder(100000).toString();
     getData();
-    location(data['location']);
     getPostsData();
     super.initState();
   }
@@ -184,8 +182,8 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                 ),
               ),
             )
-          : StreamBuilder<QuerySnapshot>(
-              stream: Workers.where("workerId", isEqualTo: '$id').snapshots(),
+          : StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: FirebaseFirestore.instance.collection('worker').doc('$id').snapshots(),
               builder: (BuildContext context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');
@@ -234,7 +232,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(20),
                                       child: Image.network(
-                                        "${data['imageURL']}",
+                                        "${snapshot.data!['imageURL']}",
                                         fit: BoxFit.fill,
                                       ),
                                     ),
@@ -279,7 +277,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          data['status']=='true' ? TKeys.WactivButton.translate(context) : TKeys.WdeactivButton.translate(context),
+                                          snapshot.data!['status']=='true' ? TKeys.WactivButton.translate(context) : TKeys.WdeactivButton.translate(context),
                                           style:
                                           TextStyle(color:Colors.white,fontWeight: FontWeight.bold),
                                         ),
@@ -313,28 +311,28 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "${data['workerName']}",
+                                      "${snapshot.data!['workerName']}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
                                       ),
                                     ),
                                     Text(
-                                      "Location : $city, $country",
+                                      "Location : ${city}, ${country}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
                                       ),
                                     ),
                                     Text(
-                                      "Category : ${data['category']}",
+                                      "Category : ${snapshot.data!['category']}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 15,
                                       ),
                                     ),
                                     Text(
-                                      "Phone: ${data['phone']}",
+                                      "Phone: ${snapshot.data!['phone']}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 15),
@@ -352,7 +350,7 @@ class _WorkerProfilePageState extends State<WorkerProfilePage> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "${TKeys.CfilterdRate.translate(context)} : ${data['rate'].toStringAsFixed(2)}",
+                                          "${TKeys.CfilterdRate.translate(context)} : ${snapshot.data!['rate'].toStringAsFixed(2)}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),

@@ -44,6 +44,7 @@ class _UserProfileState extends State<UserProfile> {
         if (element['customerUID'] == uid) {
           customers.add(element['id']);
           id = element['id'];
+          location(element['location']);
         }
       });
     });
@@ -70,7 +71,6 @@ class _UserProfileState extends State<UserProfile> {
   void initState() {
     uid = db.Uid();
     getData();
-    location(data['location']);
     super.initState();
   }
   final localizationController=Get.find<LocalizationController>();
@@ -131,8 +131,8 @@ class _UserProfileState extends State<UserProfile> {
                 ),
               ),
             )
-          : StreamBuilder(
-              stream: db.customer().doc(id).get().asStream(),
+          : StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+              stream: db.customer().doc(id).snapshots(),
               builder: (BuildContext context, snapshot) {
                 if (snapshot.hasError) {
                   return const Text('Something went wrong');
@@ -173,7 +173,7 @@ class _UserProfileState extends State<UserProfile> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(20),
                                     child: Image.network(
-                                      "${data['imageURL']}",
+                                      "${snapshot.data!['imageURL']}",
                                       fit: BoxFit.fill,
                                     ),
                                   ),
@@ -189,7 +189,7 @@ class _UserProfileState extends State<UserProfile> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
-                                      "${data['customerName']}",
+                                      "${snapshot.data!['customerName']}",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 35,
@@ -209,7 +209,7 @@ class _UserProfileState extends State<UserProfile> {
                                       height: 5,
                                     ),
                                     Text(
-                                      "${data['phone']}",
+                                      "${snapshot.data!['phone']}",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 25),
@@ -230,7 +230,7 @@ class _UserProfileState extends State<UserProfile> {
                                         ),
                                         SizedBox(width: 5),
                                         Text(
-                                          "Rate : ${data['rate'].toStringAsFixed(2)}",
+                                          "Rate : ${snapshot.data!['rate'].toStringAsFixed(2)}",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 20),

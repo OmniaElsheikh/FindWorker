@@ -136,5 +136,32 @@
   "CguideCategory": " Categories Button In \"Navigation Bar\" Shows to you the existing categories and from within you can choose the category you want a technician from ; and inside it You will find Technicians that are bound to this category and will show to you if the technician is online/offline and how far \n him/her from you.",
   "CguideLogout": " Logout Button In \"App Bar\" Logs you out of the application.",
   "CguideLanguage": "Language Button In \"App Bar\" changes the language of application.",
-  "CguideSearch": " Search Button In \"App Bar\" inside categories page allow you to find the technician you want with simply typing \n his/her full name."
+  "CguideSearch": " Search Button In \"App Bar\" inside categories page allow you to find the technician you want with simply typing \n his/her full name.",
+
+  "_comment13": "===========>user guide page <=============",
+  "WguideSetting": "The \"Edit Information\" button in the \"Navigation Bar\" allows you to edit/update your data.",
+  "WguideNotifcatin": "The notification button in the (navigation bar) shows you the requests that are (Pending / On) that you requested from a technician or requested by a customer from you, and it also shows you if there is a response to a previous complaint.",
+  "WguideProfile": "The profile button in the \"navigation bar\" displays your profile and data, and it also contains a \"Upload your work\" button so that you can upload your work and you can also delete what you have uploaded.",
+  "WguideSearch": "  The search button in \"Your Profile\" allows you to find the technician you want by simply selecting \n The category you want the technician from.",
+
+  "_comment14": "===========>user survey page <=============",
+  "CsurveyDoneTitle": "Thank You",
+  "CsurveyDoneContent": "Thank you for you survey!",
+  "CsurveyTitle": "This is A Survey",
+  "CsurveyQ1": "Did The Technician show up?",
+  "CsurveyQ2": "Did The Technician Arrive on Time?",
+  "CsurveyQ3":"Did The Technician Do what it Came For?",
+  "CsurveyQ4": "Did The Technician had a good Attitude?",
+  "CsurveyQ5": "Did the negotition on the price was Succeful?",
+  "CsurveyDone": "Done",
+  "CsurveyInfoTitle":"Information",
+  "CsurveyInfoContent":"Please note that by selecting the minimum rate that: that you approching saying no,else your saying yes",
+
+  "_comment15": "===========>worker survey page <=============",
+  "WsurveyQ1": "Did The Customer show up?",
+  "WsurveyQ2": "Did The Customer exsited on Time?",
+  "WsurveyQ3":"Did it let you do what you Came For?",
+  "WsurveyQ4": "Did The Customer had a good Attitude?",
+  "WsurveyQ5": "Did the negotition on the price was Succeful?",
+
 }

@@ -36,6 +36,7 @@ class _UserHomePageState extends State<UserHomePage> {
           selectedItemColor: Colors.deepOrange,
           unselectedItemColor: Colors.indigo.shade900,
           selectedFontSize: 20,
+          showUnselectedLabels: true,
           onTap: (index){
             setState((){
               selectedindex = index;

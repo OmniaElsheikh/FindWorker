@@ -127,7 +127,30 @@ enum TKeys{
   CguideCategory,
   CguideLogout,
   CguideLanguage,
-  CguideSearch
+  CguideSearch,
+
+  WguideSetting,
+  WguideNotifcatin,
+  WguideProfile,
+  WguideSearch,
+
+  CsurveyDoneTitle,
+  CsurveyDoneContent,
+  CsurveyTitle,
+  CsurveyQ1,
+  CsurveyQ2,
+  CsurveyQ3,
+  CsurveyQ4,
+  CsurveyQ5,
+  CsurveyDone,
+  CsurveyInfoTitle,
+  CsurveyInfoContent,
+
+  WsurveyQ1,
+  WsurveyQ2,
+  WsurveyQ3,
+  WsurveyQ4,
+  WsurveyQ5
 }
 
 extension TKeysExtention on TKeys{
