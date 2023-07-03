@@ -42,17 +42,10 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
     dynamic y=0.0;
     var x=((var1+var2+var3+var4+var5)/25.0)/5.0;
     print(x);
-    await FirebaseFirestore.instance.collection('customer').doc("${widget.customerId}").get().then((value) {
-      y=value.data()!['rate'];
-      print(y);
-    });
+    await FirebaseFirestore.instance.collection('customer').doc("${widget.customerId}").get().then((value) {y=value.data()!['rate'];});
     var z=x+y;
-    print(z);
-   await FirebaseFirestore.instance.collection('customer').doc("${widget.customerId}").update({
-      'rate':z,
-    });
-    showDialog(context: context, builder:(context){
-      return AlertDialog(
+   await FirebaseFirestore.instance.collection('customer').doc("${widget.customerId}").update({'rate':z,});
+    showDialog(context: context, builder:(context){return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         icon:Icon(Icons.info_outline,color:Colors.deepOrange,size:60),
         title:Text(TKeys.CsurveyDoneTitle.translate(context),style:TextStyle(fontSize:25,color:Colors.indigo.shade900)),
@@ -94,10 +87,7 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage(globals.BGImg),
-            fit: BoxFit.fill,
-          )),
+            color: globals.backColor),
           padding: EdgeInsets.all(20),
           child: ListView(
             children: [
@@ -114,7 +104,7 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                     icon: Icon(Icons.cancel_rounded,color:Colors.white,size: 30,),
                   ),
                   Expanded(child: Container(),),
-                  Text(TKeys.CsurveyTitle.translate(context),style: TextStyle(color: Colors.white,fontSize: 30),)
+                  Text(TKeys.CsurveyTitle.translate(context),style: TextStyle(color: Colors.black,fontSize: 30),)
                 ],
               ),
               SizedBox(height: 50,),
@@ -122,14 +112,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.WsurveyQ1.translate(context),style: TextStyle(color:Colors.white),),
+                      Text(TKeys.WsurveyQ1.translate(context),style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,
@@ -188,14 +178,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.WsurveyQ2.translate(context),style: TextStyle(color:Colors.white),),
+                      Text(TKeys.WsurveyQ2.translate(context),style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,
@@ -254,14 +244,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.WsurveyQ3.translate(context),style: TextStyle(color:Colors.white),),
+                      Text(TKeys.WsurveyQ3.translate(context),style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,
@@ -320,14 +310,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.WsurveyQ4.translate(context),maxLines:2,style: TextStyle(color:Colors.white),),
+                      Text(TKeys.WsurveyQ4.translate(context),maxLines:2,style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,
@@ -386,14 +376,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.WsurveyQ5.translate(context),maxLines:2,style: TextStyle(color:Colors.white),),
+                      Text(TKeys.WsurveyQ5.translate(context),maxLines:2,style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,

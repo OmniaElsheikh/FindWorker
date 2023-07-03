@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:gp_1/shared/globals.dart' as globals;
@@ -24,7 +25,10 @@ bool isRequested = false;
 dynamic whereToUpdate = true;
 dynamic fontSize = 18.0;
 dynamic sizedBox = 15.0;
+late dynamic city='Faisal';
+late dynamic country='Giza';
 late dynamic data = {'': dynamic};
+late dynamic Cdata = {'': dynamic};
 
 class _OngoingRequestPageState extends State<OngoingRequestPage> {
   getData() async {
@@ -34,13 +38,23 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
         setState(() {
           data = doc.data() as Map<String, dynamic>;
         });
+        print(data['customerId']);
         return data;
         // ...
       },
       onError: (e) => print("Error getting document: $e"),
     );
-  }
 
+  }
+  location(location)async{
+    GeoPoint position=location;
+    List<Placemark> placemark = await placemarkFromCoordinates(position.latitude, position.longitude);
+    setState(() {
+      country=placemark[0].subAdministrativeArea;
+      city=placemark[0].administrativeArea;
+      print('done');
+    });
+  }
   List workers = [];
   CollectionReference Workers = db.worker();
   List customers = [];
@@ -53,18 +67,11 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
     Wresponse.docs.forEach((element) {
       if (element['id'] == Id) {
         Workers.doc(Id).update({'rate': rate});
-        print("==========================================");
-        print('is worker');
-        print("==========================================");
       }
     });
     Cresponse.docs.forEach((element) {
       if (element['id'] == Id) {
         Customers.doc(Id).update({'rate': rate});
-        print("==========================================");
-        print('is customer');
-        print("==========================================");
-        print('done rate update for customer');
       }
     });
   }
@@ -87,7 +94,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
           icon: Icon(Icons.arrow_back),
           color: Colors.deepOrange,
           onPressed: () {
-            Navigator.of(context).pop;
+            Navigator.of(context).pop();
           },
         ),
         title: Center(
@@ -103,10 +110,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
       body: Container(
         padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage(globals.BGImg),
-          fit: BoxFit.fill,
-        )),
+          color:globals.backColor),
         child: Container(
           margin: EdgeInsets.all(10),
           padding: EdgeInsets.all(10),
@@ -114,7 +118,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
           width: double.infinity,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(15),
-              color: Colors.grey.withOpacity(0.8)),
+              color: globals.boxColor),
           child: Column(
             children: [
               Text(
@@ -142,14 +146,14 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                   children: [
                     Expanded(
                       child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
                             height: sizedBox,
                           ),
                           Text(
-                            "Client Name ",
+                            "Name : ${data['customerName']}",
                             style: TextStyle(
                                 fontSize: fontSize,
                                 fontWeight: FontWeight.w700),
@@ -158,7 +162,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                             height: sizedBox,
                           ),
                           Text(
-                            "Phone ",
+                            "Phone : ${data['customerPhone']}",
                             style: TextStyle(
                                 fontSize: fontSize,
                                 fontWeight: FontWeight.w700),
@@ -167,164 +171,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                             height: sizedBox,
                           ),
                           Text(
-                            "Location ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            "Distance in KM ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            "Estimated Time ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            "Transportation Fee ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            ": ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            ": ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            ": ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            ": ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            ": ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            ": ",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            "${data['customerName']}",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            "${data['customerPhone']}",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            "Giza,El-Hwamdia",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            "10 KM",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            "5 Minutes",
-                            style: TextStyle(
-                                fontSize: fontSize,
-                                fontWeight: FontWeight.w700),
-                          ),
-                          SizedBox(
-                            height: sizedBox,
-                          ),
-                          Text(
-                            "30 L.E.",
+                            "Location : ${city}, ${country} ",
                             style: TextStyle(
                                 fontSize: fontSize,
                                 fontWeight: FontWeight.w700),
@@ -378,8 +225,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                         ),
                                         color: Colors.green,
                                         onPressed: () async {
-                                          CollectionReference Noti =
-                                              db.requests();
+                                          CollectionReference Noti =db.requests();
                                           var response = await Noti.get();
                                           response.docs.forEach((element) {
                                             setState(() {
@@ -388,15 +234,39 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                               }
                                             });
                                           });
-                                          showModalBottomSheet(
-                                              backgroundColor: Colors.black26
-                                                  .withOpacity(0.5),
+                                          showModalBottomSheet(backgroundColor: Colors.black26.withOpacity(0.5),
                                               context: context,
                                               builder: (context) {
                                                 return AlertDialog(
                                                   backgroundColor: Colors.white,
-                                                  title: Text(
-                                                      "${TKeys.WongoingInReviewTitle.translate(context)} : ${data['customerName']}"),
+                                                  title:Column(
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          IconButton(onPressed: (){
+                                                            Navigator.of(context).pushReplacementNamed("workerHomePage");
+                                                          }, icon:Icon(
+                                                            Icons.cancel_rounded,
+                                                            color:Colors.deepOrange,
+                                                            size: 25,
+                                                          ))
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text(
+                                                              "${TKeys.CongoingInReviewTitle.translate(context)} : "),
+                                                        ],
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Text("${data['customerName']}")
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
@@ -530,14 +400,10 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                                               color:
                                                                   Colors.green,
                                                               onPressed: () {
-                                                                Navigator.of(
-                                                                    context).pop();
-                                                                Navigator.of(
-                                                                        context)
-                                                                    .pushReplacement(
+                                                                Navigator.of(context).pop();
+                                                                Navigator.of(context).pushReplacement(
                                                                         MaterialPageRoute(
-                                                                  builder: (BuildContext
-                                                                          context) => WorkerSurvayPage(customerId: data['customerId'],),
+                                                                  builder: (BuildContextcontext) => WorkerSurvayPage(customerId: data['customerId'],),
                                                                 ));
                                                               },
                                                               child: Text(
@@ -624,8 +490,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                         onPressed: () {
                                           Navigator.of(context).pop();
                                         },
-                                        child: Text(
-                                          TKeys.WongoingInEndCancelButton
+                                        child: Text(TKeys.WongoingInEndCancelButton
                                               .translate(context),
                                           style: TextStyle(
                                               color: Colors.white,
@@ -682,8 +547,7 @@ class _OngoingRequestPageState extends State<OngoingRequestPage> {
                                         ),
                                         color: Colors.green,
                                         onPressed: () async {
-                                          CollectionReference Noti =
-                                              db.requests();
+                                          CollectionReference Noti = db.requests();
                                           var response = await Noti.get();
                                           response.docs.forEach((element) {
                                             setState(() {

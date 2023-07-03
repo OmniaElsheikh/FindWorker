@@ -107,11 +107,7 @@ location(location)async{
         if (element['workerId'] == id) {
           if (element['imageURL'] == '$ImageUrl') {
             Post.doc(Docid).delete();
-            print('post deleted');
-          }
-        }
-      });
-    });
+            print('post deleted');}}});});
   }
   @override
   void initState() {
@@ -204,10 +200,8 @@ location(location)async{
                 }
                 return Container(
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                    image: AssetImage(globals.BGImg),
-                    fit: BoxFit.fill,
-                  )),
+                      color: globals.backColor
+                  ),
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -217,7 +211,7 @@ location(location)async{
                         height: 250,
                         width: double.infinity,
                         decoration: BoxDecoration(
-                            color: Colors.grey.withOpacity(0.6),
+                            color: globals.boxColor,
                             borderRadius: BorderRadius.circular(15)),
                         margin: EdgeInsets.only(top: 5),
                         child: Row(
@@ -268,7 +262,7 @@ location(location)async{
                                             ],
                                           );
                                         });
-                                      }, icon: Icon(Icons.info_outline,color:Colors.white)),
+                                      }, icon: Icon(Icons.info_outline,color:Colors.deepOrange)),
                                       Container(
                                     height: 50,
                                     width: 65,
@@ -279,7 +273,7 @@ location(location)async{
                                         Text(
                                           snapshot.data!['status']=='true' ? TKeys.WactivButton.translate(context) : TKeys.WdeactivButton.translate(context),
                                           style:
-                                          TextStyle(color:Colors.white,fontWeight: FontWeight.bold),
+                                          TextStyle(color:snapshot.data!['status']=='true' ?Colors.green:Colors.black,fontWeight: FontWeight.bold),
                                         ),
                                         SizedBox(height: 10,),
                                         Expanded(
@@ -432,7 +426,7 @@ location(location)async{
                               context: context,
                               builder: (context) {
                                 return Container(
-                                  color: Colors.grey.withOpacity(0.7),
+                                  color: globals.boxColor,
                                   padding: EdgeInsets.all(15),
                                   height: 235,
                                   child: Column(
@@ -570,13 +564,9 @@ location(location)async{
                             Text(
                               TKeys.WuploadedWorkTitle.translate(context),
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 20),
+                                  TextStyle(color: Colors.black, fontSize: 20),
                             ),
-                            Divider(
-                              color: Colors.white,
-                              thickness: 1,
-                              height: 8,
-                            ),
+
                             StreamBuilder<QuerySnapshot>(
                                 stream: db
                                     .posts()
@@ -592,7 +582,7 @@ location(location)async{
                                     ));
                                   }
                                   return SizedBox(
-                                    height: 250,
+                                    height: 220,
                                     child: GridView.builder(
                                         scrollDirection: Axis.vertical,
                                         itemCount: snapshot.data?.docs.length,
@@ -600,8 +590,7 @@ location(location)async{
                                             SliverGridDelegateWithFixedCrossAxisCount(
                                                 crossAxisCount: 2),
                                         itemBuilder: (context, i) => Padding(
-                                              padding:
-                                                  const EdgeInsets.all(20.0),
+                                              padding:EdgeInsets.all(5.0),
                                               child: Column(
                                                 children: [
                                                   ClipRRect(
@@ -625,11 +614,11 @@ location(location)async{
                                                           BorderRadius.circular(
                                                               15.0),
                                                     ),
-                                                    color: Colors.grey[200],
+                                                    color: Colors.white,
                                                     onPressed: () {
                                                       showBottomSheet(
                                                           backgroundColor:
-                                                              Colors.black26
+                                                              Colors.white
                                                                   .withOpacity(
                                                                       0.5),
                                                           context: context,

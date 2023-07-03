@@ -138,17 +138,14 @@ class _LoginPageState extends State<LoginPage> {
   // Sign In Function
   void login()async {
     if (_formKey.currentState!.validate()) {
-      try {
-        userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+      try {userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: email,
-            password: password
-        );
+            password: password);
         uid = FirebaseAuth.instance.currentUser?.uid;
         await getData();
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
-          showDialog(
-              context: context, builder: (context){
+          showDialog(context: context, builder: (context){
             return AlertDialog(
 
               shape: RoundedRectangleBorder(
@@ -173,8 +170,7 @@ class _LoginPageState extends State<LoginPage> {
           });
           print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
-          showDialog(
-              context: context, builder: (context){
+          showDialog(context: context, builder: (context){
             return AlertDialog(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)
@@ -195,10 +191,7 @@ class _LoginPageState extends State<LoginPage> {
                 )
               ],
             );
-          });
-          print('Wrong password provided for that user.');
-        }
-      }
+          });}}
       isLoading = true;
     }
   }
@@ -211,10 +204,7 @@ class _LoginPageState extends State<LoginPage> {
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(globals.BGImg),
-                fit: BoxFit.fill,
-              )
+              color: globals.backColor
           ),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
           child: Column(
@@ -229,7 +219,7 @@ class _LoginPageState extends State<LoginPage> {
                           setState(() {
                             localizationController.toggleLanguge();
                           });
-                        },child: Text(TKeys.WsettingLanguageButton.translate(context),style: TextStyle(color: Colors.white,fontSize: 25,decoration: TextDecoration.underline, decorationThickness: 2,),),)),
+                        },child: Text(TKeys.WsettingLanguageButton.translate(context),style: TextStyle(color: Colors.black,fontSize: 25,decoration: TextDecoration.underline, decorationThickness: 2,),),)),
                       ],)
                     ],),
                   )
@@ -238,15 +228,18 @@ class _LoginPageState extends State<LoginPage> {
                 alignment: Alignment.center,
                 child: Text(
                   TKeys.loginTitle.translate(context),
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold,color: Colors.white),
+                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold,color: Colors.black),
                 ),
               ),
               const SizedBox(height: 20),
-              Image.asset(
-                'images/worker-logo2-inside.png',
-                width: 250.0,
-                height: 245.0,
-                fit: BoxFit.fill,
+              ClipRRect(
+                borderRadius: BorderRadius.circular(5),
+                child: Image.asset(
+                  'images/worker-logo2-inside.png',
+                  width: double.infinity,
+                  height: 245.0,
+                  fit: BoxFit.fill,
+                ),
               ),
               Form(
                 key: _formKey,
@@ -361,7 +354,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 10,bottom: 20),
-                      child: Container(child: Text(TKeys.loginDontHaveAccount.translate(context),style: TextStyle(color: Colors.white,fontSize: 15),)),
+                      child: Container(child: Text(TKeys.loginDontHaveAccount.translate(context),style: TextStyle(color: Colors.black,fontSize: 15),)),
                     ),
                     InkWell(
                       onTap: () {

@@ -197,10 +197,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
             return Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(globals.BGImg),
-                    fit: BoxFit.fill,
-                  ),
+                color: Color(0xff33f0b7a1)
               ),
               child: ListView(
                 children:[
@@ -209,7 +206,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: globals.ContColor,
+                          color: globals.boxColor,
                         ),
                         child: Row(
                           children: [
@@ -269,8 +266,6 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                                               style: TextStyle(fontWeight: FontWeight.bold),
                                             ),
                                             RatingBar.builder(
-                                              updateOnDrag:
-                                              true,
                                               itemSize: 15,
                                               glowColor:
                                               Colors
@@ -386,7 +381,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                         color: Colors.black,
                         thickness: 1,
                       ),
-                      Center(child: Text(TKeys.WworkerInWorkerWork.translate(context),style: TextStyle(color: Colors.white,fontSize: 25),),),
+                      Center(child: Text(TKeys.WworkerInWorkerWork.translate(context),style: TextStyle(color: Colors.black,fontSize: 25),),),
                       Divider(
                         color: Colors.black,
                         thickness: 1,
@@ -394,7 +389,7 @@ class _WorkerInUserProfilePageState extends State<WorkerInUserProfilePage> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: globals.ContColor,
+                          color: globals.boxColor,
                         ),
                         child:  StreamBuilder<QuerySnapshot>(
                             stream: FirebaseFirestore.instance.collection('posts').where("workerId",isEqualTo:'$Wid').snapshots(),

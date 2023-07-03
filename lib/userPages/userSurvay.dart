@@ -92,10 +92,7 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
     return Scaffold(
       body: Container(
           decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage(globals.BGImg),
-            fit: BoxFit.fill,
-          )),
+           color: Color(0xff33f0b7a1)),
           padding: EdgeInsets.all(20),
           child: ListView(
             children: [
@@ -112,7 +109,7 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                     icon: Icon(Icons.cancel_rounded,color:Colors.white,size: 30,),
                   ),
                   Expanded(child: Container(),),
-                  Text(TKeys.CsurveyTitle.translate(context),style: TextStyle(color: Colors.white,fontSize: 30),)
+                  Text(TKeys.CsurveyTitle.translate(context),style: TextStyle(color: Colors.black,fontSize: 30),)
                 ],
               ),
               SizedBox(height: 50,),
@@ -120,14 +117,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.CsurveyQ1.translate(context),style: TextStyle(color:Colors.white),),
+                      Text(TKeys.CsurveyQ1.translate(context),style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,
@@ -186,14 +183,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.CsurveyQ2.translate(context),style: TextStyle(color:Colors.white),),
+                      Text(TKeys.CsurveyQ2.translate(context),style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,
@@ -252,14 +249,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.CsurveyQ3.translate(context),style: TextStyle(color:Colors.white),),
+                      Text(TKeys.CsurveyQ3.translate(context),style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,
@@ -318,14 +315,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.CsurveyQ4.translate(context),maxLines:2,style: TextStyle(color:Colors.white),),
+                      Text(TKeys.CsurveyQ4.translate(context),maxLines:2,style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,
@@ -384,14 +381,14 @@ dynamic var1=0.0,var2=0.0,var3=0.0,var4=0,var5=0.0;
                 children: [
                   Column(
                     children: [
-                      Text(TKeys.CsurveyQ5.translate(context),maxLines:2,style: TextStyle(color:Colors.white),),
+                      Text(TKeys.CsurveyQ5.translate(context),maxLines:2,style: TextStyle(color:Colors.black),),
                       SizedBox(height: 8,),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 250,
+                            width: 220,
                             height: 70,
                             child: RatingBar.builder(
                                 updateOnDrag: true,

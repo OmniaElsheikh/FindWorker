@@ -47,6 +47,7 @@ dependencies:
   provider: ^4.3.3
   flutter_localizations:
     sdk: flutter
+  intl: ^0.17.0
   get: ^4.6.1
   shared_preferences: ^2.1.0
   email_validator: ^2.1.16
@@ -65,6 +66,8 @@ dev_dependencies:
 flutter_native_splash:
   background_image: "images/worker-logo2.png"
   android_gravity: fill
+  color: "0xff33f0b7a1"
+
 
 flutter_icons:
   android: "launcher_icon"

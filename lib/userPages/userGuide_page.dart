@@ -61,15 +61,12 @@ class _UserGuidePageState extends State<UserGuidePage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage(globals.BGImg),
-          fit: BoxFit.fill,
-        )),
+          color: Color(0xff33f0b7a1)),
         padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
         child: Container(
           height: double.infinity,
           decoration:BoxDecoration(
-              color: Colors.grey.withOpacity(0.6),
+              color: globals.boxColor,
               borderRadius: BorderRadius.circular(15)
           ),
           child: ListView(
@@ -97,7 +94,7 @@ class _UserGuidePageState extends State<UserGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                 border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.CguideNotifcatin.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.CguideNotifcatin.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -114,7 +111,7 @@ class _UserGuidePageState extends State<UserGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.CguideProfile.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.CguideProfile.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -131,7 +128,7 @@ class _UserGuidePageState extends State<UserGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.CguideCategory.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.CguideCategory.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -148,7 +145,7 @@ class _UserGuidePageState extends State<UserGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.CguideLogout.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.CguideLogout.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -165,7 +162,7 @@ class _UserGuidePageState extends State<UserGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.CguideLanguage.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.CguideLanguage.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -182,7 +179,7 @@ class _UserGuidePageState extends State<UserGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.CguideSearch.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.CguideSearch.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],

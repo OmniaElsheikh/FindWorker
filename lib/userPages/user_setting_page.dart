@@ -136,10 +136,8 @@ class _UserSettingPageState extends State<UserSettingPage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage(globals.BGImg),
-          fit: BoxFit.fill,
-        )),
+          color: globals.backColor
+          ),
         child: ListView(children: [
           Column(
             children: [
@@ -238,7 +236,7 @@ class _UserSettingPageState extends State<UserSettingPage> {
                               context: context,
                               builder: (context) {
                                 return Container(
-                                  color: Colors.grey.withOpacity(0.7),
+                                  color: globals.boxColor,
                                   padding: EdgeInsets.all(15),
                                   height: 225,
                                   child: Column(

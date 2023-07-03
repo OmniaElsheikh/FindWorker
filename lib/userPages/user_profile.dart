@@ -78,6 +78,7 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Color(0xff33f0b7a1),
       appBar: AppBar(
         automaticallyImplyLeading: true,
         backgroundColor: Colors.white,
@@ -147,11 +148,6 @@ class _UserProfileState extends State<UserProfile> {
 
                 return Container(
                   alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                    image: AssetImage(globals.BGImg),
-                    fit: BoxFit.fill,
-                  )),
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: ListView(shrinkWrap: false, children: [
                     Column(
@@ -160,7 +156,7 @@ class _UserProfileState extends State<UserProfile> {
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.6),
+                              color: globals.boxColor,
                               borderRadius: BorderRadius.circular(15)),
                           margin: EdgeInsets.only(top: 10),
                           child: Column(
@@ -250,7 +246,7 @@ class _UserProfileState extends State<UserProfile> {
                           ),
                         ),
                         Divider(
-                          color: Colors.black26,
+                          color: Colors.white,
                           thickness: 2,
                         ),
                         Column(

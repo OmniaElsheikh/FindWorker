@@ -101,8 +101,7 @@ class _SettingPageState extends State<SettingPage> {
           print("updated succefully");
           Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (context) {
-            return WorkerHomePage();
-          }));
+            return WorkerHomePage();}));
         } else {
           final TaskSnapshot snapshot = await ref.putFile(file);
           imageurl = await snapshot.ref.getDownloadURL();
@@ -115,13 +114,8 @@ class _SettingPageState extends State<SettingPage> {
           print("updated succefully");
           Navigator.of(context)
               .pushReplacement(MaterialPageRoute(builder: (context) {
-            return WorkerHomePage();
-          }));
-        }
-      } catch (e) {
-        print(e.toString());
-      }
-
+            return WorkerHomePage();}));}
+      } catch (e) {print(e.toString());}
   }
 
   final localizationController=Get.find<LocalizationController>();
@@ -165,10 +159,8 @@ class _SettingPageState extends State<SettingPage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(globals.BGImg),
-              fit: BoxFit.fill,
-            )),
+            color: globals.backColor
+        ),
         child: ListView(children: [
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -311,7 +303,7 @@ class _SettingPageState extends State<SettingPage> {
                               context: context,
                               builder: (context) {
                                 return Container(
-                                  color: Colors.grey.withOpacity(0.7),
+                                  color: globals.boxColor,
                                   padding: EdgeInsets.all(15),
                                   height: 225,
                                   child: Column(
@@ -435,7 +427,6 @@ class _SettingPageState extends State<SettingPage> {
                           style:
                           TextStyle(color: Colors.deepOrange, fontSize: 20),
                         )),
-
                     const SizedBox(height: 20),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -468,7 +459,7 @@ class _SettingPageState extends State<SettingPage> {
                         child:Container(
                           height:100,
                           child: Column(children: [
-                            Text(TKeys.WchangeLangTitle.translate(context),style: TextStyle(color:Colors.white,fontSize: 20),),
+                            Text(TKeys.WchangeLangTitle.translate(context),style: TextStyle(color:Colors.black,fontSize: 20),),
                             SizedBox(height: 5,),
                             Row(children: [
                               Expanded(child: MaterialButton(onPressed: (){

@@ -61,15 +61,12 @@ class _WorkerGuidePageState extends State<WorkerGuidePage> {
       ),
       body: Container(
         decoration: BoxDecoration(
-            image: DecorationImage(
-          image: AssetImage(globals.BGImg),
-          fit: BoxFit.fill,
-        )),
+           color: globals.backColor),
         padding: EdgeInsets.symmetric(horizontal: 15,vertical: 10),
         child: Container(
           height: double.infinity,
           decoration:BoxDecoration(
-              color: Colors.grey.withOpacity(0.6),
+              color: globals.boxColor,
               borderRadius: BorderRadius.circular(15)
           ),
           child: ListView(
@@ -97,7 +94,7 @@ class _WorkerGuidePageState extends State<WorkerGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                 border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.WguideNotifcatin.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.WguideNotifcatin.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -114,7 +111,7 @@ class _WorkerGuidePageState extends State<WorkerGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.WguideProfile.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.WguideProfile.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -131,7 +128,7 @@ class _WorkerGuidePageState extends State<WorkerGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.WguideSetting.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.WguideSetting.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -148,7 +145,7 @@ class _WorkerGuidePageState extends State<WorkerGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.CguideLogout.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.CguideLogout.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -165,7 +162,7 @@ class _WorkerGuidePageState extends State<WorkerGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.CguideLanguage.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.CguideLanguage.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],
@@ -182,7 +179,7 @@ class _WorkerGuidePageState extends State<WorkerGuidePage> {
                                   borderRadius: BorderRadius.circular(15),
                                   border: Border.all(color: Colors.indigo.shade900,width: 0.8)
                               ),
-                              child:Text(TKeys.WguideSearch.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.white,fontSize: 20))
+                              child:Text(TKeys.WguideSearch.translate(context),textAlign: TextAlign.center,style:TextStyle(color:Colors.black,fontSize: 20))
                           ),
                         ),
                       ],

@@ -114,10 +114,7 @@ class _WorkerFilterdPageState extends State<WorkerFilterdPage> with WidgetsBindi
               }
               return Container(
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                    image: AssetImage(globals.BGImg),
-                    fit: BoxFit.fill,
-                  )),
+                    color: globals.backColor),
                   child: ListView.separated(
                       itemBuilder: (context, i) => Padding(
                           padding: const EdgeInsets.all(20.0),
@@ -125,10 +122,10 @@ class _WorkerFilterdPageState extends State<WorkerFilterdPage> with WidgetsBindi
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15.0),
-                                color: Colors.blueAccent,
+                                color: globals.boxColor,
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.grey,
+                                      color: globals.boxColor,
                                       spreadRadius: 1,
                                       blurRadius: 2,
                                       offset: Offset(1, 1))
@@ -138,7 +135,7 @@ class _WorkerFilterdPageState extends State<WorkerFilterdPage> with WidgetsBindi
                                 height:100,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
-                                  color: globals.ContColor,
+                                  color: globals.boxColor,
                                 ),
                                 child: Column(
                                   children: [

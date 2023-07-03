@@ -67,15 +67,6 @@ class _workerCategoriesPageState extends State<workerCategoriesPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        leading: Builder(
-          builder: (context) => // Ensure Scaffold is in context
-              IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.deepOrange,
-                  ),
-                  onPressed: () => Scaffold.of(context).openDrawer()),
-        ),
         title: Center(
             child: Text(
           TKeys.WcategoriesTitle.translate(context),
@@ -94,32 +85,6 @@ class _workerCategoriesPageState extends State<workerCategoriesPage> {
                 }),
           ),
         ],
-      ),
-      drawer: Drawer(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(color: globals.ContColor),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                tileColor: Colors.deepOrange.shade100,
-                title: Text("log out"),
-                leading: Icon(Icons.logout),
-                onTap: () async {
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) {
-                    return LoginPage();
-                  }), (_) => false);
-                },
-              ),
-            ],
-          ),
-        ),
       ),
       body: category.isEmpty || category == null
           ? Center(
@@ -144,10 +109,8 @@ class _workerCategoriesPageState extends State<workerCategoriesPage> {
                 }
                 return Container(
                     decoration: BoxDecoration(
-                        image: DecorationImage(
-                      image: AssetImage(globals.BGImg),
-                      fit: BoxFit.fill,
-                    )),
+                       color: globals.backColor
+                    ),
                     child: GridView.builder(
                         itemCount: snapshot.data?.docs.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -158,10 +121,10 @@ class _workerCategoriesPageState extends State<workerCategoriesPage> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(36.0),
-                                    color: globals.ContColor,
+                                    color: globals.boxColor,
                                     boxShadow: [
                                       BoxShadow(
-                                          color: Colors.grey,
+                                          color: Colors.indigo.shade200,
                                           spreadRadius: 1,
                                           blurRadius: 2,
                                           offset: Offset(1, 1))

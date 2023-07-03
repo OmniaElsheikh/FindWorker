@@ -153,10 +153,7 @@ class _NotificationPageState extends State<NotificationPage> {
       body: Container(
         padding: EdgeInsets.all(5),
         decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage(globals.BGImg),
-              fit: BoxFit.fill,
-            )
+          color: globals.backColor
         ),
         child: Column(
           children: [
@@ -179,7 +176,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         margin: EdgeInsets.symmetric(vertical: 10),
                         padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                         decoration: BoxDecoration(
-                            color: globals.ContColor,
+                            color: globals.boxColor,
                             borderRadius: BorderRadius.circular(15)
                         ),
                         child: ListTile(
@@ -205,7 +202,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?TKeys.WnotiIncomingReq.translate(context):TKeys.WnotiOngoingReq.translate(context),style: TextStyle(color: Colors.red.shade200,fontSize: 15),),
+                                  Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?TKeys.WnotiIncomingReq.translate(context):TKeys.WnotiOngoingReq.translate(context),style: TextStyle(color: Colors.deepOrange,fontSize: 15),),
                                   Text("Name : ${snapshot.data?.docs[i]['customerName']}",style: TextStyle(color: Colors.black)),
                                   MaterialButton(
                                     onPressed: (){
@@ -235,8 +232,6 @@ class _NotificationPageState extends State<NotificationPage> {
                                                   ),
                                                   SizedBox(height: 10,),
                                                   Text("Name : ${snapshot.data?.docs[i]['customerName']}",style: TextStyle(fontWeight: FontWeight.bold)),
-                                                  SizedBox(height: 5,),
-                                                  Text("Estimated Time : 5 Minutes",style: TextStyle(fontWeight: FontWeight.bold),),
                                                   SizedBox(height: 5,),
                                                   Row(
                                                     children: [
@@ -318,7 +313,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               ):Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.white,fontSize: 18),),
+                                  Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.black,fontSize: 18),),
                                   SizedBox(height:5),
                                   snapshot.data?.docs[i]['reqStatus']=='On'
                                       ?MaterialButton(
@@ -371,8 +366,34 @@ class _NotificationPageState extends State<NotificationPage> {
                                                                     builder: (context) {
                                                                       return AlertDialog(
                                                                         backgroundColor: Colors.white,
-                                                                        title: Text(
-                                                                            "${TKeys.WongoingInReviewTitle.translate(context)} : ${snapshot.data?.docs[i]['customerName']}"),
+                                                                        title: Column(
+                                                                          children: [
+                                                                            Row(
+                                                                              mainAxisAlignment: MainAxisAlignment.end,
+                                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                                              children: [
+                                                                                IconButton(onPressed: (){
+                                                                                  Navigator.of(context).pushReplacementNamed("workerHomePage");
+                                                                                }, icon:Icon(
+                                                                                  Icons.cancel_rounded,
+                                                                                  color:Colors.deepOrange,
+                                                                                  size: 25,
+                                                                                ))
+                                                                              ],
+                                                                            ),
+                                                                            Row(
+                                                                              children: [
+                                                                                Text(
+                                                                                    "${TKeys.CongoingInReviewTitle.translate(context)} : "),
+                                                                              ],
+                                                                            ),
+                                                                            Row(
+                                                                              children: [
+                                                                                Text("${snapshot.data?.docs[i]['customerName']}")
+                                                                              ],
+                                                                            )
+                                                                          ],
+                                                                        ),
                                                                         shape: RoundedRectangleBorder(
                                                                             borderRadius:
                                                                             BorderRadius.circular(
@@ -682,7 +703,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         margin: EdgeInsets.symmetric(vertical: 10),
                         padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                         decoration: BoxDecoration(
-                            color: globals.ContColor,
+                            color: globals.boxColor,
                             borderRadius: BorderRadius.circular(15)
                         ),
                         child: ListTile(
@@ -706,7 +727,7 @@ class _NotificationPageState extends State<NotificationPage> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?TKeys.WnotiSendingReq.translate(context):TKeys.WnotiOngoingReq.translate(context),style: TextStyle(color: Colors.red.shade200,fontSize: 15),),
+                                  Text(snapshot.data?.docs[i]['reqStatus']=='Pending'?TKeys.WnotiSendingReq.translate(context):TKeys.WnotiOngoingReq.translate(context),style: TextStyle(color: Colors.deepOrange,fontSize: 15),),
                                   Text("Name : ${snapshot.data?.docs[i]['workerName']}",style: TextStyle(color: Colors.black)),
                                   MaterialButton(
                                     onPressed: (){
@@ -795,11 +816,10 @@ class _NotificationPageState extends State<NotificationPage> {
                                   )
                                 ],
                               ),
-                              Expanded(child: Container()),
-                              Column(
+                              Expanded(child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.white,fontSize: 16),),
+                                  Text("${snapshot.data?.docs[i]['reqStatus']} Request",style: TextStyle(color: Colors.deepOrange,fontSize: 16),),
                                   SizedBox(height:5),
                                   snapshot.data?.docs[i]['reqStatus']=='On'
                                       ?MaterialButton(
@@ -847,6 +867,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                             }
                                                           });
                                                         });
+                                                        Navigator.of(context).pop();
                                                       },
                                                       child: Text(
                                                         TKeys.WongoingInEndDoneButton
@@ -891,6 +912,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                       :Container()
                                 ],
                               ),
+                              )
                             ],
                           ),
                         ),
@@ -918,7 +940,7 @@ class _NotificationPageState extends State<NotificationPage> {
                         margin: EdgeInsets.symmetric(vertical: 10),
                         padding: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
                         decoration: BoxDecoration(
-                            color: globals.ContColor,
+                            color: globals.boxColor,
                             borderRadius: BorderRadius.circular(15)
                         ),
                         child: ListTile(
@@ -961,7 +983,6 @@ class _NotificationPageState extends State<NotificationPage> {
                                    ],
                                  ),
                                  actions: [
-
                                    MaterialButton(
                                      onPressed: (){
                                        db.replys().doc(snapshot.data?.docs[i].id).delete();

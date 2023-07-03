@@ -118,7 +118,7 @@
   "CnotiInReplyContent": "Reply For Your Complain",
   "CnotiInReplyOkButton": "Ok",
 
-  "CongoingInReviewTitle": "Review On Worker",
+  "CongoingInReviewTitle": "Review On ",
 
   "_comment11": "===========>user filtered page <=============",
   "CfilterdNearby": "Nearby",
@@ -162,6 +162,6 @@
   "WsurveyQ2": "Did The Customer exsited on Time?",
   "WsurveyQ3":"Did it let you do what you Came For?",
   "WsurveyQ4": "Did The Customer had a good Attitude?",
-  "WsurveyQ5": "Did the negotition on the price was Succeful?",
+  "WsurveyQ5": "Did the negotition on the price was Succeful?"
 
 }

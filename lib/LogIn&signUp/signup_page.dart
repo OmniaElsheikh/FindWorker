@@ -95,7 +95,7 @@ class _SignupPageState extends State<SignupPage> {
       TextEditingController();
   final TextEditingController _phoneNumberController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  var selectedJob = "Carpenter";
+  var selectedJob = "سباك";
   bool showPassword = false;
   bool isLoading = false;
   dynamic uid;
@@ -106,7 +106,7 @@ class _SignupPageState extends State<SignupPage> {
       isLoading = true;
       try {
         if (position == null) {
-         showDialog(context: context, builder: (contexts){
+          showDialog(context: context, builder: (contexts){
             return AlertDialog(
               shape:RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20)
@@ -128,12 +128,10 @@ class _SignupPageState extends State<SignupPage> {
               ],
             );
           });
-          print("position is null");
-        }
+          print("position is null");}
         else {
           if(picked==null)
-            {
-             showDialog(context: context, builder: (contexts){
+            {showDialog(context: context, builder: (contexts){
                 return AlertDialog(
                   shape:RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20)
@@ -155,12 +153,10 @@ class _SignupPageState extends State<SignupPage> {
                   ],
                 );
               });
-             print('photo not picked');
-            }
+             print('photo not picked');}
           else{
             userCredential = await FirebaseAuth.instance
-                .createUserWithEmailAndPassword(
-                email: "$email", password: "$password");
+                .createUserWithEmailAndPassword(email: "$email", password: "$password");
             uid = FirebaseAuth.instance.currentUser?.uid;
             try {
               final TaskSnapshot snapshot = await ref.putFile(file);
@@ -188,14 +184,10 @@ class _SignupPageState extends State<SignupPage> {
                     imageurlIn: imageurl,
                   );
                 }));
-              }
-            } catch (e) {
-              print(e.toString());
-            }
-            print("account created succefully");
-          }
-        }
-      } on FirebaseAuthException catch (e) {
+              }} catch (e) {
+              print(e.toString());}
+            print("account created succefully");}}}
+      on FirebaseAuthException catch (e) {
         if (e.code == 'weak-password') {
           showDialog(
               context: context,
@@ -281,11 +273,9 @@ class _SignupPageState extends State<SignupPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15),
           decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage(globals.BGImg),
-            fit: BoxFit.fill,
-          )),
+            color: globals.backColor),
           child: Column(
             children: [
               Padding(
@@ -306,7 +296,7 @@ class _SignupPageState extends State<SignupPage> {
                               child: Text(
                                 TKeys.WsettingLanguageButton.translate(context),
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontSize: 25,
                                   decoration: TextDecoration.underline,
                                   decorationThickness: 2,
@@ -320,17 +310,20 @@ class _SignupPageState extends State<SignupPage> {
                   )),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                    EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                 child: Align(
                   alignment: Alignment.center,
                   child: Container(
-                    height: 150,
+                    height: 200,
                     width: double.infinity,
-                    child: Image.asset(
-                      'images/worker-logo2-inside.png',
-                      width: 250.0,
-                      height: 250.0,
-                      fit: BoxFit.fill,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: Image.asset(
+                        'images/worker-logo2-inside.png',
+                        width: double.infinity,
+                        height: 200.0,
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
                 ),
@@ -545,7 +538,7 @@ class _SignupPageState extends State<SignupPage> {
                               context: context,
                               builder: (context) {
                                 return Container(
-                                  color: Colors.grey.withOpacity(0.7),
+                                  color: globals.boxColor,
                                   padding: EdgeInsets.all(15),
                                   height: 225,
                                   child: Column(
@@ -673,100 +666,97 @@ class _SignupPageState extends State<SignupPage> {
                     const SizedBox(height: 10),
                     Row(
                       children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: InkWell(
-                              onTap: () {
-                                setState(() {
-                                  globals.isUser = false;
-                                });
-                              },
-                              child: Container(
-                                height: 125,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: globals.isUser
-                                      ? Colors.white.withOpacity(0.75)
-                                      : Colors.deepOrange.withOpacity(0.7),
-                                ),
-                                alignment: Alignment.center,
-                                child: Column(
-                                  children: [
-                                    SizedBox(height: 15),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.handyman,
-                                          color: Colors.black,
-                                        ),
-                                        SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text(
-                                          TKeys.signupChooseWorker
-                                              .translate(context),
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 10),
-                                    if (globals.isUser)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                globals.isUser = false;
+                              });
+                            },
+                            child: Container(
+                              height: 125,
+                              
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: globals.isUser
+                                    ? Colors.white.withOpacity(0.75)
+                                    : Colors.deepOrange.withOpacity(0.7),
+                              ),
+                              alignment: Alignment.center,
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 15),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
                                       Icon(
-                                        Icons.construction_sharp,
-                                        size: 50,
+                                        Icons.handyman,
                                         color: Colors.black,
                                       ),
-                                    if (!globals.isUser)
-                                      Expanded(
-                                        child: DropdownButton(
-                                          hint: Text(
-                                            "Select you category",
-                                            style: TextStyle(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          dropdownColor: Colors.grey,
-                                          icon: const Icon(
-                                            Icons.keyboard_arrow_down,
-                                            color: Colors.white,
-                                          ),
-                                          items: categorie
-                                              .map((item) => DropdownMenuItem(
-                                                    child: Text(
-                                                      "$item",
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors
-                                                              .indigo[900]),
-                                                    ),
-                                                    value: item,
-                                                  ))
-                                              .toList(),
-                                          value: selectedJob,
-                                          onChanged: (value) {
-                                            setState(() {
-                                              selectedJob = value.toString();
-                                              category = value.toString();
-                                            });
-                                          },
-                                        ),
-                                      )
-                                  ],
-                                ),
+                                      SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        TKeys.signupChooseWorker
+                                            .translate(context),
+                                        style: TextStyle(
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  if (globals.isUser)
+                                    Icon(
+                                      Icons.construction_sharp,
+                                      size: 30,
+                                      color: Colors.black,
+                                    ),
+                                  if (!globals.isUser)
+                                    DropdownButton(
+                                      hint: Text(
+                                        "Select you category",
+                                        style: TextStyle(
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      dropdownColor: Colors.grey,
+                                      icon: const Icon(
+                                        Icons.keyboard_arrow_down,
+                                        color: Colors.white,
+                                      ),
+                                      items: categorie
+                                          .map((item) => DropdownMenuItem(
+                                                child: Text(
+                                                  "$item",
+                                                  style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      color: Colors
+                                                          .indigo[900]),
+                                                ),
+                                                value: item,
+                                              ))
+                                          .toList(),
+                                      value: selectedJob,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          selectedJob = value.toString();
+                                          category = value.toString();
+                                        });
+                                      },
+                                    )
+                                ],
                               ),
                             ),
                           ),
                         ),
                         Text(
                           TKeys.signupChooseOr.translate(context),
-                          style: TextStyle(fontSize: 25, color: Colors.white),
+                          style: TextStyle(fontSize: 25, color: Colors.black),
                         ),
                         Expanded(
                           child: Padding(
@@ -845,7 +835,7 @@ class _SignupPageState extends State<SignupPage> {
                     Center(
                       child: Text(
                         TKeys.signupChooseOr.translate(context),
-                        style: TextStyle(color: Colors.white, fontSize: 20),
+                        style: TextStyle(color: Colors.black, fontSize: 20),
                       ),
                     ),
                     const SizedBox(height: 10),

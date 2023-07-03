@@ -21,7 +21,6 @@ class LocalizationService {
     final jsonString = await rootBundle.loadString('images/translations/${locale.languageCode}.json');
     Map<String,dynamic> jsonMap=jsonDecode(jsonString);
     _localizedString=jsonMap.map((key, value) => MapEntry(key, value.toString()));
-
   }
 
   String? translate(String key){
@@ -78,7 +77,6 @@ class _LocalizationServiceDelegate extends LocalizationsDelegate<LocalizationSer
 
 class LocalizationController extends GetxController{
   String currentLanguage =''.obs.toString();
-  Locale initialLang=sharepref!.getString("lang")=="ar"?Locale("en"):Locale("ar");
   void toggleLanguge()async{
     currentLanguage=LocalizationService.currentLanguage.languageCode =='ar'?'en':'ar';
     print(currentLanguage);

@@ -61,18 +61,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: globals.backColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
-        leading: Builder(
-          builder: (context) => // Ensure Scaffold is in context
-              IconButton(
-                  icon: Icon(
-                    Icons.menu,
-                    color: Colors.deepOrange,
-                  ),
-                  onPressed: () => Scaffold.of(context).openDrawer()),
-        ),
         title: Center(
             child: Text(
           TKeys.WcategoriesTitle.translate(context),
@@ -91,32 +83,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
                 }),
           ),
         ],
-      ),
-      drawer: Drawer(
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          decoration: BoxDecoration(color: globals.ContColor),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                tileColor: Colors.deepOrange.shade100,
-                title: Text("log out"),
-                leading: Icon(Icons.logout),
-                onTap: () async {
-                  await FirebaseAuth.instance.signOut();
-                  Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(builder: (context) {
-                    return LoginPage();
-                  }), (_) => false);
-                },
-              ),
-            ],
-          ),
-        ),
       ),
       body: category.isEmpty || category == null
           ? Center(
@@ -140,11 +106,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
                   ));
                 }
                 return Container(
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                      image: AssetImage(globals.BGImg),
-                      fit: BoxFit.fill,
-                    )),
                     child: GridView.builder(
                         itemCount: snapshot.data?.docs.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -155,10 +116,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
                                 child: Container(
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(36.0),
-                                    color: globals.ContColor,
+                                    color: globals.boxColor,
                                     boxShadow: [
                                       BoxShadow(
-                                          color: Colors.grey,
+                                          color: Colors.indigo.shade100.withOpacity(0.5),
                                           spreadRadius: 1,
                                           blurRadius: 2,
                                           offset: Offset(1, 1))
@@ -232,46 +193,33 @@ class DataSearch extends SearchDelegate {
     return Container(
       color: globals.ContColor,
       child: StreamBuilder<QuerySnapshot>(
-          stream: db.worker().snapshots(),
-          builder: (context, snapshot) {
-            return StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
                     .collection('worker')
                     .where("workerName", isEqualTo: '$query')
                     .snapshots(),
                 builder: (context, snapshot2) {
                   return ListView.builder(
-                      itemCount: query == ""
-                          ? snapshot.data?.docs.length
-                          : snapshot2.data?.docs.length,
+                      itemCount:snapshot2.data?.docs.length,
                       itemBuilder: (context, i) {
                         return InkWell(
                           onTap: () {
                             Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) {
                                 return WorkerInUserProfilePage(
-                                    id: snapshot.data?.docs[i].id);
+                                    id: snapshot2.data?.docs[i].id);
                               },
                             ));
                           },
                           child: Container(
                               padding: EdgeInsets.all(10),
-                              child: query == ""
-                                  ? Text(
-                                      "${snapshot.data?.docs[i]['workerName']}",
-                                      style: TextStyle(
-                                          color: Colors.indigo.shade900,
-                                          fontSize: 25),
-                                    )
-                                  : Text(
+                              child:Text(
                                       "${snapshot2.data?.docs[i]['workerName']}",
                                       style: TextStyle(
                                           color: Colors.indigo.shade900,
                                           fontSize: 25))),
                         );
                       });
-                });
-          }),
+                })
     );
   }
 }

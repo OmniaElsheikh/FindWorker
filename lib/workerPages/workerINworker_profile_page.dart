@@ -199,10 +199,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
             return Container(
               padding: EdgeInsets.all(10),
               decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage(globals.BGImg),
-                    fit: BoxFit.fill,
-                  ),
+                color: globals.backColor
               ),
               child: ListView(
                 children:[
@@ -211,7 +208,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: globals.ContColor,
+                          color: globals.boxColor,
                         ),
                         child: Row(
                           children: [
@@ -263,7 +260,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                                       height: 10,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                      padding: EdgeInsets.symmetric(horizontal: 10.0),
                                       child: Row(
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         children: [
@@ -272,9 +269,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                                             style: TextStyle(fontWeight: FontWeight.bold),
                                           ),
                                           RatingBar.builder(
-                                            updateOnDrag:
-                                            true,
-                                            itemSize: 15,
+                                            itemSize: 12,
                                             glowColor:
                                             Colors
                                                 .amber,
@@ -313,23 +308,13 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                                                       });
                                                       print("Canceled=================");
                                                     }
-                                                  else
-                                                    {
-                                                      Requests.add({
-                                                        'customerId':Cid,
-                                                        'workerId':Wid,
-                                                        'reqStatus':'Pending',
-                                                        'customerName':Cname,
-                                                        'customerPhone':Cphone,
-                                                        'customerImage':Cimage,
-                                                        'customerRate':Crate,
-                                                        'workerName':Wname,
-                                                        'workerPhone':Wphone,
-                                                        'workerImage':Wimage,
+                                                  else {
+                                                      Requests.add({'customerId':Cid, 'workerId':Wid,
+                                                        'reqStatus':'Pending', 'customerName':Cname, 'customerPhone':Cphone, 'customerImage':Cimage,
+                                                        'customerRate':Crate, 'workerName':Wname, 'workerPhone':Wphone, 'workerImage':Wimage,
                                                         'workerRate':Wrate,
                                                       }
                                                     );
-
                                                       setState(() {
                                                         getData();
                                                       });
@@ -361,7 +346,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                         color: Colors.black,
                         thickness: 1,
                       ),
-                      Center(child: Text(TKeys.WworkerInWorkerWork.translate(context),style: TextStyle(color: Colors.white,fontSize: 25),),),
+                      Center(child: Text(TKeys.WworkerInWorkerWork.translate(context),style: TextStyle(color: Colors.black,fontSize: 25),),),
                       Divider(
                         color: Colors.black,
                         thickness: 1,
@@ -369,7 +354,7 @@ class _WorkerInWorkerProfilePageState extends State<WorkerInWorkerProfilePage> {
                       Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
-                          color: globals.ContColor,
+                          color: globals.boxColor,
                         ),
                         child:  StreamBuilder<QuerySnapshot>(
                             stream: FirebaseFirestore.instance.collection('posts').where("workerId",isEqualTo:'$Wid').snapshots(),

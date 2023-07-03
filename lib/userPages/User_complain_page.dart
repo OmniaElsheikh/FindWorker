@@ -53,7 +53,12 @@ class _UserComplainPageState extends State<UserComplainPage> {
       });
     }
   }
-
+bool check(){
+    if(_formKey.currentState!.validate())
+      return true;
+    else
+      return false;
+}
   @override
   void initState() {
     complainId =
@@ -86,17 +91,14 @@ class _UserComplainPageState extends State<UserComplainPage> {
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage(globals.BGImg),
-            fit: BoxFit.fill,
-          )),
+           color: Color(0xff33f0b7a1)),
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Container(
             width: double.infinity,
             margin: EdgeInsets.all(10),
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.75),
+                color: globals.boxColor,
                 borderRadius: BorderRadius.circular(15)),
             child: Form(
               key: _formKey,
@@ -106,7 +108,7 @@ class _UserComplainPageState extends State<UserComplainPage> {
                 children: [
                   Text(
                     TKeys.WcomplainDetails.translate(context),
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(color: Colors.deepOrange, fontSize: 25),
                   ),
                   Divider(
                     thickness: 1,
@@ -125,7 +127,7 @@ class _UserComplainPageState extends State<UserComplainPage> {
                   ),
                   Text(
                     "${TKeys.WcomplainContent.translate(context)} :",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    style: TextStyle(color: Colors.deepOrange, fontSize: 20),
                   ),
                   SizedBox(
                     height: 20,
@@ -133,6 +135,7 @@ class _UserComplainPageState extends State<UserComplainPage> {
                   TextFormField(
                     controller: _complainController,
                     //initialValue: "user old name",
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please Enter Your Complain';
@@ -144,9 +147,10 @@ class _UserComplainPageState extends State<UserComplainPage> {
                         content = val;
                       });
                     },
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.black),
                     maxLines: 15,
                     decoration: InputDecoration(
+                      fillColor: Colors.white,
                       filled: true,
                       hintText: '${TKeys.WcomplainTextField.translate(context)}',
                       hintStyle: const TextStyle(
@@ -173,47 +177,50 @@ class _UserComplainPageState extends State<UserComplainPage> {
                     children: [
                       MaterialButton(
                         onPressed: () {
-                          updateWorkerComplain();
-                          editinfo(context);
-                          showDialog<void>(
-                            context: context,
-                            builder: (BuildContext dialogContext) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                title: Text(
-                                  'Note',
-                                  style: TextStyle(
-                                      color: Colors.indigo.shade900,
-                                      fontSize: 20),
-                                ),
-                                content: Text(
-                                  'Complain Done Succefully',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 20),
-                                ),
-                                actions: <Widget>[
-                                  MaterialButton(
-                                    color: Colors.deepOrange,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    child: Text('Ok'),
-                                    onPressed: () {
-                                      Navigator.of(dialogContext)
-                                          .pop(); // Dismiss alert dialog
-                                    },
+                          var bol=check();
+                          if(bol){
+                            updateWorkerComplain();
+                            editinfo(context);
+                            showDialog<void>(
+                              context: context,
+                              builder: (BuildContext dialogContext) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)),
+                                  title: Text(
+                                    'Note',
+                                    style: TextStyle(
+                                        color: Colors.indigo.shade900,
+                                        fontSize: 20),
                                   ),
-                                ],
-                              );
-                            },
-                          );
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const UserHomePage(),
-                          ));
+                                  content: Text(
+                                    'Complain Done Succefully',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20),
+                                  ),
+                                  actions: <Widget>[
+                                    MaterialButton(
+                                      color: Colors.deepOrange,
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                          BorderRadius.circular(15)),
+                                      child: Text('Ok'),
+                                      onPressed: () {
+                                        Navigator.of(dialogContext)
+                                            .pop(); // Dismiss alert dialog
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                              const UserHomePage(),
+                            ));
+                          }
                         },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),

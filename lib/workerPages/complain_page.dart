@@ -29,7 +29,12 @@ class _ComplainPageState extends State<ComplainPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _complainController = TextEditingController();
   CollectionReference Customers = db.customer();
-
+  bool check(){
+    if(_formKey.currentState!.validate())
+      return true;
+    else
+      return false;
+  }
   updateCustomerComplain() {
     DocumentReference documentReference1 = Customers.doc(widget.Cid);
     FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -44,7 +49,7 @@ class _ComplainPageState extends State<ComplainPage> {
     });
   }
 
-  void editinfo(BuildContext context) async {
+  void addcomplain(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       await db.workerComplains().doc('$complainId').set({
         'customerId': widget.Cid,
@@ -87,17 +92,14 @@ class _ComplainPageState extends State<ComplainPage> {
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
-              image: DecorationImage(
-            image: AssetImage(globals.BGImg),
-            fit: BoxFit.fill,
-          )),
+            color:globals.backColor),
           padding: EdgeInsets.symmetric(horizontal: 10),
           child: Container(
             width: double.infinity,
             margin: EdgeInsets.all(10),
             padding: EdgeInsets.all(20),
             decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.75),
+                color: globals.boxColor,
                 borderRadius: BorderRadius.circular(15)),
             child: Form(
               key: _formKey,
@@ -107,7 +109,7 @@ class _ComplainPageState extends State<ComplainPage> {
                 children: [
                   Text(
                     TKeys.WcomplainDetails.translate(context),
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: TextStyle(color: Colors.deepOrange, fontSize: 25),
                   ),
                   Divider(
                     thickness: 1,
@@ -126,7 +128,7 @@ class _ComplainPageState extends State<ComplainPage> {
                   ),
                   Text(
                     "${TKeys.WcomplainContent.translate(context)} :",
-                    style: TextStyle(color: Colors.white, fontSize: 20),
+                    style: TextStyle(color: Colors.black, fontSize: 20),
                   ),
                   SizedBox(
                     height: 20,
@@ -134,6 +136,7 @@ class _ComplainPageState extends State<ComplainPage> {
                   TextFormField(
                     controller: _complainController,
                     //initialValue: "user old name",
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
                       if (value!.isEmpty) {
                         return 'Please Enter Your Complain';
@@ -145,13 +148,14 @@ class _ComplainPageState extends State<ComplainPage> {
                         content = val;
                       });
                     },
-                    style: const TextStyle(color: Colors.white),
+                    style: const TextStyle(color: Colors.black),
                     maxLines: 15,
                     decoration: InputDecoration(
                       filled: true,
+                      fillColor: Colors.white,
                       hintText: '${TKeys.WcomplainTextField.translate(context)}',
                       hintStyle: const TextStyle(
-                        color: Colors.grey,
+                        color: Colors.black,
                         fontSize: 20,
                       ),
                       prefixIcon: const Icon(
@@ -174,13 +178,16 @@ class _ComplainPageState extends State<ComplainPage> {
                     children: [
                       MaterialButton(
                         onPressed: () {
-                          updateCustomerComplain();
-                          editinfo(context);
-                          Navigator.of(context)
-                              .pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const WorkerHomePage(),
-                          ));
+                          var bol=check();
+                          if(bol){
+                            updateCustomerComplain();
+                            addcomplain(context);
+                            Navigator.of(context)
+                                .pushReplacement(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                              const WorkerHomePage(),
+                            ));
+                          }
                         },
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(15)),

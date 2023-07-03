@@ -106,10 +106,7 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
               }
               return Container(
                   decoration: BoxDecoration(
-                      image: DecorationImage(
-                    image: AssetImage(globals.BGImg),
-                    fit: BoxFit.fill,
-                  )),
+                    color: Color(0xff33f0b7a1)),
                   child: ListView.separated(
                       itemBuilder: (context, i) => Padding(
                           padding: const EdgeInsets.all(20.0),
@@ -117,67 +114,77 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(15.0),
-                                color: Colors.blueAccent,
+                                color: Colors.indigo.shade50,
                                 boxShadow: [
                                   BoxShadow(
-                                      color: Colors.grey,
+                                      color: globals.boxColor,
                                       spreadRadius: 1,
                                       blurRadius: 2,
                                       offset: Offset(1, 1))
                                 ],
                               ),
                               child: Container(
-                                height:100,
+                                padding: EdgeInsets.all(4),
+                                height:120,
                                 decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15),
-                                  color: globals.ContColor,
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: globals.boxColor,
                                 ),
                                 child: Column(
                                   children: [
                                     Row(
                                       children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5.0,horizontal: 3),
-                                          child: Container(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              textAlign: TextAlign.start,
-                                              "${snapshot.data?.docs[i]['workerName']}",
-                                              style: TextStyle(
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold,
+                                        Expanded(
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: 5.0,horizontal: 3),
+                                            child: Container(
+                                              alignment: Alignment.topLeft,
+                                              child: Text(
+                                                textAlign: TextAlign.start,
+                                                maxLines:2,
+                                                "${snapshot.data?.docs[i]['workerName']}",
+                                                style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                        Expanded(child:Container()),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 5.0),
-                                          child: Container(
-                                            alignment: Alignment.topLeft,
-                                            child: Text(
-                                              textAlign: TextAlign.center,
-                                              "${TKeys.CfilterdRate.translate(context)} : ${snapshot.data?.docs[i]['rate'].toStringAsFixed(2)}",
-                                              style: TextStyle(
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.all(5.0),
-                                          child: Icon(
-                                            Icons.star,
-                                            color: Colors
-                                                .deepOrange,
-                                            size: 20,
-                                          ),
-                                        ),
+
                                       ],
                                     ),
+                                   Row(
+                                     mainAxisAlignment: MainAxisAlignment.end,
+                                     crossAxisAlignment: CrossAxisAlignment.center,
+                                     children: [
+                                       Padding(
+                                         padding: const EdgeInsets.symmetric(
+                                             vertical: 5.0),
+                                         child: Container(
+                                           alignment: Alignment.topLeft,
+                                           child: Text(
+                                             textAlign: TextAlign.center,
+                                             "${TKeys.CfilterdRate.translate(context)} : ${snapshot.data?.docs[i]['rate'].toStringAsFixed(2)}",
+                                             style: TextStyle(
+                                               fontSize: 20,
+                                               fontWeight: FontWeight.bold,
+                                             ),
+                                           ),
+                                         ),
+                                       ),
+                                       Padding(
+                                         padding: const EdgeInsets.all(5.0),
+                                         child: Icon(
+                                           Icons.star,
+                                           color: Colors
+                                               .deepOrange,
+                                           size: 15,
+                                         ),
+                                       ),
+                                     ],
+                                   ),
                                    Row(
                                       children: [
                                         Padding(
@@ -211,7 +218,7 @@ class _FilterdPageState extends State<FilterdPage> with WidgetsBindingObserver {
                                                   ),
                                                 ),
                                                 SizedBox(width:4),
-                                                Icon(Icons.circle,color:Colors.grey.shade900,size: 10,)
+                                                Icon(Icons.circle,color:Colors.black,size: 10,)
                                               ],
                                             )
                                           ),
